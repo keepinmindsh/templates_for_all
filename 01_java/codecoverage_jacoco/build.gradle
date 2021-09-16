@@ -29,32 +29,32 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+    // We set code coverage under 90% when we build our code for testing.
     violationRules {
         rule {
-            limit {
-                minimum = 0.5
-            }
-        }
-
-        rule {
-            enabled = false
             element = 'CLASS'
-            includes = ['org.gradle.*']
 
             limit {
-                counter = 'LINE'
-                value = 'TOTALCOUNT'
-                maximum = 0.3
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.90
             }
         }
     }
 }
 
 test {
-    finalizedBy jacocoTestReport // report is always generated after tests run
     useJUnitPlatform()
+
+    finalizedBy jacocoTestReport // report is always generated after tests run
+
+    finalizedBy jacocoTestCoverageVerification // jacoco Test Coverage Verification after jacocoTestReport run
 }
 
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestCoverageVerification{
+    dependsOn test // tests are required to run before checking code coverage
 }
