@@ -1,4 +1,19 @@
 spring:
+  profiles:
+    group:
+      develop : local1
+      develop-timezone-after : local-timezone-after
+      develop-timezone-before : local-timezone-before
+      develop-local-httpmethod : local-httpmethod
+      develop-local-path-route : local-path-route
+      develop-local-query-route : local-query-route
+      beta : local2
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local1
   cloud:
     gateway:
       routes:
@@ -6,3 +21,91 @@ spring:
           uri: https://example.org
           predicates:
             - Cookie=mycookie,mycookievalue
+---
+spring:
+  config:
+    activate:
+      on-profile: local2
+  cloud:
+    gateway:
+      routes:
+        - id: after_route
+          uri: https://example.org
+          predicates:
+            - name: Cookie
+              args:
+                name: mycookie
+                regexp: mycookievalue
+---
+spring:
+  config:
+    activate:
+      on-profile: local-timezone-after
+  cloud:
+    gateway:
+      routes:
+        - id: after_route
+          uri: http://localhost:8080/
+          predicates:
+            - After=2021-09-18T21:32:00.000-00:00[Asia/Seoul]
+---
+spring:
+  config:
+    activate:
+      on-profile: local-timezone-before
+  cloud:
+    gateway:
+      routes:
+        - id: after_route
+          uri: http://localhost:8080/
+          predicates:
+            - After=2021-09-18T21:35:00.000-00:00[Asia/Seoul]
+---
+spring:
+  config:
+    activate:
+      on-profile: local-httpmethod
+  cloud:
+    gateway:
+      routes:
+        - id: method_route
+          uri: http://localhost:8080/hello
+          predicates:
+            - Method=POST
+---
+spring:
+  config:
+    activate:
+      on-profile: local-path-route
+  cloud:
+    gateway:
+      routes:
+        - id: path_route
+          uri: https://example.org
+          predicates:
+            - Path=/red/{segment},/blue/{segment}
+---
+spring:
+  config:
+    activate:
+      on-profile: local-path-route
+  cloud:
+    gateway:
+      routes:
+        - id: path_route
+          uri: https://naver.com
+          predicates:
+            - Path=/api/**
+---
+spring:
+  config:
+    activate:
+      on-profile: local-query-route
+  cloud:
+    gateway:
+      routes:
+        - id: query_route
+          uri: https://naver.com
+          predicates:
+            - Query=green
+
