@@ -1,3 +1,4 @@
 rootProject.name = 'spring-cloud-gateway-ways'
 include 'basic-cloud-gateway'
+include 'basic-shortcut-configuration'
 
