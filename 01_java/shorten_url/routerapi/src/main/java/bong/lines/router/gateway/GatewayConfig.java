@@ -16,22 +16,25 @@ public class GatewayConfig {
                 .routes()
                 .route( routeSpec ->
                         getUri(routeSpec)
-                )
-
+                        )
+                .route( routeSpec ->
+                        routeSpec.path("/hello")
+                                .uri("http://localhost:2001/")
+                        )
                 .build();
     }
 
     private Buildable<Route> getUri(PredicateSpec routeSpec) {
-        return routeSpec.path("/call")
-                .filters(
-                        gatewayFilterSpec -> {
-
-                            gatewayFilterSpec.setPath("/real");
-
-                            return gatewayFilterSpec;
-                        }
-                )
-                .uri("http://localhost:2001/");
+        return routeSpec.path("/real/**")
+//                .filters(
+//                        gatewayFilterSpec -> {
+//
+//                            gatewayFilterSpec.setPath("/real");
+//
+//                            return gatewayFilterSpec;
+//                        }
+//                )
+                .uri("http://localhost:2001");
     }
 
 }
