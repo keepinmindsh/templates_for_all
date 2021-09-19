@@ -1,24 +1,37 @@
 package bong.lines.router.gateway;
 
-import bong.lines.router.configuration.URIConfiguration;
+import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.Buildable;
+import org.springframework.cloud.gateway.route.builder.PredicateSpec;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 public class GatewayConfig {
-
     @Bean
-    public RouteLocator myRoutes(RouteLocatorBuilder builder, URIConfiguration uriConfiguration) {
+    RouteLocator gateway (RouteLocatorBuilder rlb) {
+        return rlb
+                .routes()
+                .route( routeSpec ->
+                        getUri(routeSpec)
+                )
 
-        String httpURI = uriConfiguration.getHttpUrl();
-
-        return builder.routes()
-                .route(predicateSpec ->
-                        predicateSpec
-                                .path("/call")
-                                .uri(httpURI))
                 .build();
     }
+
+    private Buildable<Route> getUri(PredicateSpec routeSpec) {
+        return routeSpec.path("/call")
+                .filters(
+                        gatewayFilterSpec -> {
+
+                            gatewayFilterSpec.setPath("/real");
+
+                            return gatewayFilterSpec;
+                        }
+                )
+                .uri("http://localhost:2001/");
+    }
+
 }
