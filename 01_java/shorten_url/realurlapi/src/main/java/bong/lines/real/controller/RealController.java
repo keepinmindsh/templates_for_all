@@ -27,4 +27,14 @@ public class RealController {
 
         return "Hello World" + value;
     }
+
+
+    @PostMapping("/real_test")
+    public String postRealTest(@RequestParam("value") String value, PostVO.RequestVO requestVO){
+
+        log.info("From POST Value : {}", value);
+        log.info("From Request Body : {}", requestVO);
+
+        return "Hello World" + value;
+    }
 }

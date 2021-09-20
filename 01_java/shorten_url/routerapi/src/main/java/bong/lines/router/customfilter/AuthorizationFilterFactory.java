@@ -15,6 +15,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthorizationFilterFactory extends AbstractGatewayFilterFactory<AuthorizationFilterFactory.Config> {
 
+    // TODO - https://www.woolha.com/tutorials/spring-cloud-gateway-creating-custom-route-filters-abstractgatewayfilterfactory
+
     public AuthorizationFilterFactory() {
         super(Config.class);
     }
