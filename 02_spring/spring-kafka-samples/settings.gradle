@@ -1,0 +1,6 @@
+rootProject.name = 'spring-kafka-samples'
+include 'producers'
+include 'consumers'
+include 'realapi'
+include 'callapi'
+
