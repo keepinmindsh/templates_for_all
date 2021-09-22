@@ -3,4 +3,5 @@ include 'producers'
 include 'consumers'
 include 'realapi'
 include 'callapi'
+include 'kafka-manual'
 
