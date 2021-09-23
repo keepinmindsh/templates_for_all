@@ -8,7 +8,7 @@ public class QueryManager {
 
     static {
         queryGetter.put("asdweasdqwasd", "http://localhost:2001/real_test?value=123");
-        queryGetter.put("sfasvsdfefewf", "http://localhost:9000/greeting/greeting?value=123");
+        queryGetter.put("asdf24f", "http://localhost:9000/greeting/greeting?value=123");
     }
 
     public static String getQuery(String key){
