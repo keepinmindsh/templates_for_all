@@ -1,10 +1,6 @@
 ﻿using Confluent.Kafka;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace kafka_sample
 {
@@ -14,8 +10,8 @@ namespace kafka_sample
         {
             var config = new ConsumerConfig
             {
-                GroupId = "consumer.sanha",
-                BootstrapServers = "10.30.0.153:9092",
+                GroupId = "test-consumer-group",
+                BootstrapServers = "localhost:9092",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
