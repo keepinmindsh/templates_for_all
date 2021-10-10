@@ -23,6 +23,14 @@ public class TrayApplication {
         );
 
         // 그리고 아래와 같이 addItem() 메소드를 호출하자
+        TrayIconHandler.addItem("Check Today", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        // 그리고 아래와 같이 addItem() 메소드를 호출하자
         TrayIconHandler.addItem("Exit", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
