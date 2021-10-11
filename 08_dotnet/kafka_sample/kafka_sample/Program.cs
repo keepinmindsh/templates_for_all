@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using System;
 using System.Threading;
+using Bongs.Module;
 
 namespace kafka_sample
 {
@@ -34,10 +35,16 @@ namespace kafka_sample
                         {
                             var cr = consumer.Consume(cts.Token);
                             Console.WriteLine($"Consumed Message: '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
+
+
+                            ProgramSwitcher.execute(new ParamBuilder()
+                                                    .machine(cr.Value)
+                                                    .messages("test"));
+
                         }
                         catch(ConsumeException e)
                         {
-                            Console.WriteLine($"Error occured: {e.Error.Reason}");
+                            Logger.SendErrorToText(e, "kafka_sample");
                         }
                     }
                 }
