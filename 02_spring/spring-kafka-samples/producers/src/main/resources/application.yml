@@ -1,0 +1,6 @@
+
+
+kafka:
+  bootstrapAddress: localhost:9092
+server:
+  port: 9090

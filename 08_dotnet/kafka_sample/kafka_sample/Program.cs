@@ -17,7 +17,7 @@ namespace kafka_sample
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
-                consumer.Subscribe("test");
+                consumer.Subscribe("bong-lines");
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
