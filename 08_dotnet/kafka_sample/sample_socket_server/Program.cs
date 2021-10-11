@@ -10,7 +10,7 @@ namespace sample_socket_server
 {
     class Program
     {
-        static void Main(string[] args)
+        static void MainSample(string[] args)
         {
 
             // (1) 소켓 객체 생성 (TCP 소켓)

@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="connection\SocketClientTo.cs" />
     <Compile Include="logger\Logger.cs" />
     <Compile Include="param\Param.cs" />
     <Compile Include="param\ParamBuilder.cs" />

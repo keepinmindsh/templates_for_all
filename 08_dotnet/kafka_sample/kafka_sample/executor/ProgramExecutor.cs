@@ -8,24 +8,25 @@ namespace Bongs.Module
 {
     static class ProgramSwitcher
     {
-        static SockerClient socketClient = new SockerClient("127.0.0.1", 777);
 
         public static void execute(ParamBuilder param)
         {
             switch (param.getMachine())
             {
-                case "Hello World":
+                case "ROOM_MNG":
 
-                    Console.WriteLine("Consumed Message: Hello World has been called!!");
-                    socketClient.acceptClient(param.getMessges());
+                    Console.WriteLine("RoomManagement");
+                    
                     break;
-                case "1112":
-                    socketClient = new SockerClient("127.0.0.1", 778);
-                    socketClient.acceptClient(param.getMessges());
+                case "ROOM_KEY":
+
+                    Console.WriteLine("RoomKey");
+
                     break;
-                case "1113":
-                    socketClient = new SockerClient("127.0.0.1", 779);
-                    socketClient.acceptClient(param.getMessges());
+                case "CREDIT_CARD":
+
+                    Console.WriteLine("CreditCard");
+
                     break;
             }
         }
