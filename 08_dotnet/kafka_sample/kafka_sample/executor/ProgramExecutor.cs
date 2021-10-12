@@ -15,15 +15,21 @@ namespace Bongs.Module
             {
                 case "ROOM_MNG":
 
+                    // TODO - TCP Socket Client에 의한 프로그램 호출 
+
                     Console.WriteLine("RoomManagement");
                     
                     break;
                 case "ROOM_KEY":
 
+                    // TODO - TCP Socket Client에 의한 프로그램 호출 
+
                     Console.WriteLine("RoomKey");
 
                     break;
                 case "CREDIT_CARD":
+
+                    // TODO - TCP Socket Client에 의한 프로그램 호출 
 
                     Console.WriteLine("CreditCard");
 

@@ -1,7 +1,8 @@
 package bong.lines.producer.code;
 
 public enum TOPIC_VALUE {
-    BONG_LINES("bong-lines");
+    BONG_LINES("bong-lines"),
+    NEW_TOPICS("wingsent5-machine");
 
     private final String value;
 

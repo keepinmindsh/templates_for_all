@@ -11,6 +11,6 @@ public class Messages {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessage(String msg) {
-        kafkaTemplate.send(TOPIC_VALUE.BONG_LINES.getValue(), msg);
+        kafkaTemplate.send(TOPIC_VALUE.NEW_TOPICS.getValue(), msg);
     }
 }

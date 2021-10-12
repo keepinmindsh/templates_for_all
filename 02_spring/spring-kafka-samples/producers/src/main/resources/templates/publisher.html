@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WINGS Publisher Call Sample</title>
+</head>
+<body>
+    <h1>Kafka Producer Call Sample</h1>
+    <div>
+        <label for="devices">장비구분</label><br>
+        <select id="devices" name="machine" >
+            <option value="ROOM_KEY">객실키</option>
+            <option value="ROOM_MNG">객실관리</option>
+            <option value="CREDIT_CARD">카페오레</option>
+        </select>
+        <label for="message">전송메세지 정의</label><br>
+        <input type="text" id="message" name="messages" value=""><br><br>
+        <input type="button" onclick="callProducer()" value="Submit">
+    </div>
+
+    <script>
+        const callProducer = () => {
+
+            let data = {
+                "machine" : document.getElementById("devices").value,
+                "messages" : document.getElementById('message').value
+            }
+
+            fetch("/hello", {
+                method: "POST",
+                mode: 'cors',
+                cache: 'no-cache',
+                headers:  {"Content-Type" : "application/json"},
+                credentials: "same-origin",
+                body: JSON.stringify(data)
+            });
+        }
+    </script>
+</body>
+</html>
