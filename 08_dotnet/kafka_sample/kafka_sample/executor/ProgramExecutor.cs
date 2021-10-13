@@ -11,7 +11,7 @@ namespace Bongs.Module
 
         public static void execute(ParamBuilder param)
         {
-            switch (param.getMachine())
+            switch (param.getParam().machineType)
             {
                 case "ROOM_MNG":
 

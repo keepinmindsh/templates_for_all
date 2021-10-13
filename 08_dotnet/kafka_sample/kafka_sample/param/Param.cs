@@ -8,33 +8,14 @@ namespace Bongs.Module
 {
     class Param
     {
-        private String machine;
-        private String messages;
-        
-        public Param(String machine, String messages)
-        {
-            this.machine = machine;
-            this.messages = messages;
-        }
-
-        public void setMachine(String machine)
-        {
-            this.machine = machine;
-        }
-
-        public void setMessages(String messages)
-        {
-            this.messages = messages;
-        }
-
-        public String getMachine()
-        {
-            return machine;
-        }
-
-        public String getMessages()
-        {
-            return messages;
-        }
+        public string machineType { get; set; }
+        public string companyId { get; set; }
+        public string bsnsCode { get; set; }
+        public string propertyNo { get; set; }
+        public string folioNo { get; set; }
+        public string roomNo { get; set; }
+        public string posNo { get; set; }
+        public string vendorId { get; set; }
+        public string jobType { get; set; }
     }
 }
