@@ -20,7 +20,6 @@ public class KeyDTO {
         private String folioNo;
         private String roomNo;
         private String posNo;
-
         private String vendorId;
         private String jobType;
     }
