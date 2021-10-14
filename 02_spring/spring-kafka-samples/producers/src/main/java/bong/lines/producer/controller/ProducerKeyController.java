@@ -17,7 +17,7 @@ public class ProducerKeyController {
 
     private final Messages messages;
 
-    @PostMapping("/key")
+    @PostMapping("/publisher/call")
     public String hello(@RequestBody KeyDTO.Request keyDTO) throws Exception{
 
         log.info(keyDTO.toString());

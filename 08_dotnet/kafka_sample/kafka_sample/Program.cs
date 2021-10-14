@@ -13,8 +13,8 @@ namespace kafka_sample
             var config = new ConsumerConfig
             {
                 GroupId = "test-consumer-group", // 해당 코드는 설정 코드여야 한다. 
-                BootstrapServers = "172.18.25.168:9092", // 해당 코드는 설정 코드여야 한다. 
-                //BootstrapServers = "127.0.0.1:9092", // 해당 코드는 설정 코드여야 한다.
+                //BootstrapServers = "172.18.25.168:9092", // 해당 코드는 설정 코드여야 한다. 
+                BootstrapServers = "127.0.0.1:9092", // 해당 코드는 설정 코드여야 한다.
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
