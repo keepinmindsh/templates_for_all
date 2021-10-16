@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>WINGS Publisher Call Sample</title>
+</head>
+<body>
+    <h1>Kafka Producer Call Sample</h1>
+
+    <div class="card" >
+        <div class="card-body">
+            <div class="mb-3 row">
+                <label for="machineType" class="col-sm-2 col-form-label" >장비구분</label>
+                <div class="col-sm-10">
+                    <select id="machineType" name="machineType" class="form-control" >
+                        <option value="ROOM_KEY">객실키</option>
+                        <option value="ROOM_MNG">객실관리</option>
+                        <option value="CREDIT_CARD">신용카드</option>
+                    </select>
+                </div>
+            </div>
+            <div  class="mb-3 row" >
+                <label for="companyId" class="col-sm-2 col-form-label" >컴퍼니 ID</label>
+                <div class="col-sm-10">
+                    <input type="text" id="companyId" name="companyId" value="" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="bsnsCode" class="col-sm-2 col-form-label" >사업장 코드</label>
+                <div class="col-sm-10">
+                    <input type="text" id="bsnsCode" name="bsnsCode" value="" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="propertyNo" class="col-sm-2 col-form-label" >프로퍼티 번호</label>
+                <div class="col-sm-10">
+                    <input type="text" id="propertyNo" name="propertyNo" value="" class="form-control">
+                </div>
+            </div >
+            <div class="mb-3 row" >
+                <label for="folioNo"  class="col-sm-2 col-form-label">폴리오 번호</label>
+                <div class="col-sm-10">
+                    <input type="text" id="folioNo" name="folioNo" value="" class="form-control">
+                </div>
+            </div>
+            <div  class="mb-3 row">
+                <label for="roomNo" class="col-sm-2 col-form-label">객실번호</label>
+                <div class="col-sm-10">
+                    <input type="text" id="roomNo" name="roomNo" value="" class="form-control">
+                </div>
+            </div>
+            <div  class="mb-3 row">
+                <label for="posNo" class="col-sm-2 col-form-label">포스 번호</label>
+                <div class="col-sm-10">
+                    <input type="text" id="posNo" name="posNo" value="" class="form-control">
+                </div>
+            </div>
+            <div  class="mb-3 row">
+                <label for="vendorId" class="col-sm-2 col-form-label">Vendor ID - 업체 ID</label>
+                <div class="col-sm-10">
+                    <input type="text" id="vendorId" name="vendorId" value="" class="form-control">
+                </div>
+            </div>
+            <div  class="mb-3 row">
+                <label for="jobType" class="col-sm-5 col-form-label">Job Type - 각 인터페이스별 구분</label>
+                <div class="col-sm-7">
+                    <select id="jobType" name="jobType"  class="form-control">
+                        <option value="CHECKIN">체크인 - 객실관리</option>
+                        <option value="CHEKCOUT">체크아웃 - 객실관리</option>
+                        <option value="NEWKEY">신규 - 객실키</option>
+                        <option value="COPYKEY">복사 - 객실키</option>
+                        <option value="READKEY">카드 읽기 - 객실키</option>
+                        <option value="DELETEKEY">키 삭제 - 객실키</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" onclick="callProducer()" class="btn btn-primary">Kafka 호출</button>
+        </div>
+    </div>
+    <script>
+        const callProducer = () => {
+
+            let data = {
+                "machineType" : document.getElementById("machineType").value,
+                "companyId" : document.getElementById('companyId').value,
+                "bsnsCode" : document.getElementById('bsnsCode').value,
+                "propertyNo" : document.getElementById('propertyNo').value,
+                "folioNo" : document.getElementById('folioNo').value,
+                "roomNo" : document.getElementById('roomNo').value,
+                "posNo" : document.getElementById('posNo').value,
+                "vendorId" : document.getElementById('vendorId').value,
+                "jobType" : document.getElementById('jobType').value
+            }
+
+            fetch("/template")
+            .then(result => {
+                fetch("/publisher/call", {
+                    method: "POST",
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    headers:  {"Content-Type" : "application/json"},
+                    credentials: "same-origin",
+                    body: JSON.stringify(data)
+                });
+            });
+        }
+    </script>
+</body>
+</html>

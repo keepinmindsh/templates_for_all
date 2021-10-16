@@ -2,11 +2,10 @@ package bong.lines.producer.controller;
 
 import bong.lines.producer.messages.Messages;
 import bong.lines.producer.model.HelloWorldDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import bong.lines.producer.model.KeyDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,18 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class ProducerController {
+public class ProducerKeyController {
 
     private final Messages messages;
 
-    @PostMapping("/hello")
-    public String hello(@RequestBody HelloWorldDTO helloWorldDTO) throws Exception{
+    @PostMapping("/publisher/call")
+    public String hello(@RequestBody KeyDTO.Request keyDTO) throws Exception{
 
-        log.info(helloWorldDTO.toString());
+        log.info(keyDTO.toString());
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String stringValue = objectMapper.writeValueAsString(helloWorldDTO);
+        String stringValue = objectMapper.writeValueAsString(keyDTO);
 
         messages.sendMessage(stringValue);
 

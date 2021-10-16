@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bongs.Module
 {
-    class Param
+    class KafkaMessageVO
     {
         public string machineType { get; set; }
         public string companyId { get; set; }
@@ -16,6 +16,8 @@ namespace Bongs.Module
         public string roomNo { get; set; }
         public string posNo { get; set; }
         public string vendorId { get; set; }
+
         public string jobType { get; set; }
+
     }
 }

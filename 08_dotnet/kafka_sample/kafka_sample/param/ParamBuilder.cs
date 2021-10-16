@@ -8,34 +8,72 @@ namespace Bongs.Module
 {
     class ParamBuilder
     {
-
         private Param param;
 
         public ParamBuilder()
         {
-            param = new Param("", "");
+            param = new Param();
         }
 
-        public ParamBuilder messages(String messages)
+
+        public ParamBuilder machineType(String machineType)
         {
-            param.setMessages(messages);
+            param.machineType = machineType;
             return this;
         }
 
-        public ParamBuilder machine(String machine)
+        public ParamBuilder companyId(String companyId)
         {
-            param.setMachine(machine);
+            param.companyId = companyId;
             return this;
         }
 
-        public String getMachine()
+        public ParamBuilder bsnsCode(String bsnsCode)
         {
-            return param.getMachine();
+            param.bsnsCode = bsnsCode;
+            return this;
         }
 
-        public String getMessges()
+        public ParamBuilder propertyNo(String propertyNo)
         {
-            return param.getMessages();
+            param.propertyNo = propertyNo;
+            return this;
+        }
+
+        public ParamBuilder folioNo(String folioNo)
+        {
+            param.folioNo = folioNo;
+            return this;
+        }
+
+        public ParamBuilder roomNo(String roomNo)
+        {
+            param.roomNo = roomNo;
+            return this;
+        }
+
+        public ParamBuilder posNo(String posNo)
+        {
+            param.posNo = posNo;
+            return this;
+        }
+
+        public ParamBuilder vendorId(String vendorId)
+        {
+            param.vendorId = vendorId;
+            return this;
+        }
+
+        public ParamBuilder jobType(String jobType)
+        {
+            param.jobType = jobType;
+            return this;
+        }
+
+
+        public Param getParam()
+        {
+            return param;
         }
 
     }
