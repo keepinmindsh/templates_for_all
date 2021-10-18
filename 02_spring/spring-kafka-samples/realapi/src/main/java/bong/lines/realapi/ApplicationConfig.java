@@ -48,7 +48,7 @@ public class ApplicationConfig {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
         try {
-            Class.forName("oracle.jdbc.OracleDriver");
+            Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
