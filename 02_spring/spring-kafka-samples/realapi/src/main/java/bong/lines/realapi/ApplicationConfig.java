@@ -19,9 +19,9 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:persistence.properties")
-@ComponentScan("bong.lines.realapi.repository")
+@ComponentScan("bong.lines.realapi")
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "bong.lines.realapi.repository")
+@EnableJpaRepositories(basePackages = "bong.lines.realapi")
 public class ApplicationConfig {
 
     private final Environment env;
@@ -34,7 +34,7 @@ public class ApplicationConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("bong.lines.realapi.repository");
+        em.setPackagesToScan("bong.lines.realapi");
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
