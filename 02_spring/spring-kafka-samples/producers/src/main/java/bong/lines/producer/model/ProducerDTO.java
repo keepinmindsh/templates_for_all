@@ -7,11 +7,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class KeyDTO {
+public class ProducerDTO {
     @Setter
     @Getter
     @ToString
     public static class Request {
-        private String requestkafkaMessage;
+        private String requestKafkaMessage;
     }
 }

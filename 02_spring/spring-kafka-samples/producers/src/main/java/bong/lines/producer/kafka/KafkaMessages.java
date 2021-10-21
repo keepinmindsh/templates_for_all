@@ -1,4 +1,4 @@
-package bong.lines.producer.messages;
+package bong.lines.producer.kafka;
 
 import bong.lines.producer.code.TOPIC_VALUE;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class Messages {
+public class KafkaMessages {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessage(String msg) {

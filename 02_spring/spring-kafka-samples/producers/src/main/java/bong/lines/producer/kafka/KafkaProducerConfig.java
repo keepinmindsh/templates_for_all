@@ -1,4 +1,4 @@
-package bong.lines.producer.config;
+package bong.lines.producer.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

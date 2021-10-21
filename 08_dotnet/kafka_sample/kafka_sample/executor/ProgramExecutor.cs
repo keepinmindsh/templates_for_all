@@ -9,10 +9,7 @@ namespace Bongs.Module
     static class ProgramSwitcher
     {
 
-        public static void execute(ParamBuilder 
-            
-            
-            )
+        public static void execute(ParamBuilder param)
         {
             switch (param.getParam().machineType)
             {

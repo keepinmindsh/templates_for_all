@@ -1,8 +1,7 @@
-package bong.lines.producer.controller;
+package bong.lines.producer.messages;
 
-import bong.lines.producer.messages.Messages;
-import bong.lines.producer.model.HelloWorldDTO;
-import bong.lines.producer.model.KeyDTO;
+import bong.lines.producer.kafka.KafkaMessages;
+import bong.lines.producer.model.ProducerDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class ProducerKeyController {
+public class Producer {
 
-    private final Messages messages;
+    private final KafkaMessages kafkaMessages;
 
     @PostMapping("/publisher/call")
-    public String hello(@RequestBody KeyDTO.Request keyDTO) throws Exception{
+    public String hello(@RequestBody ProducerDTO.Request keyDTO) throws Exception{
 
         log.info(keyDTO.toString());
 
@@ -26,7 +25,7 @@ public class ProducerKeyController {
 
         String stringValue = objectMapper.writeValueAsString(keyDTO);
 
-        messages.sendMessage(stringValue);
+        kafkaMessages.sendMessage(stringValue);
 
         return "success";
     }

@@ -12,3 +12,6 @@ spring:
 #    hikari:
 #      connection-timeout: 60000
 #      maximum-pool-size: 3
+
+logging:
+  config: classpath:logback-spring.xml
