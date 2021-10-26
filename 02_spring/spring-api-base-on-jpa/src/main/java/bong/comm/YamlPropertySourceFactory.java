@@ -1,4 +1,4 @@
-package bong.sample.comm;
+package bong.comm;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;

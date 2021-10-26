@@ -1,7 +1,7 @@
-package bong.sample.db.config;
+package bong.db.config;
 
 
-import bong.sample.comm.YamlPropertySourceFactory;
+import bong.comm.YamlPropertySourceFactory;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

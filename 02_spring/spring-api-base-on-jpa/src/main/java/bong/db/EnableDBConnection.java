@@ -1,4 +1,4 @@
-package bong.sample.db;
+package bong.db;
 
 import org.springframework.context.annotation.Import;
 
