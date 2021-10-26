@@ -1,5 +1,6 @@
 hotels:
-  - jdbc-driverClassName :
-    jdbc-url :
-    jdbc-user :
-    jdbc-password :
+  hotel:
+    - jdbc_driverClassName: 1
+      jdbc_url: 1
+      jdbc_user: 1
+      jdbc_password: 1

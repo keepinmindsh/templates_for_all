@@ -45,10 +45,10 @@ public class ConfigDataSource {
             e.printStackTrace();
         }
 
-        dataSource.setDriverClassName(yamlDBPropertiesForDBConfigs.getDbConfigs().get(0).get("jdbc-driverClassName"));
-        dataSource.setUrl(yamlDBPropertiesForDBConfigs.getDbConfigs().get(0).get("jdbc-url"));
-        dataSource.setUsername(yamlDBPropertiesForDBConfigs.getDbConfigs().get(0).get("jdbc-user"));
-        dataSource.setPassword(yamlDBPropertiesForDBConfigs.getDbConfigs().get(0).get("jdbc-password"));
+        dataSource.setDriverClassName(yamlDBPropertiesForDBConfigs.getHotel().get(0).getJdbc_driverClassName());
+        dataSource.setUrl(yamlDBPropertiesForDBConfigs.getHotel().get(0).getJdbc_url());
+        dataSource.setUsername(yamlDBPropertiesForDBConfigs.getHotel().get(0).getJdbc_user());
+        dataSource.setPassword(yamlDBPropertiesForDBConfigs.getHotel().get(0).getJdbc_password());
 
         return dataSource;
     }
