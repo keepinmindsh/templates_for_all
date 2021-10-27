@@ -5,3 +5,6 @@ hibernate:
 
 persistence:
   packagetoscan: "bong.sample.api"
+
+driver:
+  className: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

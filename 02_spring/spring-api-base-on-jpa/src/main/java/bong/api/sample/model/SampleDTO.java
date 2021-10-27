@@ -1,4 +1,4 @@
-package bong.api.model;
+package bong.api.sample.model;
 
 import lombok.Builder;
 import lombok.Getter;

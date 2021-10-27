@@ -1,14 +1,26 @@
 package bong.starter;
 
 
+import bong.comm.builder.ApplicationBuilder;
+import bong.comm.starter.ApplicationStarter;
 import bong.db.EnableDBConnection;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import bong.starter.module.SampleContext;
+import org.springframework.boot.WebApplicationType;
 
-@EnableDBConnection
-@SpringBootApplication
+
 public class SpringBootStarter {
-    public static void main(String[] args) {
-        SpringApplication.run(SpringBootStarter.class, args);
+    public static void main(String[] args) throws Exception {
+        ApplicationStarter.run(
+                ApplicationBuilder
+                        .builder()
+                        .args(args)
+                        .systemId("WINGS")
+                        .parentApplicationContext(new Class[]{
+                                SpringBootStarter.class
+                        })
+                        .webApplicationType(WebApplicationType.SERVLET)
+                        .childApplicationContext(new Class[]{
+                                SampleContext.class
+                        }).build());
     }
 }

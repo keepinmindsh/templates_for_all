@@ -1,6 +1,12 @@
 hotels:
-  hotel:
-    - jdbc_driverClassName: 1
-      jdbc_url: 1
-      jdbc_user: 1
-      jdbc_password: 1
+  dblist:
+    - wingsent5:
+        jdbc_driverClassName:
+        jdbc_url:
+        jdbc_user:
+        jdbc_password:
+    - wingsent3:
+        jdbc_driverClassName:
+        jdbc_url:
+        jdbc_user:
+        jdbc_password:

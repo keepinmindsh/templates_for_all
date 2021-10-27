@@ -1,4 +1,4 @@
-package bong.db.config;
+package bong.db.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;

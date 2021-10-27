@@ -1,17 +1,18 @@
-package bong.db.config;
+package bong.db.config.properties;
 
-import bong.comm.YamlPropertySourceFactory;
+import bong.comm.factory.YamlPropertySourceFactory;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "persistence")
 @PropertySource(value = "classpath:config/persistence/persistence.yml", factory = YamlPropertySourceFactory.class)
 @Getter
-@Setter
 public class YamlDBPropertiesForPersistence {
+    @Value("${persistence.packagetoscan}")
     private String packagetoscan;
+
+    @Value("${driver.className}")
+    private String driverClassName;
 }
