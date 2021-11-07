@@ -1,4 +1,4 @@
-package bong.sse.http.model;
+package bong.sse.http.model.sample;
 
 import lombok.Data;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class User {
+public class SampleDTO {
     private Long id;
     private String name;
     private String email;
