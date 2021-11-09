@@ -1,12 +1,12 @@
 hotels:
   dblist:
     - wingsent5:
-        jdbc_driverClassName:
-        jdbc_url:
-        jdbc_user:
-        jdbc_password:
+        jdbc_driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        jdbc_url: jdbc:log4jdbc:oracle:thin:@192.168.50.170:1527/WPMS07
+        jdbc_user: WINGSINTEGRATION
+        jdbc_password: WINGS_4172
     - wingsent3:
-        jdbc_driverClassName:
-        jdbc_url:
-        jdbc_user:
-        jdbc_password:
+        jdbc_driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        jdbc_url: jdbc:log4jdbc:oracle:thin:@192.168.50.170:1527/WPMS07
+        jdbc_user: WINGSINTEGRATION
+        jdbc_password: WINGS_4172

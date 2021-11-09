@@ -14,7 +14,7 @@ public class SpringBootStarter {
                 ApplicationBuilder
                         .builder()
                         .args(args)
-                        .systemId("WINGS")
+                        .systemId("spring-api-base-on-jpa")
                         .parentApplicationContext(new Class[]{
                                 SpringBootStarter.class
                         })

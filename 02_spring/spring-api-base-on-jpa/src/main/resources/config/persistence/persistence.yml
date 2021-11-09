@@ -4,7 +4,7 @@ hibernate:
   dialect: org.hibernate.dialect.Oracle10gDialect
 
 persistence:
-  packagetoscan: "bong.sample.api"
+  packagetoscan: "bong.api.sample"
 
 driver:
   className: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

@@ -12,7 +12,7 @@ import java.time.Duration;
 public class ResultWaitingDomain {
 
     public Flux<ResultWaitingDTO> getResult(String key) {
-        return Flux.interval(Duration.ofMillis(300), Schedulers.newSingle("resultWaiting"))
+        return Flux.interval(Duration.ofMillis(1000), Schedulers.newSingle("resultWaiting"))
                 .take(30)
                 .flatMap(number -> DataManager.getResult(key))
                 .cast(ResultWaitingDTO.class);

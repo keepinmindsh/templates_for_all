@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.EntityManager;
 
 @RequiredArgsConstructor
-public class SampleProcessA implements Command<Void> {
+public class SampleProcessA implements
+<Void> {
 
     private final EntityManager entityManager;
 

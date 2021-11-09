@@ -1,6 +1,6 @@
 package bong.api.sample.domain.operation;
 
-import bong.api.sample.model.SampleDTO;
+import bong.api.sample.model.sample.SampleDTO;
 import bong.comm.operation.Query;
 
 public class SampleSelectB implements Query<SampleDTO.SampleResponse> {
