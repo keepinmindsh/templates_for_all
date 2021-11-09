@@ -7,7 +7,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @RequiredArgsConstructor
@@ -19,17 +22,26 @@ public class ResultWaitingDomain {
         CompletableFuture<ResultWaitingDTO> future = CompletableFuture
                 .supplyAsync(() -> {
 
-                    ResultWaitingDTO resultWaitingDTO;
+                    ResultWaitingDTO resultWaitingDTO = null;
 
-                    while (true){
-                        resultWaitingDTO = DataManager.getResult(key, redisTemplate);
+                    boolean isPass = false;
 
-                        if("call".equals(resultWaitingDTO.getValue())) {
-                            break;
+                    for (int i = 0; i < 5; i++) {
+                        try{
+                            resultWaitingDTO = DataManager.getResult(key, redisTemplate);
+
+                            if("call".equals(resultWaitingDTO.getValue())) {
+                                isPass = true;
+                                break;
+                            }
+
+                            TimeUnit.SECONDS.sleep(1);
+                        }catch (Exception exception){
+                            exception.printStackTrace();
                         }
                     }
 
-                return resultWaitingDTO;
+                return isPass ? resultWaitingDTO : ResultWaitingDTO.builder().value("Timeout!").build();
         });
 
         Mono<ResultWaitingDTO> monoFromFuture = Mono.fromFuture(future);
