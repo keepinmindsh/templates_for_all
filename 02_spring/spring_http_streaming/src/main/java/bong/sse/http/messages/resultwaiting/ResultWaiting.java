@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/result/waiting")
@@ -17,7 +17,7 @@ public class ResultWaiting {
     private final ResultWaitingDomain resultWaitingDomain;
 
     @GetMapping(value = "/{key}", produces = "application/stream+json")
-    public Flux<ResultWaitingDTO> resultWaiting(@PathVariable("key") String key) {
+    public Mono<ResultWaitingDTO> resultWaiting(@PathVariable("key") String key) {
         return resultWaitingDomain.getResult(key);
     }
 }
