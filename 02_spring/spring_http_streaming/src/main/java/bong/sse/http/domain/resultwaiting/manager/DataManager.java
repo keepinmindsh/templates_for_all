@@ -1,16 +1,23 @@
 package bong.sse.http.domain.resultwaiting.manager;
 
 import bong.sse.http.model.resultwaiting.ResultWaitingDTO;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import reactor.core.publisher.Flux;
 
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DataManager {
+    public static Flux<ResultWaitingDTO> getResult(String key, RedisTemplate redisTemplate){
 
-    private static final ConcurrentHashMap<String, ResultWaitingDTO> STRING_RESULT_WAITING_DTO_CONCURRENT_HASH_MAP = new ConcurrentHashMap<>();
+        final ValueOperations<String, String> stringStringValueOperations = redisTemplate.opsForValue();
 
-    public static Flux<ResultWaitingDTO> getResult(String key){
-        return Flux.just(Optional.ofNullable(STRING_RESULT_WAITING_DTO_CONCURRENT_HASH_MAP.get(key)).orElse(new ResultWaitingDTO()));
+        ResultWaitingDTO resultWaitingDTO = ResultWaitingDTO.builder()
+                .value(Optional.ofNullable(stringStringValueOperations.get(key)).orElse("Empty"))
+                .build();
+
+        stringStringValueOperations.getOperations().delete(String.valueOf(key));
+
+        return Flux.just(resultWaitingDTO);
     }
 }
