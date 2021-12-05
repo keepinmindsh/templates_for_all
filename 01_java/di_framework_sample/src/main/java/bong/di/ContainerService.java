@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public class ContainerService {
 
-    // TODO - 아래의 구성에 대해서 DI 에 대한 개념을 이해하기!
     public static <T> T getObject(Class<T> classType){
         T instance = getNewInstance(classType);
 

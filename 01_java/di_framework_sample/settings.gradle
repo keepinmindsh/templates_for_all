@@ -1,2 +1,3 @@
 rootProject.name = 'di_framework_sample'
+include 'di_sample'
 
