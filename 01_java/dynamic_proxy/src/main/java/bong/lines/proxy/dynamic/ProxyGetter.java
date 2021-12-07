@@ -17,17 +17,24 @@ public class ProxyGetter {
 
                 @Override
                 public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                    System.out.println("Test! Before");
-                    Object invoke = method.invoke(sampleService, objects);
-                    System.out.println("Test! After");
+                    if(method.getName().equals("something")){
+                        System.out.println("Test! Before");
+                        Object invoke = method.invoke(sampleService, objects);
+                        System.out.println("Test! After");
+                        return invoke;
+                    }
 
-                    return invoke;
+                    return method.invoke(sampleService, objects);
                 }
             });
 
 
     public void test(){
         sample.sample();
+    }
+
+    public void test2(){
+        sample.something();
     }
 
 }

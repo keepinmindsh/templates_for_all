@@ -7,5 +7,7 @@ public class ProxyApplication {
         ProxyGetter sampleService = new ProxyGetter();
 
         sampleService.test();
+
+        sampleService.test2();
     }
 }
