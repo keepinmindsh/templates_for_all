@@ -105,4 +105,6 @@ public class BuddyGetter {
 - 스프링 AOP
 - Mockito
 - 하이버네이트 lazy initialization
-- ...
+- ..
+
+# http://tutorials.jenkov.com/java-reflection/dynamic-proxies.html
