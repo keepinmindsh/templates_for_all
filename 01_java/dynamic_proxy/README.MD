@@ -98,3 +98,11 @@ public class BuddyGetter {
 }
 
 ```
+
+# 다이나믹 프록시 사용처 
+
+- 스프링 데이터 JPA
+- 스프링 AOP
+- Mockito
+- 하이버네이트 lazy initialization
+- ...
