@@ -21,3 +21,9 @@ dependencies {
 }
 
 ```
+
+# Java Service Provider 
+
+확장 포인트를 제공한다. 
+
+- https://itnext.io/java-service-provider-interface-understanding-it-via-code-30e1dd45a091

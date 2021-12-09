@@ -1,3 +1,4 @@
 rootProject.name = 'annotation_processor'
 include 'sample_annotations'
+include 'sample_sources'
 

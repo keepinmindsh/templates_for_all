@@ -30,7 +30,6 @@ public class MagicMojaProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Magic.class);
 
         for(Element element : elements){
