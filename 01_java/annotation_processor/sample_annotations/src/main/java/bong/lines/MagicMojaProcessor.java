@@ -1,8 +1,6 @@
 package bong.lines;
 
 import com.google.auto.service.AutoService;
-import com.sun.source.tree.Tree;
-import jdk.jshell.Diag;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
