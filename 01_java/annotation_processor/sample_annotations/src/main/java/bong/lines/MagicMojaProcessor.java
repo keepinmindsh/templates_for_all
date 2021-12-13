@@ -12,7 +12,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.util.Set;
 
-@AutoService(Processor.class)
+//@AutoService(Processor.class)
 public class MagicMojaProcessor extends AbstractProcessor {
 
     @Override
