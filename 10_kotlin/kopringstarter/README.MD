@@ -37,3 +37,28 @@ class HtmlControllerTest(@Autowired val restTemplate: TestRestTemplate) {
 위와 같이 @TestInstance(TestInstance.Lifecycle.PER_CLASS) Annotation으로 라이프 사이클을 클래스 단위로 설정할 수 있다.
 라이프 사이클을 클래스 단위로 지정해 놓으면 @BeforeAll, @AfterAll Annotation을 static method가 아닌 곳에서도 사용할 수 있다.
 따라서 static method가 없는 kotlin에서도 위와 같이 일반 함수에 @BeforeAll, @AfterAll Annotation을 사용할 수 있다.
+
+# Kotlin extension를 통해서 함수를 재정의 하는 방식 
+
+```kotlin
+
+fun LocalDateTime.format(): String = this.format(englishDateFormatter)
+
+private val daysLookup = (1..31).associate { it.toLong() to getOrdinal(it) }
+
+private val englishDateFormatter = DateTimeFormatterBuilder()
+    .appendPattern("yyyy-MM-dd")
+    .appendLiteral(" ")
+    .appendText(ChronoField.DAY_OF_MONTH, daysLookup)
+    .appendLiteral(" ")
+    .appendPattern("yyyy")
+    .toFormatter(Locale.ENGLISH)
+
+
+import bong.lines.kopringstarter.blog.extensions.format
+
+model["formatDate"] = LocalDateTime.now().format();
+
+```
+
+# Constructor 와 init
