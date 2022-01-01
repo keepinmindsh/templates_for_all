@@ -62,3 +62,12 @@ model["formatDate"] = LocalDateTime.now().format();
 ```
 
 # Constructor 와 init
+
+
+# JPA - 영속성 전이
+
+- https://velog.io/@youns1121/JPA-object-references-an-unsaved-transient-instance-save-the-transient-instance-before-flushing-%EC%97%90%EB%9F%AC
+
+- https://bottom-to-top.tistory.com/49?category=842783
+
+- https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=rorean&logNo=221479709787

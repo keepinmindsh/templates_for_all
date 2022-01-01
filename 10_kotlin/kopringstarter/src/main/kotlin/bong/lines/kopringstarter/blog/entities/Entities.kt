@@ -2,17 +2,14 @@ package bong.lines.kopringstarter.blog.entities
 
 import bong.lines.kopringstarter.blog.extensions.toSlug
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 data class Article(
     var title: String,
     var headline: String,
     var content: String,
-    @ManyToOne var author: User,
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL]) var author: User,
     var slug: String = title.toSlug(),
     var addedAt: LocalDateTime = LocalDateTime.now(),
     @Id @GeneratedValue var id: Long? = null)
