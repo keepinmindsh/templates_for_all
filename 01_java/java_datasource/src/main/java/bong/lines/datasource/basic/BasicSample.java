@@ -9,9 +9,9 @@ public class BasicSample {
 
     public static void main(String[] args) {
         String sqlSelectAllPersons = "SELECT SEQ_NO, TITLE FROM TB_IDEA_MST";
-        String connectionUrl = "jdbc:mariadb://61.79.202.243:6371/1line?useUnicode=true&characterEncoding=utf-8";
+        String connectionUrl = "*";
 
-        try (Connection conn = DriverManager.getConnection(connectionUrl, "1line", "1line0000");
+        try (Connection conn = DriverManager.getConnection(connectionUrl, "*", "*");
              PreparedStatement ps = conn.prepareStatement(sqlSelectAllPersons);
              ResultSet rs = ps.executeQuery()) {
 
