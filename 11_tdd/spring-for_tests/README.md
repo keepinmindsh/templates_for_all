@@ -15,3 +15,5 @@
 > - https://velog.io/@sproutt/MockBean%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%9C-%ED%86%B5%ED%95%A9Controller%ED%85%8C%EC%8A%A4%ED%8A%B8  
 > - https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/mock/mockito/MockBean.html    
 > - https://www.baeldung.com/java-spring-mockito-mock-mockbean
+> - https://frozenpond.tistory.com/83  
+> - https://velog.io/@max9106/Spring-Boot-%ED%85%8C%EC%8A%A4%ED%8A%B8-dek6b0a1zd    
