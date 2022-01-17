@@ -28,7 +28,7 @@ class SpringForTestsApplicationTests {
 	private TDDService service;
 
 	@Test
-	public void helloworldTests() throws Exception {
+	public void helloWorldTests() throws Exception {
 		when(service.member()).thenReturn(new ArrayList<Member>());
 
 		this.mockMvc.perform(get("/helloworld"))
