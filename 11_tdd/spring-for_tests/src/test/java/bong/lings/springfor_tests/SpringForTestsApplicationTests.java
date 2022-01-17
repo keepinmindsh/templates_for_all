@@ -1,12 +1,15 @@
 package bong.lings.springfor_tests;
 
 import bong.lings.springfor_tests.controller.TddController;
+import bong.lings.springfor_tests.model.Member;
 import bong.lings.springfor_tests.service.TDDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -26,10 +29,11 @@ class SpringForTestsApplicationTests {
 
 	@Test
 	public void helloworldTests() throws Exception {
-		when(service.greeting()).thenReturn("Hello World");
+		when(service.member()).thenReturn(new ArrayList<Member>());
+
 		this.mockMvc.perform(get("/helloworld"))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("Hello World")));
+				.andExpect(content().json("[]"));
 	}
 }
