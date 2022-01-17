@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,12 +29,22 @@ class SpringForTestsApplicationTests {
 	private TDDService service;
 
 	@Test
-	public void helloWorldTests() throws Exception {
+	public void helloWorldGetTests() throws Exception {
 		when(service.member()).thenReturn(new ArrayList<Member>());
 
 		this.mockMvc.perform(get("/helloworld"))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().json("[]"));
+	}
+
+	@Test
+	public void helloWorldPostTests() throws Exception {
+		when(service.member()).thenReturn(new ArrayList<Member>());
+
+		this.mockMvc.perform(post("/helloworld"))
+				.andDo(print())
+				.andExpect(status().isOk());
+
 	}
 }
