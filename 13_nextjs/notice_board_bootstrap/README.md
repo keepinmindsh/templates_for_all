@@ -85,3 +85,50 @@ yarn add bootstrap@next
         index.tsx
 
 ```
+
+# API Routes 
+
+```javascript
+
+import cookies from '../../utils/cookies'
+
+const handler = (req, res) => {
+  // The cookie middleware will add the `set-cookie` header
+  res.cookie('Next.js', 'api-middleware!')
+  // Return the `set-cookie` header so we can display it in the browser and show that it works!
+  res.end(res.getHeader('Set-Cookie'))
+}
+
+export default cookies(handler)
+
+```
+
+```javascript
+
+import useSWR from 'swr'
+
+const fetcher = (url) => fetch(url).then((res) => res.text())
+
+export default function Index() {
+  const { data, error } = useSWR('/api/cookies', fetcher)
+
+  if (error) return <div>Failed to load</div>
+  if (!data) return <div>Loading...</div>
+
+  return <div>{`Cookie from response: "${data}"`}</div>
+}
+
+```
+
+# Sample Projects
+
+
+##### NextJS API Routes 
+
+- https://nextjs.org/docs/api-routes/introduction
+
+##### NextJS 찾다가 엉겹결에 찾았고 추후에 테스트 해볼 예정
+
+- [NestJS](https://docs.nestjs.com/first-steps)
+
+- [NodeJS NestJs Project](https://github.com/lujakob/nestjs-realworld-example-app)
