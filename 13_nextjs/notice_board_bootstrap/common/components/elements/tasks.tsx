@@ -1,4 +1,5 @@
 import styles from "../../../styles/components/elements/Tasks.module.css";
+import Link from 'next/link'
 
 const Tasks = () => {
     return (
@@ -57,8 +58,9 @@ const Tasks = () => {
 
                                 <td>
                                     <div className="action">
-                                        <a href="#" className="text-success mr-4" data-toggle="tooltip" data-placement="top"
-                                           title="" data-original-title="Edit"> <i className="fa fa-pencil h5 m-0"></i></a>
+                                        <Link href="/register/register" >
+                                            <a href="#" className="text-success mr-4" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"> <i className="fa fa-pencil h5 m-0"></i></a>
+                                        </Link>
                                         <a href="#" className="text-danger" data-toggle="tooltip" data-placement="top" title=""
                                            data-original-title="Close"> <i className="fa fa-remove h5 m-0"></i></a>
                                     </div>
