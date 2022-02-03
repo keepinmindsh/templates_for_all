@@ -3,8 +3,28 @@ const Register = () => {
         <>
             <div className="container">
                 <div className="row">
+                    <div className="card flex-row my-1 border-0 shadow rounded-3">
+                        <div className="card-body" >
+                            <div className="row" >
+                                <div className="col" >
 
-                    <div className="card flex-row my-5 border-0 shadow rounded-3">
+                                </div>
+                                <div className="col" >
+
+                                </div>
+                                <div className="col" >
+
+                                </div>
+                                <div className="col" >
+                                    <button type="button" className="btn btn-primary m-1">새로 고침</button>
+                                    <button type="button" className="btn btn-primary">저장</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="card flex-row my-1 border-0 shadow rounded-3">
                         <div className="card-body">
                             <div className="row" >
                                 <div className="col" >
