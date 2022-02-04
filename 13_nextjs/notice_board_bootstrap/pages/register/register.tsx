@@ -1,11 +1,24 @@
+import { useRouter } from 'next/router'
+
 const Register = () => {
+
+    const prePage = () => {
+        const router = useRouter()
+        return <button className="btn btn-primary" onClick={ () => router.back() } type="button">뒤로가기</button>
+    }
+
     return (
         <>
             <div className="card">
                 <div className="card-body">
-                    <div className="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-                        <button className="btn btn-primary" type="button">Refresh</button>
-                        <button className="btn btn-primary" type="button">Save</button>
+                    <div className="row" >
+                        <div className="col d-grid gap-2 d-md-flex justify-content-md-start mb-2" >
+                            {prePage()}
+                        </div>
+                        <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2" >
+                            <button className="btn btn-primary" type="button">Refresh</button>
+                            <button className="btn btn-primary" type="button">Save</button>
+                        </div>
                     </div>
                     <div className="row" >
                         <div className="col" >
@@ -227,13 +240,13 @@ const Register = () => {
                             </div>
                         </div>
                         <div className="col-md-4" >
-                            <div className="form-group mb-2 mt-5">
+                            <div className="form-group mb-2">
                                 <label htmlFor="comment">* 접수자 의견</label>
-                                <textarea className="form-control" rows={9} id="comment" />
+                                <textarea className="form-control" rows={10} id="comment" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="comment">* 개발자 의견</label>
-                                <textarea className="form-control" rows={9} id="comment" />
+                                <textarea className="form-control" rows={10} id="comment" />
                             </div>
                         </div>
                     </div>
