@@ -1,7 +1,7 @@
 const Register = () => {
     return (
         <>
-            <div className="card flex-row my-1 border-0 shadow rounded-3">
+            <div className="card">
                 <div className="card-body">
                     <div className="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                         <button className="btn btn-primary" type="button">Refresh</button>
@@ -142,82 +142,97 @@ const Register = () => {
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">고객사접수</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 24 ]</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">고객사접수 [홍길동]</h6>
+                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
                                 </button>
                             </div>
                         </div>
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-warning">
-                                    <h6 className="text-muted mb-0 text-sm-center">산하접수</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 18 ]</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">산하접수 [홍길동]</h6>
+                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
                                 </button>
                             </div>
                         </div>
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발담당</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">개발담당 [홍길동]</h6>
+                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
                                 </button>
                             </div>
                         </div>
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발시작</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">개발시작 [홍길동]</h6>
+                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
                                 </button>
                             </div>
                         </div>
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발종료</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">개발종료 [홍길동]</h6>
+                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
                                 </button>
                             </div>
                         </div>
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">고객사적용</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">고객사적용 [홍길동]</h6>
+                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
                                 </button>
                             </div>
                         </div>
                     </div>
                     <div className="row" >
                         <div className="col-md-8" >
-                            <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
-                                <textarea className="form-control" rows={1} id="comment" />
+                            <div className="form-group row mb-2">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* 제목</label>
+                                <div className="col-sm-10">
+                                    <textarea className="form-control" rows={1} id="comment" />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
-                                <textarea className="form-control" rows={4} id="comment" />
+                            <div className="form-group row mb-2">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* 현상</label>
+                                <div className="col-sm-10">
+                                    <textarea className="form-control" rows={5} id="comment" />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
-                                <textarea className="form-control" rows={4} id="comment" />
+                            <div className="form-group row mb-2">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* 개선방안</label>
+                                <div className="col-sm-10">
+                                    <textarea className="form-control" rows={5} id="comment" />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
-                                <textarea className="form-control" rows={1} id="comment" />
+                            <div className="form-group row mb-2">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">첨부파일</label>
+                                <div className="col-sm-10">
+                                    <input className="form-control" type="file" id="formFileMultiple" multiple />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
-                                <textarea className="form-control" rows={3} id="comment" />
+                            <div className="form-group row mb-2">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">처리결과</label>
+                                <div className="col-sm-10">
+                                    <textarea className="form-control" rows={7} id="comment" />
+                                </div>
                             </div>
                         </div>
                         <div className="col-md-4" >
-                            <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
-                                <textarea className="form-control" rows={6} id="comment" />
+                            <div className="form-group mb-2 mt-5">
+                                <label htmlFor="comment">* 접수자 의견</label>
+                                <textarea className="form-control" rows={9} id="comment" />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="comment">Comment:</label>
+                                <label htmlFor="comment">* 개발자 의견</label>
                                 <textarea className="form-control" rows={9} id="comment" />
                             </div>
                         </div>
