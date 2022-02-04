@@ -151,7 +151,7 @@ const Register = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="row mt-2 mb-5">
+                    <div className="row mt-2 mb-3">
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">
@@ -214,14 +214,14 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 현상</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={5} id="comment" />
+                                    <textarea className="form-control" rows={6} id="comment" />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 개선방안</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={5} id="comment" />
+                                    <textarea className="form-control" rows={6} id="comment" />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
@@ -242,11 +242,11 @@ const Register = () => {
                         <div className="col-md-4" >
                             <div className="form-group mb-2">
                                 <label htmlFor="comment">* 접수자 의견</label>
-                                <textarea className="form-control" rows={10} id="comment" />
+                                <textarea className="form-control" rows={11} id="comment" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="comment">* 개발자 의견</label>
-                                <textarea className="form-control" rows={10} id="comment" />
+                                <textarea className="form-control" rows={11} id="comment" />
                             </div>
                         </div>
                     </div>
