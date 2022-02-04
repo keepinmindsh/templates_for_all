@@ -23,7 +23,6 @@ const Home: NextPage = () => {
             <main>
                 <div className="container">
                   <Widgets />
-                  <br />
                   <Tasks />
                 </div>
             </main>
