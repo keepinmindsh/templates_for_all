@@ -1,10 +1,22 @@
 import { useRouter } from 'next/router'
+import axios from 'axios'
+import { useState, useEffect } from 'react'
 
 const Register = () => {
 
+    const [ businessType, SetBusinessType] = useState<any[]>([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
+            .then(res => {
+                console.log(res);
+                SetBusinessType(res.data);
+            });
+    },[])
+
     const prePage = () => {
         const router = useRouter()
-        return <button className="btn btn-primary" onClick={ () => router.back() } type="button">뒤로가기</button>
+        return <button className="btn btn-primary" onClick={() => router.back()} type="button">뒤로가기</button>
     }
 
     return (
@@ -27,7 +39,11 @@ const Register = () => {
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 고객사</label>
                                 <div className="col-sm-8">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        {
+                                            businessType.map((item) => {
+                                                <option value={item.code} >{item.value}</option>
+                                            })
+                                        }
                                     </select>
                                 </div>
                             </div>

@@ -120,8 +120,19 @@ export default function Index() {
 
 ```
 
+# Axios For ReactJS
+
+- [Axios For React JS](https://www.freecodecamp.org/news/how-to-use-axios-with-react/)
+
+# TypeScript for React 
+
+- [React TypeScript CheatSheets](https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets)
+
 # Sample Projects
 
+##### NextJS Fetching API 
+
+- [NextJS for API Fetching](https://velog.io/@jay/Next.js-API-fetching)
 
 ##### NextJS API Routes 
 
