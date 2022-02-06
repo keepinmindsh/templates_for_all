@@ -4,16 +4,18 @@ import axios from 'axios'
 
 const Register = () => {
 
-    const [ businessType, SetBusinessType] = useState<any[]>([]);
+    const [ businessType, setBusinessType] = useState<any>([]);
 
     useEffect(() => {
         // TODO - 정상동작 안함
         axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
-            .then(res => {
-                console.log(res);
-                SetBusinessType(res.data);
-            });
+             .then(res => {
+                 console.log(res);
+                 // TODO - this setState won't work here. Study for react useState
+                 setBusinessType(res.data);
+             });
     },[])
+
 
     const prePage = () => {
         const router = useRouter()
