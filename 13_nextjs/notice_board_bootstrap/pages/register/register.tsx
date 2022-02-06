@@ -7,6 +7,7 @@ const Register = () => {
     const [ businessType, SetBusinessType] = useState<any[]>([]);
 
     useEffect(() => {
+        // TODO - 정상동작 안함
         axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
             .then(res => {
                 console.log(res);
