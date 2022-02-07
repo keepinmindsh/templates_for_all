@@ -1,20 +1,33 @@
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ReactChild, ReactFragment, ReactPortal} from 'react'
 import axios from 'axios'
 
 const Register = () => {
 
-    const [ businessType, setBusinessType] = useState<any>([]);
+    const [businessType, setBusinessType] = useState<any>([]);
 
     useEffect(() => {
         // TODO - 정상동작 안함
         axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
-             .then(res => {
-                 console.log(res);
-                 // TODO - this setState won't work here. Study for react useState
-                 setBusinessType(res.data);
-             });
-    },[])
+            .then(res => {
+                console.log(res);
+                // TODO - this setState won't work here. Study for react useState
+                setBusinessType(res.data);
+            });
+        axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
+            .then(res => {
+                console.log(res);
+                // TODO - this setState won't work here. Study for react useState
+                setBusinessType(res.data);
+            });
+
+        axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
+            .then(res => {
+                console.log(res);
+                // TODO - this setState won't work here. Study for react useState
+                setBusinessType(res.data);
+            });
+    }, [])
 
 
     const prePage = () => {
@@ -26,26 +39,24 @@ const Register = () => {
         <>
             <div className="card">
                 <div className="card-body">
-                    <div className="row" >
-                        <div className="col d-grid gap-2 d-md-flex justify-content-md-start mb-2" >
+                    <div className="row">
+                        <div className="col d-grid gap-2 d-md-flex justify-content-md-start mb-2">
                             {prePage()}
                         </div>
-                        <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2" >
+                        <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                             <button className="btn btn-primary" type="button">Refresh</button>
                             <button className="btn btn-primary" type="button">Save</button>
                         </div>
                     </div>
-                    <div className="row" >
-                        <div className="col" >
+                    <div className="row">
+                        <div className="col">
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 고객사</label>
                                 <div className="col-sm-8">
                                     <select className="form-control">
                                         {
-                                            businessType.map((item) => {
-                                                <option value={item.code} >{item.value}</option>
-                                            })
+                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
                                     </select>
                                 </div>
