@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react'
 import axios from 'axios'
 
-const Widgets = () => {
+const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
     const [businessType, setBusinessType] = useState<any>([]);
     const [requireType, setRequireType] = useState<any>([]);
@@ -11,7 +11,6 @@ const Widgets = () => {
     const [steps, setSteps] = useState<any[]>([]);
 
     useEffect(() => {
-        // TODO - 정상동작 안함
         axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
             .then(res => {
                 setBusinessType(res.data);
@@ -38,6 +37,10 @@ const Widgets = () => {
         setButtonStatus(button)
     }
 
+    const searchForTasks = (value:String|null) : void => {
+        console.log(value)
+        props.applyFunc([1])
+    }
 
     return (
         <>
@@ -104,13 +107,45 @@ const Widgets = () => {
                         </div>
                     </div>
                     <div className="row mt-2" >
+                        <div className="col-md-8" >
+                            <div className="form-group row">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>접수 기간</label>
+                                <div className="col-sm-9">
+                                    <div className="input-group">
+                                        <input type="date" aria-label="First name" className="form-control" />
+                                        <input type="date" aria-label="Last name" className="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4" >
+                        </div>
+                    </div>
+                    <div className="row mt-2" >
+                        <div className="col-md-8" >
+                            <div className="form-group row">
+                                <label htmlFor="colFormLabelSm"
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>완료 기간</label>
+                                <div className="col-sm-9">
+                                    <div className="input-group">
+                                        <input type="date" aria-label="First name" className="form-control" />
+                                        <input type="date" aria-label="Last name" className="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4" >
+                        </div>
+                    </div>
+                    <div className="row mt-2 mb-2" >
                         <form>
                             <div className="form-group mb-0">
                                 <div className="input-group mb-0">
                                     <input type="text" className="form-control" placeholder="Search..."
                                            aria-describedby="project-search-addon"/>
                                     <div className="input-group-append">
-                                        <button className="btn btn-danger" type="button" id="project-search-addon"><i
+                                        <button className="btn btn-danger" onClick={searchForTasks} type="button" id="project-search-addon" ><i
                                             className="fa fa-search search-icon font-12"></i>
                                         </button>
                                     </div>
@@ -127,7 +162,7 @@ const Widgets = () => {
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => applyButtonStatus(item.stepType) } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                <button type="button" onClick={() => {applyButtonStatus(item.stepType); searchForTasks(item.stepType);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
                                                 </button>
@@ -145,7 +180,7 @@ const Widgets = () => {
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => applyButtonStatus(item.stepType) } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                <button type="button" onClick={() => {applyButtonStatus(item.stepType); searchForTasks(item.stepType);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
                                                 </button>

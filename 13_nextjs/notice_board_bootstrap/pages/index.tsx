@@ -1,17 +1,16 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import useSWR from 'swr'
 import Widgets from '../common/components/elements/widgets'
 import Tasks from "../common/components/elements/tasks";
-
-const fetcher = (url: String) => {
-    return fetch(url).then((res) => res.text());
-}
+import { useState } from "react"
 
 const Home: NextPage = () => {
-    const { data, error } = useSWR('/api/hello', fetcher)
 
-    console.log(data)
+    const [ gridData, setGridData ] = useState<[number]|null>();
+
+    const applyGridData = ( gridData : [number]|null) : void => {
+        setGridData(gridData)
+    }
 
     return (
         <div>
@@ -22,8 +21,8 @@ const Home: NextPage = () => {
             </Head>
             <main>
                 <div className="container">
-                  <Widgets />
-                  <Tasks />
+                  <Widgets applyFunc={applyGridData} />
+                  <Tasks gridData={gridData} />
                 </div>
             </main>
         </div>

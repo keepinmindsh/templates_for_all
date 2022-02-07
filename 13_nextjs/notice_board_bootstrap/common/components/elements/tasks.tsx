@@ -1,7 +1,7 @@
 import styles from "../../../styles/components/elements/Tasks.module.css";
 import Link from 'next/link'
 
-const Tasks = () => {
+const Tasks = (props : { gridData:[number]|null }) => {
     return (
         <div className="row">
             <div className="card">
@@ -22,31 +22,38 @@ const Tasks = () => {
                             </tr>
                             </thead>
                             <tbody>
-                                <Link href="/register/register" >
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>산하정보기술</td>
-                                        <td>SR 접수건</td>
-                                        <td>
-                                            긴급
-                                        </td>
-                                        <td>
-                                            신규
-                                        </td>
-                                        <td>
-                                            서버 장애
-                                        </td>
-                                        <td>
-                                            2022-02-04
-                                        </td>
-                                        <td>
-                                            2022-05-01
-                                        </td>
-                                        <td>
-                                            진행
-                                        </td>
-                                    </tr>
-                                </Link>
+                                    {
+                                        props.gridData &&
+                                        props.gridData
+                                        .map(item => {
+                                            return <Link href="/register/register" >
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>산하정보기술</td>
+                                                    <td>SR 접수건</td>
+                                                    <td>
+                                                        긴급
+                                                    </td>
+                                                    <td>
+                                                        신규
+                                                    </td>
+                                                    <td>
+                                                        서버 장애
+                                                    </td>
+                                                    <td>
+                                                        2022-02-04
+                                                    </td>
+                                                    <td>
+                                                        2022-05-01
+                                                    </td>
+                                                    <td>
+                                                        진행
+                                                    </td>
+                                                </tr>
+                                            </Link>
+                                        })
+                                    }
+
                             </tbody>
                         </table>
                     </div>
