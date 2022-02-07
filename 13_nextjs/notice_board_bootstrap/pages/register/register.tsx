@@ -1,31 +1,31 @@
 import { useRouter } from 'next/router'
-import { useState, useEffect, ReactChild, ReactFragment, ReactPortal} from 'react'
+import { useState, useEffect} from 'react'
 import axios from 'axios'
 
 const Register = () => {
 
     const [businessType, setBusinessType] = useState<any>([]);
+    const [requireType, setRequireType] = useState<any>([]);
+    const [priorityType, setPriorityType] = useState<any>([]);
+    const [customers, setCustomers] = useState<any>([]);
 
     useEffect(() => {
         // TODO - 정상동작 안함
-        axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
+        axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
             .then(res => {
-                console.log(res);
-                // TODO - this setState won't work here. Study for react useState
                 setBusinessType(res.data);
             });
-        axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
+        axios.get('http://localhost:9090/codes?codeType=REQUIRE_TYPE')
             .then(res => {
-                console.log(res);
-                // TODO - this setState won't work here. Study for react useState
-                setBusinessType(res.data);
+                setRequireType(res.data);
             });
-
-        axios.get('http://localhost:9090/register/codes?codeType=BUSINESS_TYPE')
+        axios.get('http://localhost:9090/codes?codeType=PRIORITY_TYPE')
             .then(res => {
-                console.log(res);
-                // TODO - this setState won't work here. Study for react useState
-                setBusinessType(res.data);
+                setPriorityType(res.data);
+            });
+        axios.get('http://localhost:9090/customers')
+            .then(res => {
+                setCustomers(res.data);
             });
     }, [])
 
@@ -56,7 +56,7 @@ const Register = () => {
                                 <div className="col-sm-8">
                                     <select className="form-control">
                                         {
-                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                            customers.map((item: { customerNo : string ; customerName : string; }) => <option value={item.customerNo} >{item.customerName}</option>)
                                         }
                                     </select>
                                 </div>
@@ -68,7 +68,9 @@ const Register = () => {
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 업무</label>
                                 <div className="col-sm-8">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        {
+                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -103,7 +105,9 @@ const Register = () => {
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
                                 <div className="col-sm-8">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        {
+                                            requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -114,7 +118,9 @@ const Register = () => {
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 우선순위</label>
                                 <div className="col-sm-8">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        {
+                                            priorityType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>

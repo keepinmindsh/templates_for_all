@@ -1,4 +1,44 @@
+import { useState, useEffect} from 'react'
+import axios from 'axios'
+
 const Widgets = () => {
+
+    const [businessType, setBusinessType] = useState<any>([]);
+    const [requireType, setRequireType] = useState<any>([]);
+    const [priorityType, setPriorityType] = useState<any>([]);
+    const [customers, setCustomers] = useState<any>([]);
+    const [buttonStatus, setButtonStatus] = useState<String>("CUSTOMER_RECEIPT");
+    const [steps, setSteps] = useState<any[]>([]);
+
+    useEffect(() => {
+        // TODO - 정상동작 안함
+        axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
+            .then(res => {
+                setBusinessType(res.data);
+            });
+        axios.get('http://localhost:9090/codes?codeType=REQUIRE_TYPE')
+            .then(res => {
+                setRequireType(res.data);
+            });
+        axios.get('http://localhost:9090/codes?codeType=PRIORITY_TYPE')
+            .then(res => {
+                setPriorityType(res.data);
+            });1
+        axios.get('http://localhost:9090/customers')
+            .then(res => {
+                setCustomers(res.data);
+            });
+        axios.get('http://localhost:9090/steps')
+            .then(res => {
+                setSteps(res.data);
+            });
+    }, []);
+
+    const applyButtonStatus = (button : String) : void => {
+        setButtonStatus(button)
+    }
+
+
     return (
         <>
             <div className="row">
@@ -10,7 +50,10 @@ const Widgets = () => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">고객사</label>
                                 <div className="col-sm-9">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        <option value={""} >All</option>
+                                        {
+                                            customers.map((item: { customerNo : string ; customerName : string; }) => <option value={item.customerNo} >{item.customerName}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -21,7 +64,10 @@ const Widgets = () => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">요청타입</label>
                                 <div className="col-sm-9">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        <option value={""} >All</option>
+                                        {
+                                            requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -34,7 +80,10 @@ const Widgets = () => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">업무</label>
                                 <div className="col-sm-9">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        <option value={""} >All</option>
+                                        {
+                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -45,7 +94,10 @@ const Widgets = () => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">우선순위</label>
                                 <div className="col-sm-9">
                                     <select className="form-control">
-                                        <option>Default select</option>
+                                        <option value={""} >All</option>
+                                        {
+                                            priorityType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -69,56 +121,40 @@ const Widgets = () => {
                 </div>
                 <div className="col-xl-4" >
                     <div className="row p-1">
-                        <div className="col p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">고객접수</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 24 ]</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-warning">
-                                    <h6 className="text-muted mb-0 text-sm-center">산하접수</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 18 ]</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발담당</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
-                                </button>
-                            </div>
-                        </div>
+                        {
+                            steps.map((item: { stepType: string ; stepName: string; counts: number; }, index) => {
+                                if(index <= 2 ) {
+                                    return (
+                                        <div className="col p-1">
+                                            <div className="card bg-pattern">
+                                                <button type="button" onClick={() => applyButtonStatus(item.stepType) } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
                     </div>
                     <div className="row p-1">
-                        <div className="col p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발시작</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발종료</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">고객적용</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ 06 ]</h6>
-                                </button>
-                            </div>
-                        </div>
+                        {
+                            steps.map((item: { stepType: string ; stepName: string; counts: number; }, index) => {
+                                if(index > 2 ) {
+                                    return (
+                                        <div className="col p-1">
+                                            <div className="card bg-pattern">
+                                                <button type="button" onClick={() => applyButtonStatus(item.stepType) } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
                     </div>
                 </div>
             </div>
