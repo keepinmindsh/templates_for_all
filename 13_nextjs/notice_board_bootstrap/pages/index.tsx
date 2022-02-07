@@ -6,7 +6,20 @@ import { useState } from "react"
 
 const Home: NextPage = () => {
 
-    const [ gridData, setGridData ] = useState<[number]|null>();
+    const [ gridData, setGridData ] = useState<[
+        {
+            taskNo : number,
+            custmName : string,
+            title : string,
+            priorityType : string,
+            requireType : string,
+            errorType : string,
+            receiptDate : string,
+            finishedDate : string,
+            statusType : string
+
+        }
+    ]|null>();
 
     const applyGridData = ( gridData : [number]|null) : void => {
         setGridData(gridData)

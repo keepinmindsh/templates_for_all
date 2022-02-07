@@ -39,7 +39,10 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
     const searchForTasks = (value:String|null) : void => {
         console.log(value)
-        props.applyFunc([1])
+        axios.get('http://localhost:9090/tasks')
+            .then(res => {
+                props.applyFunc(res.data)
+            });
     }
 
     return (

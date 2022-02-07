@@ -1,7 +1,18 @@
 import styles from "../../../styles/components/elements/Tasks.module.css";
 import Link from 'next/link'
 
-const Tasks = (props : { gridData:[number]|null }) => {
+const Tasks = (props : { gridData:[ {
+        taskNo : number,
+        custmName : string,
+        title : string,
+        priorityType : string,
+        requireType : string,
+        errorType : string,
+        receiptDate : string,
+        finishedDate : string,
+        statusType : string
+
+    }]|null }) => {
     return (
         <div className="row">
             <div className="card">
@@ -28,26 +39,26 @@ const Tasks = (props : { gridData:[number]|null }) => {
                                         .map(item => {
                                             return <Link href="/register/register" >
                                                 <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>산하정보기술</td>
-                                                    <td>SR 접수건</td>
+                                                    <th scope="row">{item.taskNo}</th>
+                                                    <td>{item.custmName}</td>
+                                                    <td>{item.title}</td>
                                                     <td>
-                                                        긴급
+                                                        {item.priorityType}
                                                     </td>
                                                     <td>
-                                                        신규
+                                                        {item.requireType}
                                                     </td>
                                                     <td>
-                                                        서버 장애
+                                                        {item.errorType}
                                                     </td>
                                                     <td>
-                                                        2022-02-04
+                                                        {item.receiptDate}
                                                     </td>
                                                     <td>
-                                                        2022-05-01
+                                                        {item.finishedDate}
                                                     </td>
                                                     <td>
-                                                        진행
+                                                        {item.statusType}
                                                     </td>
                                                 </tr>
                                             </Link>
