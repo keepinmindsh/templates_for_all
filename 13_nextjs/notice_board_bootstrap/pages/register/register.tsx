@@ -9,7 +9,37 @@ const Register = () => {
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
 
-    const [registerForm, setRegisterForm ] = useState<any>({})
+    const [registerForm, setRegisterForm ] = useState<{
+        task: {
+            businessType: string | null
+            cause: string | null
+            completeDate: string | null
+            customNo: number | null
+            developerOpinion: string | null
+            expectedCompleteDate: string | null
+            howToFix: string | null
+            id: number | null
+            priorityType: string | null
+            receiptDate: string | null
+            receiptNo: number | null
+            receiptOpinion: string | null
+            requestUserId: string | null
+            requireType: string | null
+            result: string | null
+            statusType: string | null
+            title: string | null
+        },
+        progressives : [
+            {
+                assignUser: string
+                stepType: string
+                timeStamp: string
+            }
+        ],
+        fileAttacheds : [
+            any
+        ]
+    }>()
 
     useEffect(() => {
         // TODO - 정상동작 안함
@@ -29,19 +59,20 @@ const Register = () => {
             .then(res => {
                 setCustomers(res.data);
             });
+        axios.get('http://localhost:9090/register/tasks')
+            .then(res => {
+                setRegisterForm(res.data);
+            });
     }, [])
-
 
     const prePage = () => {
         const router = useRouter()
         return <button className="btn btn-primary" onClick={() => router.back()} type="button">뒤로가기</button>
     }
 
-
     const onRegisterFormHandler = ( name : string, event : ChangeEvent) => {
         setRegisterForm({...registerForm, [name] : event.target.value});
     }
-
 
     return (
         <>
