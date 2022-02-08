@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useState, useEffect} from 'react'
+import {useState, useEffect, ChangeEvent} from 'react'
 import axios from 'axios'
 
 const Register = () => {
@@ -8,6 +8,8 @@ const Register = () => {
     const [requireType, setRequireType] = useState<any>([]);
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
+
+    const [registerForm, setRegisterForm ] = useState<any>({})
 
     useEffect(() => {
         // TODO - 정상동작 안함
@@ -34,6 +36,12 @@ const Register = () => {
         const router = useRouter()
         return <button className="btn btn-primary" onClick={() => router.back()} type="button">뒤로가기</button>
     }
+
+
+    const onRegisterFormHandler = ( name : string, event : ChangeEvent) => {
+        setRegisterForm({...registerForm, [name] : event.target.value});
+    }
+
 
     return (
         <>
@@ -78,22 +86,18 @@ const Register = () => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">고객사</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">접수일시</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
+                                    <input type="date" aria-label="First name" className="form-control" onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} />
                                 </div>
                             </div>
                         </div>
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">고객사</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">요청자</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
+                                    <input type="text" className="form-control" onChange={(event) => { onRegisterFormHandler("searchKey", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
@@ -104,7 +108,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
+                                    <select className="form-control" onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} >
                                         {
                                             requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
@@ -117,7 +121,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 우선순위</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
+                                    <select className="form-control" onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} >
                                         {
                                             priorityType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
@@ -130,9 +134,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">완료예정</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
+                                    <input type="date" aria-label="First name" className="form-control" onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} />
                                 </div>
                             </div>
                         </div>
@@ -141,38 +143,18 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">접수번호</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
+                                    <input type="text" className="form-control" onChange={(event) => { onRegisterFormHandler("searchKey", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="row mt-1" >
-                        <div className="col" >
-                            <div className="form-group row">
-                                <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">연관접수</label>
-                                <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col" >
-                            <div className="form-group row">
-                            </div>
-                        </div>
-                        <div className="col" >
-                            <div className="form-group row">
-                                <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">완료일자</label>
-                                <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
-                                </div>
+                        <div className="col-sm-9" >
+                            <div className="input-group mb-3">
+                                <button className="btn btn-outline-secondary" type="button" id="button-addon1">
+                                    연관링크 추가
+                                </button>
+                                <input type="text" className="form-control" placeholder=""  aria-label="Example text with button addon" aria-describedby="button-addon1" />
                             </div>
                         </div>
                         <div className="col" >
@@ -180,14 +162,12 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">상태</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control">
-                                        <option>Default select</option>
-                                    </select>
+                                    <input type="text" className="form-control disabled"  onChange={(event) => { onRegisterFormHandler("searchKey", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="row mt-2 mb-3">
+                    <div className="row mt-1 mb-1">
                         <div className="col-xl-2 col-md-2 p-1">
                             <div className="card bg-pattern">
                                 <button type="button" className="btn btn-light">

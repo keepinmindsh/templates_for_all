@@ -35,24 +35,26 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             searchKey : ""
         });
 
+    const hostUrl:string = "http://localhost:9090"
+
     useEffect(() => {
-        axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
+        axios.get(hostUrl + '/codes?codeType=BUSINESS_TYPE')
             .then(res => {
                 setBusinessType(res.data);
             });
-        axios.get('http://localhost:9090/codes?codeType=REQUIRE_TYPE')
+        axios.get(hostUrl + '/codes?codeType=REQUIRE_TYPE')
             .then(res => {
                 setRequireType(res.data);
             });
-        axios.get('http://localhost:9090/codes?codeType=PRIORITY_TYPE')
+        axios.get(hostUrl + '/codes?codeType=PRIORITY_TYPE')
             .then(res => {
                 setPriorityType(res.data);
             });1
-        axios.get('http://localhost:9090/customers')
+        axios.get(hostUrl + '/customers')
             .then(res => {
                 setCustomers(res.data);
             });
-        axios.get('http://localhost:9090/steps')
+        axios.get(hostUrl + '/steps')
             .then(res => {
                 setSteps(res.data);
             });
@@ -74,9 +76,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             + "finishedEndDate=" + searchForm.finishedEndDate?.replaceAll(/-/g, "") + "&"
             + "searchKey=" + searchForm.searchKey;
 
-
-        console.log(value)
-        axios.get('http://localhost:9090/tasks?' + queryString)
+        axios.get(hostUrl + '/tasks?' + queryString)
             .then(res => {
                 props.applyFunc(res.data)
             });
