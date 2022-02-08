@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react'
+import {useState, useEffect, ChangeEvent} from 'react'
 import axios from 'axios'
 
 const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
@@ -9,6 +9,31 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     const [customers, setCustomers] = useState<any>([]);
     const [buttonStatus, setButtonStatus] = useState<String>("CUSTOMER_RECEIPT");
     const [steps, setSteps] = useState<any[]>([]);
+
+    const [searchForm, setSearchForm ] = useState<{
+            custmNo : string|null,
+            title : string|null,
+            priorityType : string|null,
+            requireType : string|null,
+            businessType : string|null,
+            receiptStartDate : string|null,
+            receiptEndDate : string|null,
+            finishedStartDate : string|null,
+            finishedEndDate : string|null,
+            searchKey : string|null
+
+        }>({
+            custmNo : "",
+            title : "",
+            priorityType : "",
+            requireType : "",
+            businessType : "",
+            receiptStartDate : "",
+            receiptEndDate : "",
+            finishedStartDate : "",
+            finishedEndDate : "",
+            searchKey : ""
+        });
 
     useEffect(() => {
         axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
@@ -38,11 +63,27 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     }
 
     const searchForTasks = (value:String|null) : void => {
+        const queryString : string =
+            "custmNo=" + searchForm.custmNo + "&"
+            + "requireType=" + searchForm.requireType + "&"
+            + "businessType=" + searchForm.businessType + "&"
+            + "priorityType=" + searchForm.priorityType + "&"
+            + "receiptStartDate=" + searchForm.receiptStartDate?.replaceAll(/-/g, "") + "&"
+            + "receiptEndDate=" + searchForm.receiptEndDate?.replaceAll(/-/g, "") + "&"
+            + "finishedStartDate=" + searchForm.finishedStartDate?.replaceAll(/-/g, "") + "&"
+            + "finishedEndDate=" + searchForm.finishedEndDate?.replaceAll(/-/g, "") + "&"
+            + "searchKey=" + searchForm.searchKey;
+
+
         console.log(value)
-        axios.get('http://localhost:9090/tasks')
+        axios.get('http://localhost:9090/tasks?' + queryString)
             .then(res => {
                 props.applyFunc(res.data)
             });
+    }
+
+    const onSearchChangeHandler = ( name : string, event : ChangeEvent) => {
+        setSearchForm({...searchForm, [name] : event.target.value});
     }
 
     return (
@@ -55,7 +96,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">고객사</label>
                                 <div className="col-sm-9">
-                                    <select className="form-control">
+                                    <select className="form-control" onChange={(event) => { onSearchChangeHandler("custmNo", event)}}>
                                         <option value={""} >All</option>
                                         {
                                             customers.map((item: { customerNo : string ; customerName : string; }) => <option value={item.customerNo} >{item.customerName}</option>)
@@ -69,7 +110,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">요청타입</label>
                                 <div className="col-sm-9">
-                                    <select className="form-control">
+                                    <select className="form-control"  onChange={(event) => { onSearchChangeHandler("requireType", event)}} >
                                         <option value={""} >All</option>
                                         {
                                             requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
@@ -85,7 +126,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">업무</label>
                                 <div className="col-sm-9">
-                                    <select className="form-control">
+                                    <select className="form-control" onChange={(event) => { onSearchChangeHandler("businessType", event)}}>
                                         <option value={""} >All</option>
                                         {
                                             businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
@@ -99,7 +140,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-3 col-form-label col-form-label-sm text-end">우선순위</label>
                                 <div className="col-sm-9">
-                                    <select className="form-control">
+                                    <select className="form-control" onChange={(event) => { onSearchChangeHandler("priorityType", event)}}>
                                         <option value={""} >All</option>
                                         {
                                             priorityType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
@@ -116,8 +157,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>접수 기간</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
-                                        <input type="date" aria-label="First name" className="form-control" />
-                                        <input type="date" aria-label="Last name" className="form-control" />
+                                        <input type="date" aria-label="First name" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptStartDate", event)}} />
+                                        <input type="date" aria-label="Last name" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptEndDate", event)}} />
                                     </div>
                                 </div>
                             </div>
@@ -132,8 +173,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>완료 기간</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
-                                        <input type="date" aria-label="First name" className="form-control" />
-                                        <input type="date" aria-label="Last name" className="form-control" />
+                                        <input type="date" aria-label="First name" className="form-control"  onChange={(event) => { onSearchChangeHandler("finishedStartDate", event)}} />
+                                        <input type="date" aria-label="Last name" className="form-control"  onChange={(event) => { onSearchChangeHandler("finishedEndDate", event)}} />
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +187,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                             <div className="form-group mb-0">
                                 <div className="input-group mb-0">
                                     <input type="text" className="form-control" placeholder="Search..."
-                                           aria-describedby="project-search-addon"/>
+                                           aria-describedby="project-search-addon"  onChange={(event) => { onSearchChangeHandler("searchKey", event)}} />
                                     <div className="input-group-append">
                                         <button className="btn btn-danger" onClick={searchForTasks} type="button" id="project-search-addon" ><i
                                             className="fa fa-search search-icon font-12"></i>
