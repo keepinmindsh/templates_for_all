@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
 import {useState, useEffect, ChangeEvent} from 'react'
+import { withRouter } from 'next/router';
 import axios from 'axios'
 
-const Register = () => {
+const Register = ({ router: { query } }) => {
 
     const [businessType, setBusinessType] = useState<any>([]);
     const [requireType, setRequireType] = useState<any>([]);
@@ -84,10 +85,22 @@ const Register = () => {
             .then(res => {
                 setCustomers(res.data);
             });
-        axios.get('http://localhost:9090/register/tasks')
-            .then(res => {
-                setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives });
-            });
+
+        if(query.inputType != "NEW"){
+            axios.get('http://localhost:9090/register/tasks')
+                .then(res => {
+                    setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives });
+                });
+        }else{
+            setRegisterForm({...registerForm , progressives : [
+                    {assignUser: "", assignUserId: query.assignUserId, stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
+                    {assignUser: "", assignUserId: query.assignUserId, stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
+                    {assignUser: "", assignUserId: query.assignUserId, stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
+                    {assignUser: "", assignUserId: query.assignUserId, stepType: "개발시작", timeStamp: "", stepTypeCode: "DEVELOPMENT_START"},
+                    {assignUser: "", assignUserId: query.assignUserId, stepType: "개발적용", timeStamp: "", stepTypeCode: "DEVELOPMENT_FINISH"},
+                    {assignUser: "", assignUserId: query.assignUserId, stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
+                ]});
+        }
     }, [])
 
     const prePage = () => {
@@ -200,7 +213,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.receiptNo}  onChange={(event) => { onRegisterFormHandler("receiptNo", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.requireType}  onChange={(event) => { onRegisterFormHandler("requireType", event)}} >
                                         {
                                             requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
@@ -226,7 +239,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">완료예정</label>
                                 <div className="col-sm-8">
-                                    <input type="date" aria-label="First name" className="form-control" defaultValue={registerForm.task.completeDate} onChange={(event) => { onRegisterFormHandler("completeDate", event)}} />
+                                    <input type="date" aria-label="First name" className="form-control" defaultValue={registerForm.task.expectedCompleteDate} onChange={(event) => { onRegisterFormHandler("expectedCompleteDate", event)}} />
                                 </div>
                             </div>
                         </div>
@@ -332,4 +345,4 @@ const Register = () => {
     )
 }
 
-export default Register;
+export default withRouter(Register);

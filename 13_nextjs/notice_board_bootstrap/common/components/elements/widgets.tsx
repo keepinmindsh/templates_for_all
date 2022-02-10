@@ -1,5 +1,6 @@
 import {useState, useEffect, ChangeEvent} from 'react'
 import axios from 'axios'
+import Link from 'next/link'
 
 const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
@@ -9,6 +10,11 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     const [customers, setCustomers] = useState<any>([]);
     const [buttonStatus, setButtonStatus] = useState<String>("CUSTOMER_RECEIPT");
     const [steps, setSteps] = useState<any[]>([]);
+
+    const loginInfo = {
+        userId : "shjeong",
+        userName : "seung hwa"
+    }
 
     const [searchForm, setSearchForm ] = useState<{
             custmNo : string|null,
@@ -88,6 +94,21 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
     return (
         <>
+            <div className="row mt-2" >
+                <div className="row mt-2" >
+                    <div className="col-sm-8" >
+                    </div>
+                    <div className="col-sm-4" >
+                        <Link href={{
+                            pathname: '/register/register',
+                            query: { inputType : "NEW", assignUserId : loginInfo.userId , assignUserName : loginInfo.userName }, // array라 문자화
+                        }}
+                        >
+                            <button className="btn btn-primary float-end" type="button">신규등록</button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
             <div className="row">
                 <div className="col-xl-8" >
                     <div className="row mt-2" >
