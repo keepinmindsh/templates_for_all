@@ -68,6 +68,8 @@ const Register = ({ router: { query } }) => {
         }
     })
 
+    const taskId = query.id;
+
     useEffect(() => {
         axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
             .then(res => {
@@ -134,7 +136,7 @@ const Register = ({ router: { query } }) => {
             developerOpinion: registerForm.task.developerOpinion,
             expectedCompleteDate: registerForm.task.expectedCompleteDate,
             howToFix: registerForm.task.howToFix,
-            id: null,
+            id: taskId,
             priorityType: registerForm.task.priorityType,
             receiptDate: registerForm.task.receiptDate,
             receiptNo: registerForm.task.receiptNo,
