@@ -8,8 +8,6 @@ const Register = () => {
     const [requireType, setRequireType] = useState<any>([]);
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
-    const [timeStamp, setTimeStamp] = useState<string>("");
-    const [assignUser, setAssignUser] = useState<string>("")
 
     const [registerForm, setRegisterForm ] = useState<{
         task: {
@@ -98,13 +96,40 @@ const Register = () => {
     }
 
     const onRegisterFormHandler = ( name : string, event : ChangeEvent) => {
-        setRegisterForm({...registerForm, [name] : event.target.value});
+
+        registerForm.task[name] = event.target.value;
+
+        setRegisterForm(registerForm);
     }
 
     const onStartTask = (assignUserId:String|null, assignUserName:String, stepTypeCode:String|null) : void => {
         axios.post('http://localhost:9090/register/step',{
             assignUserId: assignUserId,
             stepTypeCode: stepTypeCode
+        }).then(res => {
+
+        });
+    }
+
+    const onSaveTask = () => {
+        axios.post('http://localhost:9090/register/task',{
+            businessType: registerForm.task.businessType,
+            cause: registerForm.task.cause,
+            completeDate: registerForm.task.completeDate,
+            customNo: registerForm.task.customNo,
+            developerOpinion: registerForm.task.developerOpinion,
+            expectedCompleteDate: registerForm.task.expectedCompleteDate,
+            howToFix: registerForm.task.howToFix,
+            id: null,
+            priorityType: registerForm.task.priorityType,
+            receiptDate: registerForm.task.receiptDate,
+            receiptNo: registerForm.task.receiptNo,
+            receiptOpinion: registerForm.task.receiptOpinion,
+            requestUserId: registerForm.task.requestUserId,
+            requireType: registerForm.task.requireType,
+            result: registerForm.task.result,
+            statusType: registerForm.task.statusType,
+            title: registerForm.task.title
         }).then(res => {
 
         });
@@ -120,7 +145,7 @@ const Register = () => {
                         </div>
                         <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                             <button className="btn btn-primary" type="button">Refresh</button>
-                            <button className="btn btn-primary" type="button">Save</button>
+                            <button className="btn btn-primary" onClick={onSaveTask} type="button">Save</button>
                         </div>
                     </div>
                     <div className="row">
@@ -129,7 +154,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 고객사</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" value={registerForm.task.customNo} >
+                                    <select className="form-control" defaultValue={registerForm.task.customNo} onChange={(event) => { onRegisterFormHandler("customNo", event)}}>
                                         {
                                             customers.map((item: { customerNo : string ; customerName : string; }) => <option value={item.customerNo} >{item.customerName}</option>)
                                         }
@@ -142,7 +167,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 업무</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" value={registerForm.task.businessType} >
+                                    <select className="form-control" defaultValue={registerForm.task.businessType} onChange={(event) => { onRegisterFormHandler("businessType", event)}} >
                                         {
                                             businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
@@ -155,7 +180,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">접수일시</label>
                                 <div className="col-sm-8">
-                                    <input type="date" aria-label="First name" className="form-control" value={registerForm.task.receiptDate}  onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} />
+                                    <input type="date" aria-label="First name" className="form-control" defaultValue={registerForm.task.receiptDate}  onChange={(event) => { onRegisterFormHandler("receiptDate", event)}} />
                                 </div>
                             </div>
                         </div>
@@ -164,7 +189,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">요청자</label>
                                 <div className="col-sm-8">
-                                    <input type="text" className="form-control" value={registerForm.task.requestUserId}  onChange={(event) => { onRegisterFormHandler("searchKey", event)}} readOnly />
+                                    <input type="text" className="form-control" defaultValue={registerForm.task.requestUserId}  onChange={(event) => { onRegisterFormHandler("requestUserId", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
@@ -175,7 +200,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" value={registerForm.task.receiptNo}  onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.receiptNo}  onChange={(event) => { onRegisterFormHandler("receiptNo", event)}} >
                                         {
                                             requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
@@ -188,7 +213,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 우선순위</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" value={registerForm.task.priorityType}  onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.priorityType}  onChange={(event) => { onRegisterFormHandler("priorityType", event)}} >
                                         {
                                             priorityType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
@@ -201,7 +226,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">완료예정</label>
                                 <div className="col-sm-8">
-                                    <input type="date" aria-label="First name" className="form-control" value={registerForm.task.completeDate} onChange={(event) => { onRegisterFormHandler("finishedStartDate", event)}} />
+                                    <input type="date" aria-label="First name" className="form-control" defaultValue={registerForm.task.completeDate} onChange={(event) => { onRegisterFormHandler("completeDate", event)}} />
                                 </div>
                             </div>
                         </div>
@@ -210,7 +235,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">접수번호</label>
                                 <div className="col-sm-8">
-                                    <input type="text" className="form-control" value={registerForm.task.receiptNo} onChange={(event) => { onRegisterFormHandler("searchKey", event)}} readOnly />
+                                    <input type="text" className="form-control" defaultValue={registerForm.task.receiptNo} onChange={(event) => { onRegisterFormHandler("receiptNo", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
@@ -229,7 +254,7 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">상태</label>
                                 <div className="col-sm-8">
-                                    <input type="text" className="form-control disabled" value={registerForm.task.statusType}   onChange={(event) => { onRegisterFormHandler("searchKey", event)}} readOnly />
+                                    <input type="text" className="form-control disabled" defaultValue={registerForm.task.statusType}   onChange={(event) => { onRegisterFormHandler("statusType", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
@@ -258,21 +283,21 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 제목</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={1} id="title" value={registerForm.task.title}/>
+                                    <textarea className="form-control" rows={1} id="title" defaultValue={registerForm.task.title}  onChange={(event) => { onRegisterFormHandler("title", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 현상</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={6} id="cause"  value={registerForm.task.cause} />
+                                    <textarea className="form-control" rows={6} id="cause"  defaultValue={registerForm.task.cause}  onChange={(event) => { onRegisterFormHandler("cause", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 개선방안</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={6} id="howToFix" value={registerForm.task.howToFix} />
+                                    <textarea className="form-control" rows={6} id="howToFix" defaultValue={registerForm.task.howToFix}  onChange={(event) => { onRegisterFormHandler("howToFix", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
@@ -286,18 +311,18 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">처리결과</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={7} id="result" value={registerForm.task.result} />
+                                    <textarea className="form-control" rows={7} id="result" defaultValue={registerForm.task.result}  onChange={(event) => { onRegisterFormHandler("result", event)}} />
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-4" >
                             <div className="form-group mb-2">
                                 <label htmlFor="comment">* 접수자 의견</label>
-                                <textarea className="form-control" rows={11} id="receiptOpinion" value={registerForm.task.receiptOpinion}   />
+                                <textarea className="form-control" rows={11} id="receiptOpinion" defaultValue={registerForm.task.receiptOpinion}   onChange={(event) => { onRegisterFormHandler("receiptOpinion", event)}}  />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="comment">* 개발자 의견</label>
-                                <textarea className="form-control" rows={11} id="developerOpinion" value={registerForm.task.developerOpinion}  />
+                                <textarea className="form-control" rows={11} id="developerOpinion" defaultValue={registerForm.task.developerOpinion} onChange={(event) => { onRegisterFormHandler("developerOpinion", event)}}   />
                             </div>
                         </div>
                     </div>
