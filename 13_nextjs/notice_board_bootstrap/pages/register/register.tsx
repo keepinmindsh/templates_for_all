@@ -123,7 +123,12 @@ const Register = ({ router: { query } }) => {
             assignUserId: assignUserId,
             stepTypeCode: stepTypeCode
         }).then(res => {
-
+            if(res.data == "Success"){
+                axios.get('http://localhost:9090/register/progressives?id=' + taskId)
+                    .then(res => {
+                        setRegisterForm({...registerForm , progressives : res.data });
+                    });
+            }
         });
     }
 
@@ -136,7 +141,7 @@ const Register = ({ router: { query } }) => {
             developerOpinion: registerForm.task.developerOpinion,
             expectedCompleteDate: registerForm.task.expectedCompleteDate,
             howToFix: registerForm.task.howToFix,
-            id: taskId,
+            id: taskId ? taskId : null,
             priorityType: registerForm.task.priorityType,
             receiptDate: registerForm.task.receiptDate,
             receiptNo: registerForm.task.receiptNo,
@@ -147,7 +152,10 @@ const Register = ({ router: { query } }) => {
             statusType: registerForm.task.statusType,
             title: registerForm.task.title
         }).then(res => {
-
+            axios.get('http://localhost:9090/register/progressives?id=' + res.data.taskId)
+                .then(res => {
+                    setRegisterForm({...registerForm , progressives : res.data });
+                });
         });
     }
 

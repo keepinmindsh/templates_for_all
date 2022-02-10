@@ -10,7 +10,7 @@ const Tasks = (props : { gridData:[ {
         errorType : string,
         receiptDate : string,
         finishedDate : string,
-        statusType : string
+        stepType : string
 
     }]|null }) => {
     return (
@@ -61,7 +61,7 @@ const Tasks = (props : { gridData:[ {
                                                         {item.finishedDate}
                                                     </td>
                                                     <td>
-                                                        {item.statusType}
+                                                        {item.stepType}
                                                     </td>
                                                 </tr>
                                             </Link>
