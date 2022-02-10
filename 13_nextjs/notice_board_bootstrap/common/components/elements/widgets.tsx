@@ -101,7 +101,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                     <div className="col-sm-4" >
                         <Link href={{
                             pathname: '/register/register',
-                            query: { inputType : "NEW", assignUserId : loginInfo.userId , assignUserName : loginInfo.userName }, // array라 문자화
+                            query: { inputType : "NEW", assignUserId : loginInfo.userId , assignUserName : loginInfo.userName } // array라 문자화
                         }}
                         >
                             <button className="btn btn-primary float-end" type="button">신규등록</button>

@@ -48,7 +48,7 @@ const Register = ({ router: { query } }) => {
         fileAttacheds: [null],
         progressives: [{assignUser: "", assignUserId: "", stepType: "", timeStamp: "", stepTypeCode: ""}],
         task: {
-            businessType: null,
+            businessType: "BIZ1",
             cause: null,
             completeDate: null,
             customNo: null,
@@ -56,12 +56,12 @@ const Register = ({ router: { query } }) => {
             expectedCompleteDate: null,
             howToFix: null,
             id: null,
-            priorityType: null,
+            priorityType: "MIDDLE",
             receiptDate: null,
             receiptNo: null,
             receiptOpinion: null,
             requestUserId: null,
-            requireType: null,
+            requireType: "NEW",
             result: null,
             statusType: null,
             title: null
@@ -87,12 +87,13 @@ const Register = ({ router: { query } }) => {
             });
 
         if(query.inputType != "NEW"){
-            axios.get('http://localhost:9090/register/tasks')
+            axios.get('http://localhost:9090/register/tasks?id=' + query.id)
                 .then(res => {
                     setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives });
                 });
         }else{
-            setRegisterForm({...registerForm , progressives : [
+            setRegisterForm({...registerForm
+                ,progressives : [
                     {assignUser: "", assignUserId: query.assignUserId, stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
                     {assignUser: "", assignUserId: query.assignUserId, stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
                     {assignUser: "", assignUserId: query.assignUserId, stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
