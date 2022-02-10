@@ -68,7 +68,7 @@ const Register = ({ router: { query } }) => {
         }
     })
 
-    const taskId = query.id;
+    let taskId = query.id;
 
     useEffect(() => {
         axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
@@ -120,13 +120,14 @@ const Register = ({ router: { query } }) => {
 
     const onStartTask = (assignUserId:String|null, assignUserName:String, stepTypeCode:String|null) : void => {
         axios.post('http://localhost:9090/register/step',{
+            taskId : registerForm.task.id,
             assignUserId: assignUserId,
             stepTypeCode: stepTypeCode
         }).then(res => {
             if(res.data == "Success"){
-                axios.get('http://localhost:9090/register/progressives?id=' + taskId)
+                axios.get('http://localhost:9090/register/progressives?id=' + registerForm.task.id)
                     .then(res => {
-                        setRegisterForm({...registerForm , progressives : res.data });
+                        setRegisterForm({...registerForm , progressives : res.data.progressives });
                     });
             }
         });
@@ -152,9 +153,10 @@ const Register = ({ router: { query } }) => {
             statusType: registerForm.task.statusType,
             title: registerForm.task.title
         }).then(res => {
+            registerForm.task.id = res.data.taskId
             axios.get('http://localhost:9090/register/progressives?id=' + res.data.taskId)
                 .then(res => {
-                    setRegisterForm({...registerForm , progressives : res.data });
+                    setRegisterForm({...registerForm , progressives : res.data.progressives });
                 });
         });
     }
