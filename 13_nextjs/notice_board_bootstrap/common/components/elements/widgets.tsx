@@ -189,8 +189,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                     <input type="text" className="form-control" placeholder="Search..."
                                            aria-describedby="project-search-addon"  onChange={(event) => { onSearchChangeHandler("searchKey", event)}} />
                                     <div className="input-group-append">
-                                        <button className="btn btn-danger" onClick={searchForTasks} type="button" id="project-search-addon" ><i
-                                            className="fa fa-search search-icon font-12"></i>
+                                        <button className="btn btn-danger" onClick={searchForTasks} type="button" id="project-search-addon" ><i className="fa fa-search search-icon font-12"></i>
                                         </button>
                                     </div>
                                 </div>

@@ -8,6 +8,8 @@ const Register = () => {
     const [requireType, setRequireType] = useState<any>([]);
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
+    const [timeStamp, setTimeStamp] = useState<string>("");
+    const [assignUser, setAssignUser] = useState<string>("")
 
     const [registerForm, setRegisterForm ] = useState<{
         task: {
@@ -32,10 +34,12 @@ const Register = () => {
         progressives : [
             {
                 assignUser: string
+                assignUserId : string
                 stepType: string
                 timeStamp: string
                 order: number
                 lastStep : boolean
+                stepTypeCode : string
             }
         ],
         fileAttacheds : [
@@ -43,7 +47,7 @@ const Register = () => {
         ]
     }>({
         fileAttacheds: [null],
-        progressives: [{assignUser: "", stepType: "", timeStamp: ""}],
+        progressives: [{assignUser: "", assignUserId: "", stepType: "", timeStamp: "", stepTypeCode: ""}],
         task: {
             businessType: null,
             cause: null,
@@ -66,7 +70,6 @@ const Register = () => {
     })
 
     useEffect(() => {
-        // TODO - 정상동작 안함
         axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
             .then(res => {
                 setBusinessType(res.data);
@@ -96,6 +99,15 @@ const Register = () => {
 
     const onRegisterFormHandler = ( name : string, event : ChangeEvent) => {
         setRegisterForm({...registerForm, [name] : event.target.value});
+    }
+
+    const onStartTask = (assignUserId:String|null, assignUserName:String, stepTypeCode:String|null) : void => {
+        axios.post('http://localhost:9090/register/step',{
+            assignUserId: assignUserId,
+            stepTypeCode: stepTypeCode
+        }).then(res => {
+
+        });
     }
 
     return (
@@ -225,12 +237,13 @@ const Register = () => {
                     <div className="row mt-1 mb-1">
                         {
                             registerForm.progressives.sort((a, b) =>  a.order - b.order  )
-                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean}, index) => {
+                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, assignUserId : string, stepTypeCode : string}, index) => {
                                     return (
                                         <div className="col-xl-2 col-md-2 p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" className={item.lastStep ? "btn btn-warning" : "btn btn-light" } >
-                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepType} [{item.assignUser}]</h6>
+                                                <button type="button" onClick={() => {onStartTask(item.assignUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } >
+                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUser ? "[" + item.assignUser + "]" : " " }</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
                                                 </button>
                                             </div>
