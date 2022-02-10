@@ -34,6 +34,8 @@ const Register = () => {
                 assignUser: string
                 stepType: string
                 timeStamp: string
+                order: number
+                lastStep : boolean
             }
         ],
         fileAttacheds : [
@@ -221,54 +223,21 @@ const Register = () => {
                         </div>
                     </div>
                     <div className="row mt-1 mb-1">
-                        <div className="col-xl-2 col-md-2 p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">고객사접수 [홍길동]</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col-xl-2 col-md-2 p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-warning">
-                                    <h6 className="text-muted mb-0 text-sm-center">산하접수 [홍길동]</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col-xl-2 col-md-2 p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발담당 [홍길동]</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col-xl-2 col-md-2 p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발시작 [홍길동]</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col-xl-2 col-md-2 p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">개발종료 [홍길동]</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="col-xl-2 col-md-2 p-1">
-                            <div className="card bg-pattern">
-                                <button type="button" className="btn btn-light">
-                                    <h6 className="text-muted mb-0 text-sm-center">고객사적용 [홍길동]</h6>
-                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">0000-00-00 00:00:00</h6>
-                                </button>
-                            </div>
-                        </div>
+                        {
+                            registerForm.progressives.sort((a, b) =>  a.order - b.order  )
+                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean}, index) => {
+                                    return (
+                                        <div className="col-xl-2 col-md-2 p-1">
+                                            <div className="card bg-pattern">
+                                                <button type="button" className={item.lastStep ? "btn btn-warning" : "btn btn-light" } >
+                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepType} [{item.assignUser}]</h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                            })
+                        }
                     </div>
                     <div className="row" >
                         <div className="col-md-8" >
@@ -276,21 +245,21 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 제목</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={1} id="comment" />
+                                    <textarea className="form-control" rows={1} id="title" value={registerForm.task.title}/>
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 현상</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={6} id="comment" />
+                                    <textarea className="form-control" rows={6} id="cause"  value={registerForm.task.cause} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 개선방안</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={6} id="comment" />
+                                    <textarea className="form-control" rows={6} id="howToFix" value={registerForm.task.howToFix} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
@@ -304,18 +273,18 @@ const Register = () => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">처리결과</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={7} id="comment" />
+                                    <textarea className="form-control" rows={7} id="result" value={registerForm.task.result} />
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-4" >
                             <div className="form-group mb-2">
                                 <label htmlFor="comment">* 접수자 의견</label>
-                                <textarea className="form-control" rows={11} id="comment" />
+                                <textarea className="form-control" rows={11} id="receiptOpinion" value={registerForm.task.receiptOpinion}   />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="comment">* 개발자 의견</label>
-                                <textarea className="form-control" rows={11} id="comment" />
+                                <textarea className="form-control" rows={11} id="developerOpinion" value={registerForm.task.developerOpinion}  />
                             </div>
                         </div>
                     </div>
