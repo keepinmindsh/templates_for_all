@@ -39,7 +39,7 @@ const Tasks = (props : { gridData:[ {
                                         .map(item => {
                                             return <Link href={{
                                                     pathname: '/register/register',
-                                                    query: { inputType : "UPDATE", id : item.taskNo} // array라 문자화
+                                                    query: { inputType : "UPDATE", id : item.taskNo , assignUserId : "admin" , assignUserName : "admin" } // array라 문자화
                                                 }} >
                                                 <tr>
                                                     <th scope="row">{item.taskNo}</th>

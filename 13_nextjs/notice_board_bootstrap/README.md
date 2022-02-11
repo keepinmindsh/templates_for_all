@@ -143,3 +143,7 @@ export default function Index() {
 - [NestJS](https://docs.nestjs.com/first-steps)
 
 - [NodeJS NestJs Project](https://github.com/lujakob/nestjs-realworld-example-app)
+
+#### file Upload 프로세스 
+
+- https://www.pluralsight.com/guides/uploading-files-with-reactjs

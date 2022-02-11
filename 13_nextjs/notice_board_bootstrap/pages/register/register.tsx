@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
-import {useState, useEffect, ChangeEvent} from 'react'
+import {useState, useEffect, useRef, ChangeEvent} from 'react'
 import { withRouter } from 'next/router';
+import Link from 'next/link'
 import axios from 'axios'
 
 const Register = ({ router: { query } }) => {
@@ -9,6 +10,10 @@ const Register = ({ router: { query } }) => {
     const [requireType, setRequireType] = useState<any>([]);
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
+
+    const [links, setLinks]  = useState<[string|null]>([null]);
+
+    const nameInput = useRef();
 
     const [registerForm, setRegisterForm ] = useState<{
         task: {
@@ -43,6 +48,12 @@ const Register = ({ router: { query } }) => {
         ],
         fileAttacheds : [
             any
+        ],
+        links : [
+            {
+                linkId : number
+                link : string
+            }
         ]
     }>({
         fileAttacheds: [null],
@@ -88,10 +99,17 @@ const Register = ({ router: { query } }) => {
                 setCustomers(res.data);
             });
 
-        if(query.inputType != "NEW"){
+        if(query.inputType && query.inputType != "NEW"){
             axios.get('http://localhost:9090/register/tasks?id=' + query.id)
                 .then(res => {
-                    setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives });
+                    setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives, links : res.data.links });
+
+                    const list : [string|null] = [];
+                    res.data.links.forEach(item =>{
+                        list.push(item.link)
+                    })
+
+                    setLinks(list)
                 });
         }else{
             setRegisterForm({...registerForm
@@ -157,7 +175,20 @@ const Register = ({ router: { query } }) => {
             axios.get('http://localhost:9090/register/progressives?id=' + res.data.taskId)
                 .then(res => {
                     setRegisterForm({...registerForm , progressives : res.data.progressives });
+
+                    alert("Saved!")
                 });
+        });
+    }
+
+    const onAddRelatedLink = () => {
+        setLinks([...links, nameInput.current.value]);
+
+        axios.post('http://localhost:9090/register/link',{
+            taskId : registerForm.task.id,
+            link : nameInput.current.value
+        }).then(res => {
+
         });
     }
 
@@ -267,13 +298,23 @@ const Register = ({ router: { query } }) => {
                         </div>
                     </div>
                     <div className="row mt-1" >
-                        <div className="col-sm-9" >
+                        <div className="col-sm-6" >
                             <div className="input-group mb-3">
-                                <button className="btn btn-outline-secondary" type="button" id="button-addon1">
+                                <button className="btn btn-outline-secondary" type="button" onClick={onAddRelatedLink} id="button-addon1">
                                     연관링크 추가
                                 </button>
-                                <input type="text" className="form-control" placeholder=""  aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                                <input type="text" className="form-control" id="relatedLink"  ref={nameInput}  />
                             </div>
+                        </div>
+                        <div className="col" >
+                            {links?.map(item => {
+                                if(item){
+                                    return <Link href={item}><button className="btn btn-outline-secondary me-1" type="button" id="button-addon1">{item}</button></Link>
+                                }else{
+                                    return ""
+                                }
+                            })}
+
                         </div>
                         <div className="col" >
                             <div className="form-group row">
