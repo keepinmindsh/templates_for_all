@@ -11,8 +11,17 @@ const Register = ({ router: { query } }) => {
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
     const [links, setLinks]  = useState<[string|null]>([null]);
+    const [fileTags, setFileTags]  = useState<[
+            {
+                id: number
+                fileSize: number
+                fileName: string
+                filePath: string
+            } | null
+    ]>([null]);
 
     const nameInput = useRef();
+    const fileInput = useRef();
 
     const [files, setFiles] = useState('');
     //state for checking file size
@@ -56,7 +65,12 @@ const Register = ({ router: { query } }) => {
             }
         ],
         fileAttacheds : [
-            any
+            {
+                id: number
+                fileSize: number
+                fileName: string
+                filePath: string
+            } | null
         ],
         links : [
             {
@@ -111,14 +125,26 @@ const Register = ({ router: { query } }) => {
         if(query.inputType && query.inputType != "NEW"){
             axios.get('http://localhost:9090/register/tasks?id=' + query.id)
                 .then(res => {
-                    setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives, links : res.data.links });
+                    setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives, links : res.data.links, fileAttacheds : res.data.fileAttacheds });
 
                     const list : [string|null] = [];
                     res.data.links.forEach(item =>{
                         list.push(item.link)
                     })
-
                     setLinks(list)
+
+                    const fileList : [{
+                        id: number
+                        fileSize: number
+                        fileName: string
+                        filePath: string
+                    } | null] = [];
+
+                    res.data.fileAttacheds.forEach(item =>{
+                        fileList.push(item)
+                    })
+                    setFileTags([...fileList])
+
                 });
         }else{
             setRegisterForm({...registerForm
@@ -158,6 +184,33 @@ const Register = ({ router: { query } }) => {
                     });
             }
         });
+    }
+
+    const onNewTask = () => {
+        setRegisterForm({
+            ...registerForm,
+            fileAttacheds: [null],
+            progressives: [{assignUser: "", assignUserId: "", stepType: "", timeStamp: "", stepTypeCode: ""}],
+            task: {
+                businessType: "BIZ1",
+                cause: "",
+                completeDate: "",
+                customNo: "",
+                developerOpinion: "",
+                expectedCompleteDate: "",
+                howToFix: "",
+                id: "",
+                priorityType: "",
+                receiptDate: "",
+                receiptNo: "",
+                receiptOpinion: "",
+                requestUserId: "",
+                requireType: "NEW",
+                result: "",
+                stepType: "",
+                title: ""
+            }
+        })
     }
 
     const onSaveTask = () => {
@@ -216,7 +269,7 @@ const Register = ({ router: { query } }) => {
             taskId : registerForm.task.id,
             link : nameInput.current.value
         }).then(res => {
-
+            nameInput.current.value = ""
         });
     }
 
@@ -233,13 +286,6 @@ const Register = ({ router: { query } }) => {
         const formData = new FormData();
 
         for (let i = 0; i < files.length; i++) {
-            if (files[i].size > 1024){
-                setFileSize(false);
-                setFileUploadProgress(false);
-                setFileUploadResponse(null);
-                return;
-            }
-
             formData.append(`files`, files[i])
             formData.append(`taskId`, registerForm.task.id)
         }
@@ -251,8 +297,19 @@ const Register = ({ router: { query } }) => {
 
         fetch(FILE_UPLOAD_BASE_ENDPOINT, requestOptions)
             .then(async response => {
+
+                console.log(response)
+
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();
+
+
+                setFileTags(fileTags => [...fileTags, {
+                    id: data.fileId,
+                    fileSize: data.fileSize,
+                    fileName: data.fileName,
+                    filePath: data.filePath
+                }] )
 
                 // check for error response
                 if (!response.ok) {
@@ -262,12 +319,13 @@ const Register = ({ router: { query } }) => {
                     return Promise.reject(error);
                 }
 
-                console.log(data.message);
                 setFileUploadResponse(data.message);
+                fileInput.current.value = null;
             })
             .catch(error => {
                 console.error('Error while uploading file!', error);
             });
+
         setFileUploadProgress(false);
     };
 
@@ -281,6 +339,7 @@ const Register = ({ router: { query } }) => {
                         </div>
                         <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                             <button className="btn btn-primary" type="button">Refresh</button>
+                            <button className="btn btn-primary" onClick={onNewTask} type="button">New</button>
                             <button className="btn btn-primary" onClick={onSaveTask} type="button">Save</button>
                         </div>
                     </div>
@@ -453,7 +512,7 @@ const Register = ({ router: { query } }) => {
                                     <form onSubmit={fileSubmitHandler}>
                                         <div className="row" >
                                             <div className="col-sm-10">
-                                                <input  className="form-control"  type="file" id="formFileMultiple"   multiple onChange={uploadFileHandler} />
+                                                <input  className="form-control"  type="file" id="formFileMultiple" ref={fileInput}  multiple onChange={uploadFileHandler} />
                                             </div>
 
                                             {!fileSize && <p style={{color:'red'}}>File size exceeded!!</p>}
@@ -462,6 +521,21 @@ const Register = ({ router: { query } }) => {
                                             <div className="col-sm-2">
                                                 <button className="btn btn-light" type='submit'>Upload</button>
                                             </div>
+                                        </div>
+                                        <div className="row" >
+                                            {fileTags?.map(item => {
+                                                if(item){
+                                                    if(item.fileName){
+                                                        return <a href={"http://localhost:9090/register/files?fileId=" + item.id }  target="_blank" rel="noopener noreferrer" download>
+                                                            {item.fileName}
+                                                        </a>
+                                                    }else{
+                                                        return ""
+                                                    }
+                                                }else{
+                                                    return ""
+                                                }
+                                            })}
                                         </div>
 
                                     </form>
