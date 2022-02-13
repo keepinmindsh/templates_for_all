@@ -241,6 +241,7 @@ const Register = ({ router: { query } }) => {
             }
 
             formData.append(`files`, files[i])
+            formData.append(`taskId`, registerForm.task.id)
         }
 
         const requestOptions = {
