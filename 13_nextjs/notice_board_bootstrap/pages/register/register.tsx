@@ -10,10 +10,19 @@ const Register = ({ router: { query } }) => {
     const [requireType, setRequireType] = useState<any>([]);
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
-
     const [links, setLinks]  = useState<[string|null]>([null]);
 
     const nameInput = useRef();
+
+    const [files, setFiles] = useState('');
+    //state for checking file size
+    const [fileSize, setFileSize] = useState(true);
+    // for file upload progress message
+    const [fileUploadProgress, setFileUploadProgress] = useState(false);
+    //for displaying response message
+    const [fileUploadResponse, setFileUploadResponse] = useState(null);
+    //base end point url
+    const FILE_UPLOAD_BASE_ENDPOINT = "http://localhost:9090/register/upload";
 
     const [registerForm, setRegisterForm ] = useState<{
         task: {
@@ -211,6 +220,56 @@ const Register = ({ router: { query } }) => {
         });
     }
 
+    const uploadFileHandler = (event) => {
+        setFiles(event.target.files);
+    };
+
+    const fileSubmitHandler = (event) => {
+        event.preventDefault();
+        setFileSize(true);
+        setFileUploadProgress(true);
+        setFileUploadResponse(null);
+
+        const formData = new FormData();
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > 1024){
+                setFileSize(false);
+                setFileUploadProgress(false);
+                setFileUploadResponse(null);
+                return;
+            }
+
+            formData.append(`files`, files[i])
+        }
+
+        const requestOptions = {
+            method: 'POST',
+            body: formData
+        };
+
+        fetch(FILE_UPLOAD_BASE_ENDPOINT, requestOptions)
+            .then(async response => {
+                const isJson = response.headers.get('content-type')?.includes('application/json');
+                const data = isJson && await response.json();
+
+                // check for error response
+                if (!response.ok) {
+                    // get error message
+                    const error = (data && data.message) || response.status;
+                    setFileUploadResponse(data.message);
+                    return Promise.reject(error);
+                }
+
+                console.log(data.message);
+                setFileUploadResponse(data.message);
+            })
+            .catch(error => {
+                console.error('Error while uploading file!', error);
+            });
+        setFileUploadProgress(false);
+    };
+
     return (
         <>
             <div className="card">
@@ -390,7 +449,21 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">첨부파일</label>
                                 <div className="col-sm-10">
-                                    <input className="form-control" type="file" id="formFileMultiple" multiple />
+                                    <form onSubmit={fileSubmitHandler}>
+                                        <div className="row" >
+                                            <div className="col-sm-10">
+                                                <input  className="form-control"  type="file" id="formFileMultiple"   multiple onChange={uploadFileHandler} />
+                                            </div>
+
+                                            {!fileSize && <p style={{color:'red'}}>File size exceeded!!</p>}
+                                            {fileUploadProgress && <p style={{color:'red'}}>Uploading File(s)</p>}
+                                            {fileUploadResponse!=null && <p style={{color:'green'}}>{fileUploadResponse}</p>}
+                                            <div className="col-sm-2">
+                                                <button className="btn btn-light" type='submit'>Upload</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
