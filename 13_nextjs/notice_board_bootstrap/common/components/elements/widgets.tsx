@@ -80,6 +80,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             + "receiptEndDate=" + searchForm.receiptEndDate?.replaceAll(/-/g, "") + "&"
             + "finishedStartDate=" + searchForm.finishedStartDate?.replaceAll(/-/g, "") + "&"
             + "finishedEndDate=" + searchForm.finishedEndDate?.replaceAll(/-/g, "") + "&"
+            + "buttonStatus=" + buttonStatus + "&"
             + "searchKey=" + searchForm.searchKey;
 
         axios.get(hostUrl + '/tasks?' + queryString)

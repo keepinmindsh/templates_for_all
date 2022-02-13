@@ -22,6 +22,8 @@ const Register = ({ router: { query } }) => {
 
     const nameInput = useRef();
     const fileInput = useRef();
+    const statusInput = useRef();
+    const logedInUserId = query.assignUserId;
 
     const [files, setFiles] = useState('');
     //state for checking file size
@@ -90,7 +92,7 @@ const Register = ({ router: { query } }) => {
             expectedCompleteDate: null,
             howToFix: null,
             id: null,
-            priorityType: "MIDDLE",
+            priorityType: "OPEN_READY",
             receiptDate: null,
             receiptNo: null,
             receiptOpinion: null,
@@ -149,12 +151,12 @@ const Register = ({ router: { query } }) => {
         }else{
             setRegisterForm({...registerForm
                 ,progressives : [
-                    {assignUser: "", assignUserId: query.assignUserId, stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
-                    {assignUser: "", assignUserId: query.assignUserId, stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
-                    {assignUser: "", assignUserId: query.assignUserId, stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
-                    {assignUser: "", assignUserId: query.assignUserId, stepType: "개발시작", timeStamp: "", stepTypeCode: "DEVELOPMENT_START"},
-                    {assignUser: "", assignUserId: query.assignUserId, stepType: "개발적용", timeStamp: "", stepTypeCode: "DEVELOPMENT_FINISH"},
-                    {assignUser: "", assignUserId: query.assignUserId, stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
+                    {assignUser: "", assignUserId: "", stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
+                    {assignUser: "", assignUserId: "", stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
+                    {assignUser: "", assignUserId: "", stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
+                    {assignUser: "", assignUserId: "", stepType: "개발시작", timeStamp: "", stepTypeCode: "DEVELOPMENT_START"},
+                    {assignUser: "", assignUserId: "", stepType: "개발적용", timeStamp: "", stepTypeCode: "DEVELOPMENT_FINISH"},
+                    {assignUser: "", assignUserId: "", stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
                 ]});
         }
     }, [])
@@ -165,7 +167,6 @@ const Register = ({ router: { query } }) => {
     }
 
     const onRegisterFormHandler = ( name : string, event : ChangeEvent) => {
-
         registerForm.task[name] = event.target.value;
 
         setRegisterForm(registerForm);
@@ -178,6 +179,8 @@ const Register = ({ router: { query } }) => {
             stepTypeCode: stepTypeCode
         }).then(res => {
             if(res.data == "Success"){
+                statusInput.current.value = stepTypeCode
+
                 axios.get('http://localhost:9090/register/progressives?id=' + registerForm.task.id)
                     .then(res => {
                         setRegisterForm({...registerForm , progressives : res.data.progressives });
@@ -190,7 +193,14 @@ const Register = ({ router: { query } }) => {
         setRegisterForm({
             ...registerForm,
             fileAttacheds: [null],
-            progressives: [{assignUser: "", assignUserId: "", stepType: "", timeStamp: "", stepTypeCode: ""}],
+            progressives : [
+                {assignUser: "", assignUserId: "", stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
+                {assignUser: "", assignUserId: "", stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
+                {assignUser: "", assignUserId: "", stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
+                {assignUser: "", assignUserId: "", stepType: "개발시작", timeStamp: "", stepTypeCode: "DEVELOPMENT_START"},
+                {assignUser: "", assignUserId: "", stepType: "개발적용", timeStamp: "", stepTypeCode: "DEVELOPMENT_FINISH"},
+                {assignUser: "", assignUserId: "", stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
+            ],
             task: {
                 businessType: "BIZ1",
                 cause: "",
@@ -200,17 +210,17 @@ const Register = ({ router: { query } }) => {
                 expectedCompleteDate: "",
                 howToFix: "",
                 id: "",
-                priorityType: "",
+                priorityType: "OPEN_READY",
                 receiptDate: "",
                 receiptNo: "",
                 receiptOpinion: "",
                 requestUserId: "",
                 requireType: "NEW",
                 result: "",
-                stepType: "",
+                stepType: null,
                 title: ""
             }
-        })
+        });
     }
 
     const onSaveTask = () => {
@@ -222,7 +232,7 @@ const Register = ({ router: { query } }) => {
             developerOpinion: registerForm.task.developerOpinion,
             expectedCompleteDate: registerForm.task.expectedCompleteDate,
             howToFix: registerForm.task.howToFix,
-            id: taskId ? taskId : null,
+            id: registerForm.task.id ? registerForm.task.id : null,
             priorityType: registerForm.task.priorityType,
             receiptDate: registerForm.task.receiptDate,
             receiptNo: registerForm.task.receiptNo,
@@ -271,6 +281,14 @@ const Register = ({ router: { query } }) => {
         }).then(res => {
             nameInput.current.value = ""
         });
+    }
+
+    const onRemoveFile = (fileId : number) => {
+
+        axios.delete("http://localhost:9090/register/file?fileId=" + fileId)
+            .then(res => {
+                setFileTags([...fileTags.filter(item => item.id != fileId)])
+        })
     }
 
     const uploadFileHandler = (event) => {
@@ -360,11 +378,11 @@ const Register = ({ router: { query } }) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 업무</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.businessType} onChange={(event) => { onRegisterFormHandler("businessType", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.requireType}  onChange={(event) => { onRegisterFormHandler("requireType", event)}} >
                                         {
-                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                            requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
                                     </select>
                                 </div>
@@ -393,11 +411,11 @@ const Register = ({ router: { query } }) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 업무</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.requireType}  onChange={(event) => { onRegisterFormHandler("requireType", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.businessType} onChange={(event) => { onRegisterFormHandler("businessType", event)}} >
                                         {
-                                            requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
                                         }
                                     </select>
                                 </div>
@@ -438,10 +456,10 @@ const Register = ({ router: { query } }) => {
                     <div className="row mt-1" >
                         <div className="col-sm-6" >
                             <div className="input-group mb-3">
-                                <button className="btn btn-outline-secondary" type="button" onClick={onAddRelatedLink} id="button-addon1">
+                                <button className="btn btn-outline-secondary" type="button" onClick={onAddRelatedLink} id="button-addon1" disabled={registerForm.task.id ? false : true } >
                                     연관링크 추가
                                 </button>
-                                <input type="text" className="form-control" id="relatedLink"  ref={nameInput}  />
+                                <input type="text" className="form-control" id="relatedLink"  ref={nameInput}  disabled={registerForm.task.id ? false : true }/>
                             </div>
                         </div>
                         <div className="col" >
@@ -459,7 +477,7 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">상태</label>
                                 <div className="col-sm-8">
-                                    <input type="text" className="form-control disabled" defaultValue={registerForm.task.stepType}   onChange={(event) => { onRegisterFormHandler("statusType", event)}} readOnly />
+                                    <input type="text" className="form-control disabled" defaultValue={registerForm.task.stepType}  ref={statusInput} onChange={(event) => { onRegisterFormHandler("statusType", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
@@ -471,9 +489,9 @@ const Register = ({ router: { query } }) => {
                                     return (
                                         <div className="col-xl-2 col-md-2 p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => {onStartTask(item.assignUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } >
+                                                <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={registerForm.task.id ? item.timeStamp ? true : false : true } >
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
-                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUser ? "[" + item.assignUser + "]" : " " }</h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
                                                 </button>
                                             </div>
@@ -512,23 +530,32 @@ const Register = ({ router: { query } }) => {
                                     <form onSubmit={fileSubmitHandler}>
                                         <div className="row" >
                                             <div className="col-sm-10">
-                                                <input  className="form-control"  type="file" id="formFileMultiple" ref={fileInput}  multiple onChange={uploadFileHandler} />
+                                                <input  className="form-control"  type="file" id="formFileMultiple" ref={fileInput}  multiple onChange={uploadFileHandler}  disabled={registerForm.task.id ? false : true } />
                                             </div>
 
                                             {!fileSize && <p style={{color:'red'}}>File size exceeded!!</p>}
                                             {fileUploadProgress && <p style={{color:'red'}}>Uploading File(s)</p>}
                                             {fileUploadResponse!=null && <p style={{color:'green'}}>{fileUploadResponse}</p>}
                                             <div className="col-sm-2">
-                                                <button className="btn btn-light" type='submit'>Upload</button>
+                                                <button className="btn btn-light" type='submit'  disabled={registerForm.task.id ? false : true }  >Upload</button>
                                             </div>
                                         </div>
                                         <div className="row" >
                                             {fileTags?.map(item => {
                                                 if(item){
                                                     if(item.fileName){
-                                                        return <a href={"http://localhost:9090/register/files?fileId=" + item.id }  target="_blank" rel="noopener noreferrer" download>
-                                                            {item.fileName}
-                                                        </a>
+                                                        return <>
+                                                            <div className="row" >
+                                                                <div className="col-sm-6" >
+                                                                    <a href={"http://localhost:9090/register/files?fileId=" + item.id }  target="_blank" rel="noopener noreferrer" download>
+                                                                        {item.fileName}
+                                                                    </a>
+                                                                </div>
+                                                                <div className="col-sm-2" >
+                                                                    <a onClick={() => onRemoveFile(item.id)} >Remove</a>
+                                                                </div>
+                                                            </div>
+                                                        </>
                                                     }else{
                                                         return ""
                                                     }
