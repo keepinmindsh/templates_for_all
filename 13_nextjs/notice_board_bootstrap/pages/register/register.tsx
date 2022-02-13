@@ -23,6 +23,8 @@ const Register = ({ router: { query } }) => {
     const nameInput = useRef();
     const fileInput = useRef();
     const statusInput = useRef();
+
+
     const logedInUserId = query.assignUserId;
 
     const [files, setFiles] = useState('');
@@ -103,8 +105,6 @@ const Register = ({ router: { query } }) => {
             title: null
         }
     })
-
-    let taskId = query.id;
 
     useEffect(() => {
         axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
@@ -347,6 +347,32 @@ const Register = ({ router: { query } }) => {
         setFileUploadProgress(false);
     };
 
+    const onRefresh = () => {
+        axios.get('http://localhost:9090/register/tasks?id=' + query.id)
+            .then(res => {
+                setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives, links : res.data.links, fileAttacheds : res.data.fileAttacheds });
+
+                const list : [string|null] = [];
+                res.data.links.forEach(item =>{
+                    list.push(item.link)
+                })
+                setLinks(list)
+
+                const fileList : [{
+                    id: number
+                    fileSize: number
+                    fileName: string
+                    filePath: string
+                } | null] = [];
+
+                res.data.fileAttacheds.forEach(item =>{
+                    fileList.push(item)
+                })
+                setFileTags([...fileList])
+
+            });
+    }
+
     return (
         <>
             <div className="card">
@@ -356,7 +382,7 @@ const Register = ({ router: { query } }) => {
                             {prePage()}
                         </div>
                         <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
-                            <button className="btn btn-primary" type="button">Refresh</button>
+                            <button className="btn btn-primary" onClick={onRefresh} type="button">Refresh</button>
                             <button className="btn btn-primary" onClick={onNewTask} type="button">New</button>
                             <button className="btn btn-primary" onClick={onSaveTask} type="button">Save</button>
                         </div>
@@ -465,7 +491,15 @@ const Register = ({ router: { query } }) => {
                         <div className="col" >
                             {links?.map(item => {
                                 if(item){
-                                    return <Link href={item}><button className="btn btn-outline-secondary me-1" type="button" id="button-addon1">{item}</button></Link>
+                                    return <Link  href={{
+                                        pathname: '/register/register',
+                                        query: {
+                                            inputType: "UPDATE",
+                                            id : item
+                                        }
+                                    }} >
+                                                <button className="btn btn-outline-secondary me-1" type="button" id="button-addon1">{item}</button>
+                                            </Link>
                                 }else{
                                     return ""
                                 }

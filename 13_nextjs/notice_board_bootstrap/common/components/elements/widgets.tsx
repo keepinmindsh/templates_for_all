@@ -64,10 +64,14 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             .then(res => {
                 setSteps(res.data);
             });
+
+        searchForTasks("")
     }, []);
 
-    const applyButtonStatus = (button : String) : void => {
-        setButtonStatus(button)
+    const applyButtonStatus = (event: MouseEvent) : void => {
+        setButtonStatus(event.currentTarget.value)
+
+        searchForTasks(event.currentTarget.value)
     }
 
     const searchForTasks = (value:String|null) : void => {
@@ -80,7 +84,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             + "receiptEndDate=" + searchForm.receiptEndDate?.replaceAll(/-/g, "") + "&"
             + "finishedStartDate=" + searchForm.finishedStartDate?.replaceAll(/-/g, "") + "&"
             + "finishedEndDate=" + searchForm.finishedEndDate?.replaceAll(/-/g, "") + "&"
-            + "buttonStatus=" + buttonStatus + "&"
+            + "buttonStatus=" + ( value ? value : buttonStatus ) + "&"
             + "searchKey=" + searchForm.searchKey;
 
         axios.get(hostUrl + '/tasks?' + queryString)
@@ -211,7 +215,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                     <input type="text" className="form-control" placeholder="Search..."
                                            aria-describedby="project-search-addon"  onChange={(event) => { onSearchChangeHandler("searchKey", event)}} />
                                     <div className="input-group-append">
-                                        <button className="btn btn-danger" onClick={searchForTasks} type="button" id="project-search-addon" ><i className="fa fa-search search-icon font-12"></i>
+                                        <button className="btn btn-danger" onClick={ () => { searchForTasks(null) }} type="button" id="project-search-addon" ><i className="fa fa-search search-icon font-12"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -227,7 +231,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => {applyButtonStatus(item.stepType); searchForTasks(item.stepType);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                <button type="button" value={item.stepType} onClick={(event) => {applyButtonStatus(event);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
                                                 </button>
@@ -245,7 +249,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => {applyButtonStatus(item.stepType); searchForTasks(item.stepType);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                <button type="button"  value={item.stepType} onClick={(event) => {applyButtonStatus(event);}} className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
                                                 </button>
