@@ -9,6 +9,7 @@ const Home: NextPage = () => {
     const [ gridData, setGridData ] = useState<[
         {
             taskNo : number,
+            taskNo : number,
             custmName : string,
             title : string,
             priorityType : string,
@@ -16,8 +17,7 @@ const Home: NextPage = () => {
             errorType : string,
             receiptDate : string,
             finishedDate : string,
-            statusType : string
-
+            stepType : string
         }
     ]|null>();
 

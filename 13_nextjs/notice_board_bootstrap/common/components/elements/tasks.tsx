@@ -2,7 +2,8 @@ import styles from "../../../styles/components/elements/Tasks.module.css";
 import Link from 'next/link'
 
 const Tasks = (props : { gridData:[ {
-        taskNo : number,
+        taskNo : string,
+        receiptNo : number,
         custmName : string,
         title : string,
         priorityType : string,
@@ -42,7 +43,7 @@ const Tasks = (props : { gridData:[ {
                                                     query: { inputType : "UPDATE", id : item.taskNo , assignUserId : "admin" , assignUserName : "admin" } // array라 문자화
                                                 }} >
                                                 <tr>
-                                                    <th scope="row">{item.taskNo}</th>
+                                                    <th scope="row">{item.receiptNo}</th>
                                                     <td>{item.custmName}</td>
                                                     <td>{item.title}</td>
                                                     <td>

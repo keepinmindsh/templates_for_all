@@ -32,7 +32,7 @@ const Register = ({ router: { query } }) => {
             requestUserId: string | null
             requireType: string | null
             result: string | null
-            statusType: string | null
+            stepType: string | null
             title: string | null
         },
         progressives : [
@@ -74,7 +74,7 @@ const Register = ({ router: { query } }) => {
             requestUserId: null,
             requireType: "NEW",
             result: null,
-            statusType: null,
+            stepType: null,
             title: null
         }
     })
@@ -168,13 +168,32 @@ const Register = ({ router: { query } }) => {
             requestUserId: registerForm.task.requestUserId,
             requireType: registerForm.task.requireType,
             result: registerForm.task.result,
-            statusType: registerForm.task.statusType,
+            stepType: registerForm.task.stepType,
             title: registerForm.task.title
-        }).then(res => {
-            registerForm.task.id = res.data.taskId
-            axios.get('http://localhost:9090/register/progressives?id=' + res.data.taskId)
+        }).then(taskRes => {
+            axios.get('http://localhost:9090/register/progressives?id=' + taskRes.data.taskId)
                 .then(res => {
-                    setRegisterForm({...registerForm , progressives : res.data.progressives });
+                    setRegisterForm({...registerForm , progressives : res.data.progressives ,
+                        task : {
+                            businessType: registerForm.task.businessType,
+                            cause: registerForm.task.cause,
+                            completeDate: registerForm.task.completeDate,
+                            customNo: taskRes.data.customNo,
+                            developerOpinion: registerForm.task.developerOpinion,
+                            expectedCompleteDate: registerForm.task.expectedCompleteDate,
+                            howToFix: registerForm.task.howToFix,
+                            id: taskRes.data.taskId,
+                            priorityType: registerForm.task.priorityType,
+                            receiptDate: registerForm.task.receiptDate,
+                            receiptNo: taskRes.data.receiptNo,
+                            receiptOpinion: registerForm.task.receiptOpinion,
+                            requestUserId: taskRes.data.requestUserId,
+                            requireType: registerForm.task.requireType,
+                            result: registerForm.task.result,
+                            stepType: taskRes.data.stepType,
+                            title: registerForm.task.title
+                        }
+                    });
 
                     alert("Saved!")
                 });
@@ -321,7 +340,7 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">상태</label>
                                 <div className="col-sm-8">
-                                    <input type="text" className="form-control disabled" defaultValue={registerForm.task.statusType}   onChange={(event) => { onRegisterFormHandler("statusType", event)}} readOnly />
+                                    <input type="text" className="form-control disabled" defaultValue={registerForm.task.stepType}   onChange={(event) => { onRegisterFormHandler("statusType", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
