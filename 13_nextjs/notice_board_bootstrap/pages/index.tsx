@@ -50,11 +50,11 @@ const Home: NextPage = () => {
 
             const loginHeader = {
                 method: 'POST',
-                url: '/login',
+                url: '/',
                 type: 'login',
                 headers: {
                     'Content-Type': 'application/json',
-                    'API-KEY': '165f439f72ef3febda5ea2f59a4642d6a5a93d48e9df7a9971bb969cfcc8f95c',
+                    'API-KEY': '',
                     'VENDOR_ID': ''
                 }
             };
