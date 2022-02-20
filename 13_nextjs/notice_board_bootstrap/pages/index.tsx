@@ -60,13 +60,13 @@ const Home: NextPage = () => {
             };
 
             let loginParams = {
-                systemId: 'WINGSINTEGRATION',
+                systemId: '',
                 companyId: loginInfo.COMPANY_ID,
-                bsnsCode: '11',
-                propertyNo: '11',
+                bsnsCode: '',
+                propertyNo: '',
                 userId: loginInfo.USER_ID,
                 password: loginInfo.PASSWORD,
-                langTypeCode : 'KR'
+                langTypeCode : ''
             }
 
             api_call(loginHeader, convertFormdata(loginParams), (result, request) => {
