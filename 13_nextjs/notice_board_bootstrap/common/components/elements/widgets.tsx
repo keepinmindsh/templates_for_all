@@ -1,6 +1,7 @@
 import {useState, useEffect, ChangeEvent} from 'react'
 import axios from 'axios'
 import Link from 'next/link'
+import {getCookie, getCookieUserInfo, loadLocalStorage} from "../../cookie/cookieHandle";
 
 const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
@@ -11,9 +12,10 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     const [buttonStatus, setButtonStatus] = useState<String>("CUSTOMER_RECEIPT");
     const [steps, setSteps] = useState<any[]>([]);
 
+    // @ts-ignore
     const loginInfo = {
-        userId : "shjeong",
-        userName : "seung hwa"
+        userId :  JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"],
+        userName : ""
     }
 
     const [searchForm, setSearchForm ] = useState<{
@@ -41,7 +43,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             searchKey : ""
         });
 
-    const hostUrl:string = "http://localhost:9090"
+    const hostUrl:string = process.env.NEXT_PUBLIC_BACK_API_HOST
 
     useEffect(() => {
         axios.get(hostUrl + '/codes?codeType=BUSINESS_TYPE')
@@ -69,8 +71,10 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     }, []);
 
     const applyButtonStatus = (event: MouseEvent) : void => {
+        // @ts-ignore
         setButtonStatus(event.currentTarget.value)
 
+        // @ts-ignore
         searchForTasks(event.currentTarget.value)
     }
 
@@ -80,10 +84,10 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             + "requireType=" + searchForm.requireType + "&"
             + "businessType=" + searchForm.businessType + "&"
             + "priorityType=" + searchForm.priorityType + "&"
-            + "receiptStartDate=" + searchForm.receiptStartDate?.replaceAll(/-/g, "") + "&"
-            + "receiptEndDate=" + searchForm.receiptEndDate?.replaceAll(/-/g, "") + "&"
-            + "finishedStartDate=" + searchForm.finishedStartDate?.replaceAll(/-/g, "") + "&"
-            + "finishedEndDate=" + searchForm.finishedEndDate?.replaceAll(/-/g, "") + "&"
+            + "receiptStartDate=" + searchForm.receiptStartDate + "&"
+            + "receiptEndDate=" + searchForm.receiptEndDate + "&"
+            + "finishedStartDate=" + searchForm.finishedStartDate + "&"
+            + "finishedEndDate=" + searchForm.finishedEndDate + "&"
             + "buttonStatus=" + ( value ? value : buttonStatus ) + "&"
             + "searchKey=" + searchForm.searchKey;
 
@@ -94,6 +98,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     }
 
     const onSearchChangeHandler = ( name : string, event : ChangeEvent) => {
+
+        // @ts-ignore
         setSearchForm({...searchForm, [name] : event.target.value});
     }
 
@@ -183,8 +189,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>접수 기간</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
-                                        <input type="date" aria-label="First name" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptStartDate", event)}} />
-                                        <input type="date" aria-label="Last name" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptEndDate", event)}} />
+                                        <input type="date" aria-label="First name" max="2099-12-31" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptStartDate", event)}} />
+                                        <input type="date" aria-label="Last name" max="2099-12-31" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptEndDate", event)}} />
                                     </div>
                                 </div>
                             </div>
@@ -199,8 +205,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                        className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>완료 기간</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
-                                        <input type="date" aria-label="First name" className="form-control"  onChange={(event) => { onSearchChangeHandler("finishedStartDate", event)}} />
-                                        <input type="date" aria-label="Last name" className="form-control"  onChange={(event) => { onSearchChangeHandler("finishedEndDate", event)}} />
+                                        <input type="date" aria-label="First name" className="form-control" max="2099-12-31"  onChange={(event) => { onSearchChangeHandler("finishedStartDate", event)}} />
+                                        <input type="date" aria-label="Last name" className="form-control" max="2099-12-31"  onChange={(event) => { onSearchChangeHandler("finishedEndDate", event)}} />
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +237,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">
-                                                <button type="button" value={item.stepType} onClick={(event) => {applyButtonStatus(event);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"}>
+                                                <button type="button" value={item.stepType} onClick={(event :MouseEvent ) => {
+                                                    return applyButtonStatus(event);} } className={buttonStatus == item.stepType ? "btn btn-warning" : "btn btn-light"} >
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepName}</h6>
                                                     <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">[ {item.counts} ]</h6>
                                                 </button>

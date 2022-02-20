@@ -1,5 +1,6 @@
 import styles from "../../../styles/components/elements/Tasks.module.css";
 import Link from 'next/link'
+import {getCookie, loadLocalStorage, USER_INFO_KEY} from '../../cookie/cookieHandle'
 
 const Tasks = (props : { gridData:[ {
         taskNo : string,
@@ -16,10 +17,11 @@ const Tasks = (props : { gridData:[ {
     }]|null }) => {
 
     const loginInfo = {
-        userId : "shjeong",
-        userName : "seung hwa"
+        userId : JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"],
+        userName : ""
     }
 
+    console.log(loginInfo.userId)
 
     return (
         <div className="row">
@@ -34,7 +36,6 @@ const Tasks = (props : { gridData:[ {
                                 <th scope="col">제목</th>
                                 <th scope="col">우선순위</th>
                                 <th scope="col">요청타입</th>
-                                <th scope="col">오류타입</th>
                                 <th scope="col">접수일자</th>
                                 <th scope="col">완료예정일</th>
                                 <th scope="col">상태</th>
@@ -58,9 +59,6 @@ const Tasks = (props : { gridData:[ {
                                                     </td>
                                                     <td>
                                                         {item.requireType}
-                                                    </td>
-                                                    <td>
-                                                        {item.errorType}
                                                     </td>
                                                     <td>
                                                         {item.receiptDate}

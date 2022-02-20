@@ -1,17 +1,21 @@
 import { useRouter } from 'next/router'
-import {useState, useEffect, useRef, ChangeEvent} from 'react'
-import { withRouter } from 'next/router';
+import {useState, useEffect, useRef, ChangeEvent, Key} from 'react'
+import {withRouter} from 'next/router';
 import Link from 'next/link'
 import axios from 'axios'
+import {getCookie, loadLocalStorage} from "../../common/cookie/cookieHandle";
+import Header from "../../common/components/elements/header";
 
-const Register = ({ router: { query } }) => {
+// @ts-ignore
+const Register = ({router: {query}}) => {
 
     const [businessType, setBusinessType] = useState<any>([]);
     const [requireType, setRequireType] = useState<any>([]);
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
-    const [links, setLinks]  = useState<[string|null]>([null]);
-    const [fileTags, setFileTags]  = useState<[
+    const [links, setLinks] = useState<[string | null]>([null]);
+    const [isLink, setIsLink] = useState(false);
+    const [fileTags, setFileTags] = useState<[
             {
                 id: number
                 fileSize: number
@@ -23,9 +27,18 @@ const Register = ({ router: { query } }) => {
     const nameInput = useRef();
     const fileInput = useRef();
     const statusInput = useRef();
+    const refTitle = useRef();
+    const refCause = useRef();
+    const refHowToFix = useRef();
+    const refResult = useRef();
+    const refReceiptOpinion = useRef();
+    const refDeveloperOpinion = useRef();
+
+    const router = useRouter()
 
 
-    const logedInUserId = query.assignUserId;
+    // @ts-ignore
+    const logedInUserId = getCookie("LOGIN_INFO")? JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"] : "";getCookie("LOGIN_INFO")
 
     const [files, setFiles] = useState('');
     //state for checking file size
@@ -34,10 +47,19 @@ const Register = ({ router: { query } }) => {
     const [fileUploadProgress, setFileUploadProgress] = useState(false);
     //for displaying response message
     const [fileUploadResponse, setFileUploadResponse] = useState(null);
-    //base end point url
-    const FILE_UPLOAD_BASE_ENDPOINT = "http://localhost:9090/register/upload";
 
-    const [registerForm, setRegisterForm ] = useState<{
+    // @ts-ignore
+    const hostUrl:string = process.env.NEXT_PUBLIC_BACK_API_HOST
+
+    const loginInfo = {
+        userId : JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"],
+        userName : ""
+    }
+
+    //base end point url
+    const FILE_UPLOAD_BASE_ENDPOINT = hostUrl + "/register/upload";
+
+    const [registerForm, setRegisterForm] = useState<{
         task: {
             businessType: string | null
             cause: string | null
@@ -57,29 +79,29 @@ const Register = ({ router: { query } }) => {
             stepType: string | null
             title: string | null
         },
-        progressives : [
+        progressives: [
             {
                 assignUser: string
-                assignUserId : string
+                assignUserId: string
                 stepType: string
                 timeStamp: string
                 order: number
-                lastStep : boolean
-                stepTypeCode : string
+                lastStep: boolean
+                stepTypeCode: string
             }
         ],
-        fileAttacheds : [
-            {
-                id: number
-                fileSize: number
-                fileName: string
-                filePath: string
-            } | null
+        fileAttacheds: [
+                {
+                    id: number
+                    fileSize: number
+                    fileName: string
+                    filePath: string
+                } | null
         ],
-        links : [
+        links: [
             {
-                linkId : number
-                link : string
+                linkId: number
+                link: string
             }
         ]
     }>({
@@ -98,7 +120,7 @@ const Register = ({ router: { query } }) => {
             receiptDate: null,
             receiptNo: null,
             receiptOpinion: null,
-            requestUserId: null,
+            requestUserId: logedInUserId,
             requireType: "NEW",
             result: null,
             stepType: null,
@@ -107,83 +129,118 @@ const Register = ({ router: { query } }) => {
     })
 
     useEffect(() => {
-        axios.get('http://localhost:9090/codes?codeType=BUSINESS_TYPE')
+        axios.get(hostUrl + '/codes?codeType=BUSINESS_TYPE')
             .then(res => {
                 setBusinessType(res.data);
             });
-        axios.get('http://localhost:9090/codes?codeType=REQUIRE_TYPE')
+        axios.get(hostUrl + '/codes?codeType=REQUIRE_TYPE')
             .then(res => {
                 setRequireType(res.data);
             });
-        axios.get('http://localhost:9090/codes?codeType=PRIORITY_TYPE')
+        axios.get(hostUrl + '/codes?codeType=PRIORITY_TYPE')
             .then(res => {
                 setPriorityType(res.data);
             });
-        axios.get('http://localhost:9090/customers')
+        axios.get(hostUrl + '/customers')
             .then(res => {
                 setCustomers(res.data);
             });
 
-        if(query.inputType && query.inputType != "NEW"){
-            axios.get('http://localhost:9090/register/tasks?id=' + query.id)
-                .then(res => {
-                    setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives, links : res.data.links, fileAttacheds : res.data.fileAttacheds });
+        setIsLink(getParameterByName("screenType") == "LINK" ? true : false)
 
-                    const list : [string|null] = [];
-                    res.data.links.forEach(item =>{
+        if (( query.inputType || getParameterByName("inputType") ) && ( query.inputType != "NEW" || getParameterByName("inputType") != "NEW")) {
+            axios.get(hostUrl + '/register/tasks?id=' + ( getParameterByName("id") ?  getParameterByName("id") : query.id ) )
+                .then(res => {
+                    setRegisterForm({
+                        ...registerForm,
+                        task: res.data.task,
+                        progressives: res.data.progressives,
+                        links: res.data.links,
+                        fileAttacheds: res.data.fileAttacheds
+                    });
+
+                    const list: [string | null] = [];
+                    res.data.links.forEach(item => {
                         list.push(item.link)
                     })
                     setLinks(list)
 
-                    const fileList : [{
+                    const fileList: [{
                         id: number
                         fileSize: number
                         fileName: string
                         filePath: string
                     } | null] = [];
 
-                    res.data.fileAttacheds.forEach(item =>{
+                    res.data.fileAttacheds.forEach(item => {
                         fileList.push(item)
                     })
                     setFileTags([...fileList])
 
                 });
-        }else{
-            setRegisterForm({...registerForm
-                ,progressives : [
-                    {assignUser: "", assignUserId: "", stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
+        } else {
+            setRegisterForm({
+                ...registerForm
+                , progressives: [
+                    {
+                        assignUser: "",
+                        assignUserId: "",
+                        stepType: "고객접수",
+                        timeStamp: "",
+                        stepTypeCode: "CUSTOMER_RECEIPT"
+                    },
                     {assignUser: "", assignUserId: "", stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
-                    {assignUser: "", assignUserId: "", stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
-                    {assignUser: "", assignUserId: "", stepType: "개발시작", timeStamp: "", stepTypeCode: "DEVELOPMENT_START"},
-                    {assignUser: "", assignUserId: "", stepType: "개발적용", timeStamp: "", stepTypeCode: "DEVELOPMENT_FINISH"},
+                    {
+                        assignUser: "",
+                        assignUserId: "",
+                        stepType: "개발담당",
+                        timeStamp: "",
+                        stepTypeCode: "DEVELOPMENT_ASSIGN"
+                    },
+                    {
+                        assignUser: "",
+                        assignUserId: "",
+                        stepType: "개발시작",
+                        timeStamp: "",
+                        stepTypeCode: "DEVELOPMENT_START"
+                    },
+                    {
+                        assignUser: "",
+                        assignUserId: "",
+                        stepType: "개발적용",
+                        timeStamp: "",
+                        stepTypeCode: "DEVELOPMENT_FINISH"
+                    },
                     {assignUser: "", assignUserId: "", stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
-                ]});
+                ]
+            });
         }
+
+        console.log("on ready")
     }, [])
 
     const prePage = () => {
-        const router = useRouter()
         return <button className="btn btn-primary" onClick={() => router.back()} type="button">뒤로가기</button>
     }
 
-    const onRegisterFormHandler = ( name : string, event : ChangeEvent) => {
+    const onRegisterFormHandler = (name: string, event: ChangeEvent) => {
         registerForm.task[name] = event.target.value;
 
         setRegisterForm(registerForm);
     }
 
-    const onStartTask = (assignUserId:String|null, assignUserName:String, stepTypeCode:String|null) : void => {
-        axios.post('http://localhost:9090/register/step',{
-            taskId : registerForm.task.id,
+    const onStartTask = (assignUserId: String | null, assignUserName: String, stepTypeCode: String | null): void => {
+        axios.post(hostUrl + '/register/step', {
+            taskId: registerForm.task.id,
             assignUserId: assignUserId,
             stepTypeCode: stepTypeCode
         }).then(res => {
-            if(res.data == "Success"){
+            if (res.data == "Success") {
                 statusInput.current.value = stepTypeCode
 
-                axios.get('http://localhost:9090/register/progressives?id=' + registerForm.task.id)
+                axios.get(hostUrl + '/register/progressives?id=' + registerForm.task.id)
                     .then(res => {
-                        setRegisterForm({...registerForm , progressives : res.data.progressives });
+                        setRegisterForm({...registerForm, progressives: res.data.progressives});
                     });
             }
         });
@@ -193,7 +250,7 @@ const Register = ({ router: { query } }) => {
         setRegisterForm({
             ...registerForm,
             fileAttacheds: [null],
-            progressives : [
+            progressives: [
                 {assignUser: "", assignUserId: "", stepType: "고객접수", timeStamp: "", stepTypeCode: "CUSTOMER_RECEIPT"},
                 {assignUser: "", assignUserId: "", stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
                 {assignUser: "", assignUserId: "", stepType: "개발담당", timeStamp: "", stepTypeCode: "DEVELOPMENT_ASSIGN"},
@@ -214,17 +271,24 @@ const Register = ({ router: { query } }) => {
                 receiptDate: "",
                 receiptNo: "",
                 receiptOpinion: "",
-                requestUserId: "",
+                requestUserId: logedInUserId,
                 requireType: "NEW",
                 result: "",
                 stepType: null,
                 title: ""
             }
         });
+
+        refTitle.current.value = "";
+        refCause.current.value = "";
+        refHowToFix.current.value = "";
+        refResult.current.value = "";
+        refReceiptOpinion.current.value = "";
+        refDeveloperOpinion.current.value = "";
     }
 
     const onSaveTask = () => {
-        axios.post('http://localhost:9090/register/task',{
+        axios.post(hostUrl + '/register/task', {
             businessType: registerForm.task.businessType,
             cause: registerForm.task.cause,
             completeDate: registerForm.task.completeDate,
@@ -237,16 +301,17 @@ const Register = ({ router: { query } }) => {
             receiptDate: registerForm.task.receiptDate,
             receiptNo: registerForm.task.receiptNo,
             receiptOpinion: registerForm.task.receiptOpinion,
-            requestUserId: registerForm.task.requestUserId,
+            requestUserId: registerForm.task.requestUserId ? registerForm.task.requestUserId : logedInUserId,
             requireType: registerForm.task.requireType,
             result: registerForm.task.result,
             stepType: registerForm.task.stepType,
             title: registerForm.task.title
         }).then(taskRes => {
-            axios.get('http://localhost:9090/register/progressives?id=' + taskRes.data.taskId)
+            axios.get(hostUrl + '/register/progressives?id=' + taskRes.data.taskId)
                 .then(res => {
-                    setRegisterForm({...registerForm , progressives : res.data.progressives ,
-                        task : {
+                    setRegisterForm({
+                        ...registerForm, progressives: res.data.progressives,
+                        task: {
                             businessType: registerForm.task.businessType,
                             cause: registerForm.task.cause,
                             completeDate: registerForm.task.completeDate,
@@ -273,27 +338,46 @@ const Register = ({ router: { query } }) => {
     }
 
     const onAddRelatedLink = () => {
-        setLinks([...links, nameInput.current.value]);
 
-        axios.post('http://localhost:9090/register/link',{
-            taskId : registerForm.task.id,
-            link : nameInput.current.value
-        }).then(res => {
-            nameInput.current.value = ""
-        });
+        axios
+            .get(hostUrl + "/register/task/exist?id=" +  nameInput.current.value )
+            .then(res => {
+                if(res.data){
+                    setLinks([...links, nameInput.current.value]);
+
+                    axios.post(hostUrl + '/register/link', {
+                        taskId: registerForm.task.id,
+                        link: nameInput.current.value
+                    }).then(res => {
+                        nameInput.current.value = ""
+                    });
+                }else{
+                    alert("존재하지 않는 Task ID 입니다.!")
+                    nameInput.current.value = ""
+                }
+            })
     }
 
-    const onRemoveFile = (fileId : number) => {
+    const onRemoveFile = (fileId: number) => {
 
-        axios.delete("http://localhost:9090/register/file?fileId=" + fileId)
+        axios.delete(hostUrl + "/register/file?fileId=" + fileId)
             .then(res => {
                 setFileTags([...fileTags.filter(item => item.id != fileId)])
-        })
+            })
     }
 
     const uploadFileHandler = (event) => {
         setFiles(event.target.files);
     };
+
+    const getParameterByName = (name, url = window.location.href) => {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 
     const fileSubmitHandler = (event) => {
         event.preventDefault();
@@ -321,13 +405,12 @@ const Register = ({ router: { query } }) => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();
 
-
                 setFileTags(fileTags => [...fileTags, {
                     id: data.fileId,
                     fileSize: data.fileSize,
                     fileName: data.fileName,
                     filePath: data.filePath
-                }] )
+                }])
 
                 // check for error response
                 if (!response.ok) {
@@ -348,24 +431,30 @@ const Register = ({ router: { query } }) => {
     };
 
     const onRefresh = () => {
-        axios.get('http://localhost:9090/register/tasks?id=' + query.id)
+        axios.get(hostUrl + '/register/tasks?id=' + query.id)
             .then(res => {
-                setRegisterForm({...registerForm , task : res.data.task , progressives : res.data.progressives, links : res.data.links, fileAttacheds : res.data.fileAttacheds });
+                setRegisterForm({
+                    ...registerForm,
+                    task: res.data.task,
+                    progressives: res.data.progressives,
+                    links: res.data.links,
+                    fileAttacheds: res.data.fileAttacheds
+                });
 
-                const list : [string|null] = [];
-                res.data.links.forEach(item =>{
+                const list: [string | null] = [];
+                res.data.links.forEach(item => {
                     list.push(item.link)
                 })
                 setLinks(list)
 
-                const fileList : [{
+                const fileList: [{
                     id: number
                     fileSize: number
                     fileName: string
                     filePath: string
                 } | null] = [];
 
-                res.data.fileAttacheds.forEach(item =>{
+                res.data.fileAttacheds.forEach(item => {
                     fileList.push(item)
                 })
                 setFileTags([...fileList])
@@ -375,12 +464,18 @@ const Register = ({ router: { query } }) => {
 
     return (
         <>
+            <Header />
             <div className="card">
                 <div className="card-body">
                     <div className="row">
-                        <div className="col d-grid gap-2 d-md-flex justify-content-md-start mb-2">
-                            {prePage()}
-                        </div>
+                        {isLink ?
+                            <></>
+                            :
+                            <div className="col d-grid gap-2 d-md-flex justify-content-md-start mb-2">
+                                {prePage()}
+                            </div>
+                        }
+
                         <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                             <button className="btn btn-primary" onClick={onRefresh} type="button">Refresh</button>
                             <button className="btn btn-primary" onClick={onNewTask} type="button">New</button>
@@ -393,9 +488,12 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">* 고객사</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.customNo} onChange={(event) => { onRegisterFormHandler("customNo", event)}}>
+                                    <select className="form-control" defaultValue={registerForm.task.customNo}
+                                            onChange={(event) => {
+                                                onRegisterFormHandler("customNo", event)
+                                            }}>
                                         {
-                                            customers.map((item: { customerNo : string ; customerName : string; }) => <option value={item.customerNo} >{item.customerName}</option>)
+                                            customers.map((item: { customerNo: string; customerName: string; }, index: Key | null | undefined) => <option key={index}  value={item.customerNo} >{item.customerName}</option>)
                                         }
                                     </select>
                                 </div>
@@ -408,7 +506,7 @@ const Register = ({ router: { query } }) => {
                                 <div className="col-sm-8">
                                     <select className="form-control" defaultValue={registerForm.task.requireType}  onChange={(event) => { onRegisterFormHandler("requireType", event)}} >
                                         {
-                                            requireType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                            requireType.map((item: { code: string ; value: string; }, index: Key | null | undefined) => <option key={index} value={item.code} >{item.value}</option>)
                                         }
                                     </select>
                                 </div>
@@ -419,7 +517,7 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">접수일시</label>
                                 <div className="col-sm-8">
-                                    <input type="date" aria-label="First name" className="form-control" defaultValue={registerForm.task.receiptDate}  onChange={(event) => { onRegisterFormHandler("receiptDate", event)}} />
+                                    <input type="date" aria-label="First name" max="2099-12-31"  className="form-control" defaultValue={registerForm.task.receiptDate}  onChange={(event) => { onRegisterFormHandler("receiptDate", event)}} />
                                 </div>
                             </div>
                         </div>
@@ -441,7 +539,7 @@ const Register = ({ router: { query } }) => {
                                 <div className="col-sm-8">
                                     <select className="form-control" defaultValue={registerForm.task.businessType} onChange={(event) => { onRegisterFormHandler("businessType", event)}} >
                                         {
-                                            businessType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                            businessType.map((item: { code: string ; value: string; }, index: Key | null | undefined) => <option key={index} value={item.code} >{item.value}</option>)
                                         }
                                     </select>
                                 </div>
@@ -454,7 +552,7 @@ const Register = ({ router: { query } }) => {
                                 <div className="col-sm-8">
                                     <select className="form-control" defaultValue={registerForm.task.priorityType}  onChange={(event) => { onRegisterFormHandler("priorityType", event)}} >
                                         {
-                                            priorityType.map((item: { code: string ; value: string; }) => <option value={item.code} >{item.value}</option>)
+                                            priorityType.map((item: { code: string ; value: string; }, index: Key | null | undefined) => <option key={index} value={item.code} >{item.value}</option>)
                                         }
                                     </select>
                                 </div>
@@ -465,7 +563,7 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-4 col-form-label col-form-label-sm text-end">완료예정</label>
                                 <div className="col-sm-8">
-                                    <input type="date" aria-label="First name" className="form-control" defaultValue={registerForm.task.expectedCompleteDate} onChange={(event) => { onRegisterFormHandler("expectedCompleteDate", event)}} />
+                                    <input type="date" aria-label="First name" max="2099-12-31"  className="form-control" defaultValue={registerForm.task.expectedCompleteDate} onChange={(event) => { onRegisterFormHandler("expectedCompleteDate", event)}} />
                                 </div>
                             </div>
                         </div>
@@ -495,10 +593,13 @@ const Register = ({ router: { query } }) => {
                                         pathname: '/register/register',
                                         query: {
                                             inputType: "UPDATE",
-                                            id : item
+                                            id : item,
+                                            assignUserId : loginInfo.userId ,
+                                            assignUserName : loginInfo.userName,
+                                            screenType : "LINK"
                                         }
                                     }} >
-                                                <button className="btn btn-outline-secondary me-1" type="button" id="button-addon1">{item}</button>
+                                                <a className="btn btn-outline-secondary me-1" target="_blank" type="button" id="button-addon1">{item}</a>
                                             </Link>
                                 }else{
                                     return ""
@@ -520,8 +621,7 @@ const Register = ({ router: { query } }) => {
                         {
                             registerForm.progressives.sort((a, b) =>  a.order - b.order  )
                                 .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, assignUserId : string, stepTypeCode : string}, index) => {
-                                    return (
-                                        <div className="col-xl-2 col-md-2 p-1">
+                                    return ( <div className="col-xl-2 col-md-2 p-1" key={index}>
                                             <div className="card bg-pattern">
                                                 <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={registerForm.task.id ? item.timeStamp ? true : false : true } >
                                                     <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
@@ -534,27 +634,44 @@ const Register = ({ router: { query } }) => {
                             })
                         }
                     </div>
+                    <div className="row mt-1 mb-1 justify-content-end">
+                        {
+                            registerForm.progressives.sort((a, b) =>  a.order - b.order  )
+                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, assignUserId : string, stepTypeCode : string}, index) => {
+                                    return ( <div className="col-xl-1 col-md-1 p-1" key={index}>
+                                            <div className="card bg-pattern">
+                                                <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={registerForm.task.id ? item.timeStamp ? true : false : true } >
+                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
+                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                        }
+                    </div>
                     <div className="row" >
                         <div className="col-md-8" >
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 제목</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={1} id="title" defaultValue={registerForm.task.title}  onChange={(event) => { onRegisterFormHandler("title", event)}} />
+                                    <textarea className="form-control" rows={1} id="title" ref={refTitle} defaultValue={registerForm.task.title}  onChange={(event) => { onRegisterFormHandler("title", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 현상</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={6} id="cause"  defaultValue={registerForm.task.cause}  onChange={(event) => { onRegisterFormHandler("cause", event)}} />
+                                    <textarea className="form-control" rows={6} id="cause" ref={refCause}  defaultValue={registerForm.task.cause}  onChange={(event) => { onRegisterFormHandler("cause", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">* 개선방안</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={6} id="howToFix" defaultValue={registerForm.task.howToFix}  onChange={(event) => { onRegisterFormHandler("howToFix", event)}} />
+                                    <textarea className="form-control" rows={6} id="howToFix" ref={refHowToFix} defaultValue={registerForm.task.howToFix}  onChange={(event) => { onRegisterFormHandler("howToFix", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
@@ -581,7 +698,7 @@ const Register = ({ router: { query } }) => {
                                                         return <>
                                                             <div className="row" >
                                                                 <div className="col-sm-6" >
-                                                                    <a href={"http://localhost:9090/register/files?fileId=" + item.id }  target="_blank" rel="noopener noreferrer" download>
+                                                                    <a href={ hostUrl + "/register/files?fileId=" + item.id }  target="_blank" rel="noopener noreferrer" download>
                                                                         {item.fileName}
                                                                     </a>
                                                                 </div>
@@ -606,18 +723,18 @@ const Register = ({ router: { query } }) => {
                                 <label htmlFor="colFormLabelSm"
                                        className="col-sm-2 col-form-label col-form-label-sm text-end">처리결과</label>
                                 <div className="col-sm-10">
-                                    <textarea className="form-control" rows={7} id="result" defaultValue={registerForm.task.result}  onChange={(event) => { onRegisterFormHandler("result", event)}} />
+                                    <textarea className="form-control" rows={7} id="result" ref={refResult} defaultValue={registerForm.task.result}  onChange={(event) => { onRegisterFormHandler("result", event)}} />
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-4" >
                             <div className="form-group mb-2">
                                 <label htmlFor="comment">* 접수자 의견</label>
-                                <textarea className="form-control" rows={11} id="receiptOpinion" defaultValue={registerForm.task.receiptOpinion}   onChange={(event) => { onRegisterFormHandler("receiptOpinion", event)}}  />
+                                <textarea className="form-control" rows={11} id="receiptOpinion" ref={refReceiptOpinion} defaultValue={registerForm.task.receiptOpinion}   onChange={(event) => { onRegisterFormHandler("receiptOpinion", event)}}  />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="comment">* 개발자 의견</label>
-                                <textarea className="form-control" rows={11} id="developerOpinion" defaultValue={registerForm.task.developerOpinion} onChange={(event) => { onRegisterFormHandler("developerOpinion", event)}}   />
+                                <textarea className="form-control" rows={11} id="developerOpinion" ref={refDeveloperOpinion} defaultValue={registerForm.task.developerOpinion} onChange={(event) => { onRegisterFormHandler("developerOpinion", event)}}   />
                             </div>
                         </div>
                     </div>
