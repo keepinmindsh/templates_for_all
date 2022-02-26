@@ -1,18 +1,41 @@
 import Link from "next/link";
 import {getCookie} from "../../cookie/cookieHandle";
 import {useEffect, useState} from "react";
+import axios from "axios";
+
 
 const Header = () => {
 
     const [ home, setHome ] = useState(false)
     const [ register, setRegister ] = useState(false)
     const [ isLink, setIsLink] = useState(false);
+    const [ menus, setMenus ] = useState<[{
+        menuId : string,
+        menuName : string,
+        useYN : string,
+        authMenuId : number,
+        userId : string
+    }]>([
+        { menuId : "000001", menuName : "신규 등록" , useYN : "Y", authMenuId : 0 , userId : "" },
+        { menuId : "000002", menuName : "권한 설정" , useYN : "Y", authMenuId : 0 , userId : "" },
+        { menuId : "000003", menuName : "권한 이력조회" , useYN : "Y", authMenuId : 0 , userId : "" }
+    ])
+
+    const srHostUrl:string = process.env.NEXT_PUBLIC_BACK_API_HOST
 
     // @ts-ignore
     const loginInfo = {
         userId : getCookie("LOGIN_INFO")? JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"] : "",
         userName : ""
     }
+
+    useEffect(() => {
+       axios.get(srHostUrl + "/auth/user/menus?userId=" + loginInfo.userId)
+            .then(res => {
+                setIsLink(getParameterByName("screenType") == "LINK" ? true : false)
+                setMenus([...res.data.authMenuByUser])
+            });
+    }, [])
 
     const onActive = (value: string) => {
         switch (value) {
@@ -36,10 +59,6 @@ const Header = () => {
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 
-    useEffect(() => {
-        setIsLink(getParameterByName("screenType") == "LINK" ? true : false)
-    }, [])
-
 
     return (
         <>
@@ -62,14 +81,67 @@ const Header = () => {
                                         <a className={home ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Home")} href="#">홈으로</a>
                                     </Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link href={{
-                                        pathname: '/register/register',
-                                        query: { inputType : "NEW",  assignUserId : loginInfo.userId } // array라 문자화
-                                    }} >
-                                        <a className={register ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Register")} aria-current="page" href="#">신규 등록</a>
-                                    </Link>
-                                </li>
+                                {
+                                    menus ?
+                                        menus.map(
+                                            ( item , index ) => {
+                                                switch (item.menuId) {
+                                                    case "0000001" :
+                                                        if(item.useYN == "Y"){
+                                                            return <li className="nav-item">
+                                                                <Link href={{
+                                                                    pathname: '/register/register',
+                                                                    query: { inputType : "NEW",  assignUserId : loginInfo.userId } // array라 문자화
+                                                                }} >
+                                                                    <a className={register ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Register")} aria-current="page" href="#">신규 등록</a>
+                                                                </Link>
+                                                            </li>
+                                                        }else{
+                                                            return <></>
+                                                        }
+                                                    case "0000002" :
+                                                        if(item.useYN == "Y") {
+                                                            return <li className="nav-item">
+                                                                <Link href={{
+                                                                    pathname: '/auth/auth',
+                                                                    query: {
+                                                                        inputType: "NEW",
+                                                                        assignUserId: loginInfo.userId
+                                                                    } // array라 문자화
+                                                                }}>
+                                                                    <a className={register ? "nav-link active" : "nav-link"}
+                                                                       onClick={() => onActive("Register")}
+                                                                       aria-current="page" href="#">권한 설정</a>
+                                                                </Link>
+                                                            </li>
+                                                        }else{
+                                                            return <></>
+                                                        }
+                                                    case "0000003" :
+                                                        if(item.useYN == "Y") {
+                                                            return <li className="nav-item">
+                                                                <Link href={{
+                                                                    pathname: '/auth/authHistory',
+                                                                    query: {
+                                                                        inputType: "NEW",
+                                                                        assignUserId: loginInfo.userId
+                                                                    } // array라 문자화
+                                                                }}>
+                                                                    <a className={register ? "nav-link active" : "nav-link"}
+                                                                       onClick={() => onActive("Register")}
+                                                                       aria-current="page" href="#">권한 이력조회</a>
+                                                                </Link>
+                                                            </li>
+                                                        }else{
+                                                            return <></>
+                                                        }
+                                                    default :
+                                                        return <></>
+                                                }
+                                            }
+                                        )
+                                        :<></>
+                                }
                             </ul>
                         </div>
                         <Link href={{ pathname: '/' }} >

@@ -15,6 +15,8 @@ const Register = ({router: {query}}) => {
     const [customers, setCustomers] = useState<any>([]);
     const [links, setLinks] = useState<[string | null]>([null]);
     const [isLink, setIsLink] = useState(false);
+    const [isShowCodeView, setIsShowCodeView] = useState(false)
+    const [isShowCodeApprovalView, setIsShowCodeApprovalView] = useState(false)
     const [fileTags, setFileTags] = useState<[
             {
                 id: number
@@ -33,7 +35,10 @@ const Register = ({router: {query}}) => {
     const refResult = useRef();
     const refReceiptOpinion = useRef();
     const refDeveloperOpinion = useRef();
-
+    const refReviewContent = useRef();
+    const refReviewApprovalContent = useRef();
+    const refReviewApprover = useRef();
+    const refReviewApprovalDate = useRef();
     const router = useRouter()
 
 
@@ -59,6 +64,30 @@ const Register = ({router: {query}}) => {
     //base end point url
     const FILE_UPLOAD_BASE_ENDPOINT = hostUrl + "/register/upload";
 
+    const [procesStart, setProcessStart] = useState<boolean>(false)
+    const [devProgressive, setDevProgressive] = useState<[
+        {
+            assignUser: string
+            assignUserId: string
+            devType: string
+            timeStamp: string
+            lastStep: boolean
+            isDisable: boolean
+            devTypeCode: string
+        }
+    ]>([ {assignUser: "", assignUserId: "", devType: "요청확인", timeStamp: "",lastStep : false, isDisable: false , devTypeCode: "REQUIREMENT_CHECK"},
+        {assignUser: "", assignUserId: "", devType: "개발시작", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_START"},
+        {assignUser: "", assignUserId: "", devType: "개발빌드", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_BUILD"},
+        {assignUser: "", assignUserId: "", devType: "리뷰요청", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_CODE_REVIEW"},
+        {assignUser: "", assignUserId: "", devType: "리뷰승인", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_CODE_APPROVAL"},
+        {assignUser: "", assignUserId: "", devType: "개발배포요청", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_DEVELOP_PUBLISH_REQUEST"},
+        {assignUser: "", assignUserId: "", devType: "개발배포승인", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_DEVELOP_PUBLISH_APPROVAL"},
+        {assignUser: "", assignUserId: "", devType: "검증배포요청", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_STAGE_PUBLISH_REQUEST"},
+        {assignUser: "", assignUserId: "", devType: "검증배포승인", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_STAGE_PUBLISH_APPROVAL"},
+        {assignUser: "", assignUserId: "", devType: "운영배포요청", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_REAL_PUBLISH_REQUEST"},
+        {assignUser: "", assignUserId: "", devType: "운영배포승인", timeStamp: "",lastStep : false, isDisable: false ,devTypeCode: "DEVELOPMENT_REAL_PUBLISH_APPROVAL"}
+    ])
+
     const [registerForm, setRegisterForm] = useState<{
         task: {
             businessType: string | null
@@ -78,6 +107,10 @@ const Register = ({router: {query}}) => {
             result: string | null
             stepType: string | null
             title: string | null
+            reviewContent : string | null
+            reviewApprovalContent : string | null
+            reviewApprover : string | null
+            reviewApprovalDate : string | null
         },
         progressives: [
             {
@@ -87,6 +120,7 @@ const Register = ({router: {query}}) => {
                 timeStamp: string
                 order: number
                 lastStep: boolean
+                disable: boolean
                 stepTypeCode: string
             }
         ],
@@ -124,7 +158,11 @@ const Register = ({router: {query}}) => {
             requireType: "NEW",
             result: null,
             stepType: null,
-            title: null
+            title: null,
+            reviewContent : null,
+            reviewApprovalContent : null,
+            reviewApprover :  null,
+            reviewApprovalDate : null
         }
     })
 
@@ -149,7 +187,7 @@ const Register = ({router: {query}}) => {
         setIsLink(getParameterByName("screenType") == "LINK" ? true : false)
 
         if (( query.inputType || getParameterByName("inputType") ) && ( query.inputType != "NEW" || getParameterByName("inputType") != "NEW")) {
-            axios.get(hostUrl + '/register/tasks?id=' + ( getParameterByName("id") ?  getParameterByName("id") : query.id ) )
+            axios.get(hostUrl + '/register/tasks?id=' + ( getParameterByName("id") ?  getParameterByName("id") : query.id ) +"&userId=" + loginInfo.userId )
                 .then(res => {
                     setRegisterForm({
                         ...registerForm,
@@ -177,43 +215,35 @@ const Register = ({router: {query}}) => {
                     })
                     setFileTags([...fileList])
 
+                    checkDevProcessStart(res.data.task.stepType);
+
+                    axios.get(hostUrl + '/register/progressives/dev?id=' + getParameterByName("id") +"&userId=" + loginInfo.userId)
+                        .then(res => {
+                            setDevProgressive(res.data.devProgressives)
+
+                            res.data.devProgressives.forEach((item, index) => {
+                                if(item.timeStamp){
+                                    setDevelopmentStatus(item.devTypeCode, true)
+                                }
+                            })
+                        });
                 });
         } else {
-            setRegisterForm({
-                ...registerForm
-                , progressives: [
-                    {
-                        assignUser: "",
-                        assignUserId: "",
-                        stepType: "고객접수",
-                        timeStamp: "",
-                        stepTypeCode: "CUSTOMER_RECEIPT"
-                    },
-                    {assignUser: "", assignUserId: "", stepType: "산하접수", timeStamp: "", stepTypeCode: "RECEIPT"},
-                    {
-                        assignUser: "",
-                        assignUserId: "",
-                        stepType: "개발담당",
-                        timeStamp: "",
-                        stepTypeCode: "DEVELOPMENT_ASSIGN"
-                    },
-                    {
-                        assignUser: "",
-                        assignUserId: "",
-                        stepType: "개발시작",
-                        timeStamp: "",
-                        stepTypeCode: "DEVELOPMENT_START"
-                    },
-                    {
-                        assignUser: "",
-                        assignUserId: "",
-                        stepType: "개발적용",
-                        timeStamp: "",
-                        stepTypeCode: "DEVELOPMENT_FINISH"
-                    },
-                    {assignUser: "", assignUserId: "", stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
-                ]
-            });
+            axios.get(hostUrl + '/register/progressives?id=00' +"&userId=" + loginInfo.userId)
+                .then(res => {
+                    setRegisterForm({...registerForm, progressives: res.data.progressives});
+                });
+
+            axios.get(hostUrl + '/register/progressives/dev?id=00'  +"&userId=" + loginInfo.userId)
+                .then(res => {
+                    setDevProgressive([...res.data.devProgressives])
+
+                    res.data.devProgressives.forEach((item, index) => {
+                        if(item.timeStamp){
+                            setDevelopmentStatus(item.devTypeCode, true)
+                        }
+                    })
+                });
         }
 
         console.log("on ready")
@@ -223,13 +253,33 @@ const Register = ({router: {query}}) => {
         return <button className="btn btn-primary" onClick={() => router.back()} type="button">뒤로가기</button>
     }
 
+    const setDevelopmentStatus = (processCode : string, isOpen : boolean) => {
+        switch (processCode) {
+            case "DEVELOPMENT_BUILD" :
+                setIsShowCodeView(isOpen)
+                break;
+            case "DEVELOPMENT_CODE_APPROVAL" :
+                setIsShowCodeApprovalView(isOpen)
+                break;
+        }
+    }
+
     const onRegisterFormHandler = (name: string, event: ChangeEvent) => {
         registerForm.task[name] = event.target.value;
 
         setRegisterForm(registerForm);
     }
 
-    const onStartTask = (assignUserId: String | null, assignUserName: String, stepTypeCode: String | null): void => {
+    const checkDevProcessStart = (stepTypeCode: String | null) =>{
+        if (stepTypeCode == "DEVELOPMENT_START" || stepTypeCode == "DEVELOPMENT_FINISH" || stepTypeCode == "CUSTOMER_APPLY") {
+            setProcessStart(true)
+        }
+    }
+
+    const onStartTask = (assignUserId: String | null, assignUserName: String, stepTypeCode: String | null, disable: boolean): void => {
+
+        if(disable) return;
+
         axios.post(hostUrl + '/register/step', {
             taskId: registerForm.task.id,
             assignUserId: assignUserId,
@@ -238,9 +288,65 @@ const Register = ({router: {query}}) => {
             if (res.data == "Success") {
                 statusInput.current.value = stepTypeCode
 
-                axios.get(hostUrl + '/register/progressives?id=' + registerForm.task.id)
+                axios.get(hostUrl + '/register/progressives?id=' + registerForm.task.id +"&userId=" + loginInfo.userId)
                     .then(res => {
                         setRegisterForm({...registerForm, progressives: res.data.progressives});
+                    });
+                checkDevProcessStart(stepTypeCode);
+            }else if(res.data == "NotAll"){
+                alert("모든 개발 단계가 완료되어여 다음단계를 진행할 수 있습니다.")
+            }
+        });
+    }
+
+    const reviewApproval = () => {
+        if(!refReviewApprover.current.value){
+            axios.post(hostUrl + '/register/approval', {
+                id: registerForm.task.id,
+                userId : loginInfo.userId,
+                reviewApprovalContent : registerForm.task.reviewApprovalContent
+            }).then(res => {
+                refReviewApprover.current.value = res.data.reviewApproval.reviewApprover;
+                refReviewApprovalDate.current.value = res.data.reviewApproval.reviewApprovalDate;
+            })
+        }
+    }
+
+    const onStartDevTask = (assignUserId: String | null, assignUserName: String, devTypeCode: String | null, disable :boolean): void => {
+
+        if(disable) return;
+
+        if(devTypeCode == "DEVELOPMENT_DEVELOP_PUBLISH_REQUEST"){
+            if(!refReviewApprover.current.value && !refReviewApprovalDate.current.value){
+                alert("리뷰 승인을 진행하지 않으면 다음 단계로 진행할 수 없습니다. ")
+                return;
+            }
+        }
+
+        if(devTypeCode == "DEVELOPMENT_CODE_REVIEW") {
+            if (!registerForm.task.reviewContent) {
+                alert("리뷰할 내용이 저장되지 않으면 다음 단계로 진행할 수 없습니다.")
+                return;
+            }else{
+                onSaveTask(true);
+            }
+        }
+
+        axios.post(hostUrl + '/register/step/dev', {
+            taskId: registerForm.task.id,
+            assignUserId: assignUserId,
+            devTypeCode: devTypeCode
+        }).then(res => {
+            if (res.data == "Success") {
+                axios.get(hostUrl + '/register/progressives/dev?id=' + registerForm.task.id +"&userId=" + loginInfo.userId)
+                    .then(res => {
+                        setDevProgressive(res.data.devProgressives)
+
+                        res.data.devProgressives.forEach((item, index) => {
+                            if(item.timeStamp){
+                                setDevelopmentStatus(item.devTypeCode, true)
+                            }
+                        })
                     });
             }
         });
@@ -275,7 +381,11 @@ const Register = ({router: {query}}) => {
                 requireType: "NEW",
                 result: "",
                 stepType: null,
-                title: ""
+                title: "",
+                reviewContent : "",
+                reviewApprovalContent : "",
+                reviewApprover : "",
+                reviewApprovalDate : ""
             }
         });
 
@@ -285,9 +395,19 @@ const Register = ({router: {query}}) => {
         refResult.current.value = "";
         refReceiptOpinion.current.value = "";
         refDeveloperOpinion.current.value = "";
+        refReviewContent.current.value = "";
+        refReviewApprovalContent.current.value =  "";
+        refReviewApprover.current.value = "";
+        refReviewApprovalDate.current.value = "";
+
+        setProcessStart(false);
+        setIsShowCodeView(false);
+        setIsShowCodeApprovalView(false)
+        setLinks([null]);
+        setFileTags([null]);
     }
 
-    const onSaveTask = () => {
+    const onSaveTask = (isAlertPassed : boolean | null) => {
         axios.post(hostUrl + '/register/task', {
             businessType: registerForm.task.businessType,
             cause: registerForm.task.cause,
@@ -305,9 +425,11 @@ const Register = ({router: {query}}) => {
             requireType: registerForm.task.requireType,
             result: registerForm.task.result,
             stepType: registerForm.task.stepType,
-            title: registerForm.task.title
+            title: registerForm.task.title,
+            reviewContent :  registerForm.task.reviewContent,
+            reviewApprovalContent : registerForm.task.reviewApprovalContent
         }).then(taskRes => {
-            axios.get(hostUrl + '/register/progressives?id=' + taskRes.data.taskId)
+            axios.get(hostUrl + '/register/progressives?id=' + taskRes.data.taskId + "&userId=" + loginInfo.userId)
                 .then(res => {
                     setRegisterForm({
                         ...registerForm, progressives: res.data.progressives,
@@ -328,11 +450,16 @@ const Register = ({router: {query}}) => {
                             requireType: registerForm.task.requireType,
                             result: registerForm.task.result,
                             stepType: taskRes.data.stepType,
-                            title: registerForm.task.title
+                            title: registerForm.task.title,
+                            reviewContent :  registerForm.task.reviewContent,
+                            reviewApprovalContent : registerForm.task.reviewApprovalContent
                         }
                     });
 
-                    alert("Saved!")
+                    if(!isAlertPassed){
+                        alert("Saved!")
+                    }
+
                 });
         });
     }
@@ -479,7 +606,7 @@ const Register = ({router: {query}}) => {
                         <div className="col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
                             <button className="btn btn-primary" onClick={onRefresh} type="button">Refresh</button>
                             <button className="btn btn-primary" onClick={onNewTask} type="button">New</button>
-                            <button className="btn btn-primary" onClick={onSaveTask} type="button">Save</button>
+                            <button className="btn btn-primary" onClick={() => { onSaveTask(false) }} type="button">Save</button>
                         </div>
                     </div>
                     <div className="row">
@@ -620,14 +747,17 @@ const Register = ({router: {query}}) => {
                     <div className="row mt-1 mb-1">
                         {
                             registerForm.progressives.sort((a, b) =>  a.order - b.order  )
-                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, assignUserId : string, stepTypeCode : string}, index) => {
+                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, disable : boolean, assignUserId : string, stepTypeCode : string}, index) => {
                                     return ( <div className="col-xl-2 col-md-2 p-1" key={index}>
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={registerForm.task.id ? item.timeStamp ? true : false : true } >
-                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
-                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
-                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
-                                                </button>
+                                                {
+                                                        <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode, item.disable)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={item.disable ? true : registerForm.task.id ? item.timeStamp ? true : false : true } >
+                                                            <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
+                                                            <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
+                                                            <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
+                                                        </button>
+                                                }
+
                                             </div>
                                         </div>
                                     )
@@ -636,19 +766,25 @@ const Register = ({router: {query}}) => {
                     </div>
                     <div className="row mt-1 mb-1 justify-content-end">
                         {
-                            registerForm.progressives.sort((a, b) =>  a.order - b.order  )
-                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, assignUserId : string, stepTypeCode : string}, index) => {
+                            procesStart ?
+                            devProgressive.sort((a, b) =>  a.order - b.order  )
+                                .map((item: {assignUser: string, devType: string,  timeStamp: string, lastStep : boolean, disable : boolean, assignUserId : string, devTypeCode : string}, index) => {
                                     return ( <div className="col-xl-1 col-md-1 p-1" key={index}>
                                             <div className="card bg-pattern">
-                                                <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={registerForm.task.id ? item.timeStamp ? true : false : true } >
-                                                    <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
-                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
-                                                    <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
-                                                </button>
+                                                {
+                                                        <button type="button"  onClick={() => {onStartDevTask(logedInUserId, item.assignUser, item.devTypeCode, item.disable)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={item.disable ? true : registerForm.task.id ? item.timeStamp ? true : false : true } >
+                                                            <h6 className="text-muted mb-0 text-sm-center">{item.devType} </h6>
+                                                            <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
+                                                            <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
+                                                        </button>
+                                                }
+
                                             </div>
                                         </div>
                                     )
                                 })
+                                :
+                                <></>
                         }
                     </div>
                     <div className="row" >
@@ -738,6 +874,47 @@ const Register = ({router: {query}}) => {
                             </div>
                         </div>
                     </div>
+                    {isShowCodeView ?
+                        <div className="row" >
+                            <div className="col-md-12" >
+                                <label htmlFor="comment">* 코드 리뷰 내용</label>
+                                <textarea className="form-control" rows={11} id="reviewContent" ref={refReviewContent} defaultValue={registerForm.task.reviewContent}   onChange={(event) => { onRegisterFormHandler("reviewContent", event)}}  />
+                            </div>
+                        </div>
+                        :
+                        <></>
+                    }
+                    {
+                        isShowCodeApprovalView ?
+                        <div className="row" >
+                            <div className="col-md-8" >
+                                <label htmlFor="comment">* 코드 리뷰 승인</label>
+                                <textarea className="form-control" rows={11} id="reviewApprovalContent" ref={refReviewApprovalContent} defaultValue={registerForm.task.reviewApprovalContent}   onChange={(event) => { onRegisterFormHandler("reviewApprovalContent", event)}}  />
+                            </div>
+                            <div className="col-md-4" >
+                                <h6>코드 리뷰 승인 결과</h6>
+                                <button type="button"  className="btn btn-warning" onClick={reviewApproval} >
+                                    <h6 className="text-muted mb-0 text-sm-center">Code Review 승인</h6>
+                                </button>
+                                <div className="form-group row mb-2 mt-2">
+                                    <label htmlFor="colFormLabelSm"
+                                           className="col-sm-2 col-form-label col-form-label-sm text-end">승인자</label>
+                                    <div className="col-sm-10">
+                                        <textarea className="form-control" rows={1} id="title" ref={refReviewApprover} defaultValue={registerForm.task.reviewApprover} value={registerForm.task.reviewApprover}  disabled />
+                                    </div>
+                                </div>
+                                <div className="form-group row mb-2 mt-2">
+                                    <label htmlFor="colFormLabelSm"
+                                           className="col-sm-2 col-form-label col-form-label-sm text-end">승인일시</label>
+                                    <div className="col-sm-10">
+                                        <textarea className="form-control" rows={1} id="title" ref={refReviewApprovalDate} defaultValue={registerForm.task.reviewApprovalDate} value={registerForm.task.reviewApprovalDate} disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        :
+                        <></>
+                    }
                 </div>
             </div>
         </>

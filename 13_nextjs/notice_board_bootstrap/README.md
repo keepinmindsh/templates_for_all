@@ -12,7 +12,7 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/register.tsx`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `pages/auth.tsx`. The page auto-updates as you edit the file.
 
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
@@ -82,7 +82,7 @@ yarn add bootstrap@next
               [Name]API.js
         _app.tsx
         _document.tsx
-        register.tsx
+        auth.tsx
 
 ```
 
@@ -148,3 +148,7 @@ export default function Index() {
 
 - [File Upload 샘플 1](https://www.pluralsight.com/guides/uploading-files-with-reactjs)
 - [File Upload 샘플 2](https://www.techgeeknext.com/react-multiple-files-upload-spring-boot-example)
+
+#### React Hook Form 
+
+- [React Hook Form](https://react-hook-form.com/advanced-usage/)

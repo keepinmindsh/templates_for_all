@@ -5,7 +5,7 @@ import {useRouter} from 'next/router'
 
 import {loadLocalStorage, removeLocalStorage, saveLocalStorage, setCookieUserInfo} from '../common/cookie/cookieHandle'
 import { nullToBlank } from '../common/util/utils'
-import {api_call, convertFormdata} from "../common/util/commAxios";
+import {api_call, convertFormData} from "../common/util/commAxios";
 
 const Home: NextPage = () => {
     const router = useRouter()
@@ -32,9 +32,9 @@ const Home: NextPage = () => {
 
     }, []);
 
-    const changeHandler = (ele) => {
-        const value = ele.target.value;
-        const name = ele.target.name;
+    const changeHandler = (element: { target: { value: any; name: any } }) => {
+        const value = element.target.value;
+        const name = element.target.name;
 
         setLoginInfo({
             ...loginInfo,
@@ -50,11 +50,11 @@ const Home: NextPage = () => {
 
             const loginHeader = {
                 method: 'POST',
-                url: '/',
+                url: '/login',
                 type: 'login',
                 headers: {
                     'Content-Type': 'application/json',
-                    'API-KEY': '',
+                    'API-KEY': '***',
                     'VENDOR_ID': ''
                 }
             };
@@ -66,10 +66,10 @@ const Home: NextPage = () => {
                 propertyNo: '',
                 userId: loginInfo.USER_ID,
                 password: loginInfo.PASSWORD,
-                langTypeCode : ''
+                langTypeCode : 'KR'
             }
 
-            api_call(loginHeader, convertFormdata(loginParams), (result, request) => {
+            api_call(loginHeader, convertFormData(loginParams), (result, request) => {
                 if(idSave){
                     saveLocalStorage("ID_SAVE", 'Y');
                     saveLocalStorage("USER_ID", loginInfo.USER_ID);
@@ -86,15 +86,15 @@ const Home: NextPage = () => {
                 }));
 
                 router.push('/main/main');
-            }, (error) => {
+            }, (error: any) => {
                 console.error(error)
                 alert("로그인 정보가 잘못되었습니다.");
             });
         }
     }
 
-    const handleKeyDown = (ele) => {
-        if(ele.key === 'Enter'){
+    const handleKeyDown = (element: { key: string }) => {
+        if(element.key === 'Enter'){
             loginHandler();
         }
     }

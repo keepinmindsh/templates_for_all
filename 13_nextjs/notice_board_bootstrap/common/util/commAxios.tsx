@@ -96,7 +96,7 @@ const initHeader = (method, opt, params) => {
 }
 
 
-export function convertFormdata(object, formData){
+export function convertFormData(object, formData){
     if(formData == null || formData == '' || formData == 'undefined') {
         formData = new FormData();
     }

@@ -21,8 +21,6 @@ const Tasks = (props : { gridData:[ {
         userName : ""
     }
 
-    console.log(loginInfo.userId)
-
     return (
         <div className="row">
             <div className="card">
