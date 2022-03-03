@@ -1,2 +1,4 @@
 rootProject.name = 'google_api_with_java'
+include 'googleapi_133'
+include 'googleapi_125'
 

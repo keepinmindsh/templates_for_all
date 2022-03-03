@@ -1,4 +1,4 @@
-package com.sanha.lines;
+package com.bongs.lines;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -8,7 +8,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
@@ -22,10 +21,11 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
+// TODO 해당 코드는 정상적으로 동작하지 않음 - 인증 상의 이슈가 있는 것으로 파악됨.
 public class Sample {
 
     private static final String APPLICATION_NAME = "google-sheet-lins";
-    private static final JsonFactory JSON_FACTORY =  GsonFactory.getDefaultInstance();
+    private static final JsonFactory JSON_FACTORY =  null; //GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     /**
