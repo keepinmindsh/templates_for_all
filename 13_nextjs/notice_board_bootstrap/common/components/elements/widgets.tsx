@@ -1,7 +1,7 @@
 import {useState, useEffect, ChangeEvent} from 'react'
 import axios from 'axios'
 import Link from 'next/link'
-import {getCookie, getCookieUserInfo, loadLocalStorage} from "../../cookie/cookieHandle";
+import {getCookie, loadLocalStorage} from "../../cookie/cookieHandle";
 
 const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
@@ -12,10 +12,13 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
     const [buttonStatus, setButtonStatus] = useState<String>("CUSTOMER_RECEIPT");
     const [steps, setSteps] = useState<any[]>([]);
 
+    const logedInCompanyId = loadLocalStorage('SESSION_COMPANY_ID');
+
     // @ts-ignore
     const loginInfo = {
         userId :  JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"],
-        userName : ""
+        userName : "",
+        companyId : logedInCompanyId
     }
 
     const [searchForm, setSearchForm ] = useState<{
@@ -58,11 +61,11 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
             .then(res => {
                 setPriorityType(res.data);
             });1
-        axios.get(hostUrl + '/customers')
+        axios.get(hostUrl + '/customers?companyId=' + logedInCompanyId)
             .then(res => {
                 setCustomers(res.data);
             });
-        axios.get(hostUrl + '/steps')
+        axios.get(hostUrl + '/steps?companyId=' + logedInCompanyId)
             .then(res => {
                 setSteps(res.data);
             });
@@ -80,7 +83,8 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
 
     const searchForTasks = (value:String|null) : void => {
         const queryString : string =
-            "custmNo=" + searchForm.custmNo + "&"
+            "companyId=" + logedInCompanyId + "&"
+            +"custmNo=" + searchForm.custmNo + "&"
             + "requireType=" + searchForm.requireType + "&"
             + "businessType=" + searchForm.businessType + "&"
             + "priorityType=" + searchForm.priorityType + "&"
@@ -115,7 +119,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                             query: { inputType : "NEW", assignUserId : loginInfo.userId , assignUserName : loginInfo.userName } // array라 문자화
                         }}
                         >
-                            <button className="btn btn-primary float-end" type="button">신규등록</button>
+                            <button className="btn btn-primary float-end" type="button">Register New Task</button>
                         </Link>
                     </div>
                 </div>
@@ -126,7 +130,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">고객사</label>
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end">Customer</label>
                                 <div className="col-sm-9">
                                     <select className="form-control" onChange={(event) => { onSearchChangeHandler("custmNo", event)}}>
                                         <option value={""} >All</option>
@@ -140,7 +144,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">요청타입</label>
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end">Require Type</label>
                                 <div className="col-sm-9">
                                     <select className="form-control"  onChange={(event) => { onSearchChangeHandler("requireType", event)}} >
                                         <option value={""} >All</option>
@@ -156,7 +160,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">업무</label>
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end">Business Type</label>
                                 <div className="col-sm-9">
                                     <select className="form-control" onChange={(event) => { onSearchChangeHandler("businessType", event)}}>
                                         <option value={""} >All</option>
@@ -170,7 +174,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">우선순위</label>
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end">Priority Type</label>
                                 <div className="col-sm-9">
                                     <select className="form-control" onChange={(event) => { onSearchChangeHandler("priorityType", event)}}>
                                         <option value={""} >All</option>
@@ -186,7 +190,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         <div className="col-md-8" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>접수 기간</label>
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>Receipt Period</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
                                         <input type="date" aria-label="First name" max="2099-12-31" className="form-control"  onChange={(event) => { onSearchChangeHandler("receiptStartDate", event)}} />
@@ -202,7 +206,7 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         <div className="col-md-8" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>완료 기간</label>
+                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>Expected Date</label>
                                 <div className="col-sm-9">
                                     <div className="input-group">
                                         <input type="date" aria-label="First name" className="form-control" max="2099-12-31"  onChange={(event) => { onSearchChangeHandler("finishedStartDate", event)}} />
@@ -234,6 +238,11 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         {
                             steps.map((item: { stepType: string ; stepName: string; counts: number; }, index) => {
                                 if(index <= 2 ) {
+                                    /*if(loginInfo.companyId != "SANHAIT"){
+                                        if(item.stepType == "DEVELOPMENT_ASSIGN"){
+                                            return <></>
+                                        }
+                                    }*/
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">
@@ -253,6 +262,11 @@ const Widgets = (props : { applyFunc : (param:[number]) => void }) => {
                         {
                             steps.map((item: { stepType: string ; stepName: string; counts: number; }, index) => {
                                 if(index > 2 ) {
+                                    /*if(loginInfo.companyId != "SANHAIT"){
+                                        if(item.stepType == "DEVELOPMENT_START"){
+                                            return <></>
+                                        }
+                                    }*/
                                     return (
                                         <div className="col p-1">
                                             <div className="card bg-pattern">

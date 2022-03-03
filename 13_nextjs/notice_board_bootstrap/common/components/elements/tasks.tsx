@@ -29,14 +29,14 @@ const Tasks = (props : { gridData:[ {
                         <table className="table project-table table-centered table-nowrap">
                             <thead>
                             <tr>
-                                <th scope="col">번호</th>
-                                <th scope="col">고객사</th>
-                                <th scope="col">제목</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">요청타입</th>
-                                <th scope="col">접수일자</th>
-                                <th scope="col">완료예정일</th>
-                                <th scope="col">상태</th>
+                                <th scope="col">Receipt No</th>
+                                <th scope="col">Customer</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Priority</th>
+                                <th scope="col">Require Type</th>
+                                <th scope="col">Receipt Date</th>
+                                <th scope="col">Expected Date</th>
+                                <th scope="col">Status</th>
                             </tr>
                             </thead>
                             <tbody>

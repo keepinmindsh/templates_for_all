@@ -14,9 +14,11 @@ const Register = ({router: {query}}) => {
     const [priorityType, setPriorityType] = useState<any>([]);
     const [customers, setCustomers] = useState<any>([]);
     const [links, setLinks] = useState<[string | null]>([null]);
+    const [devLinks, setDevLinks] = useState<[string | null]>([null]);
     const [isLink, setIsLink] = useState(false);
     const [isShowCodeView, setIsShowCodeView] = useState(false)
     const [isShowCodeApprovalView, setIsShowCodeApprovalView] = useState(false)
+    const [isForCustomer, setIsForCustomer] = useState(false)
     const [fileTags, setFileTags] = useState<[
             {
                 id: number
@@ -27,6 +29,8 @@ const Register = ({router: {query}}) => {
     ]>([null]);
 
     const nameInput = useRef();
+    const customerDropInput = useRef();
+    const refDevLinkInput = useRef();
     const fileInput = useRef();
     const statusInput = useRef();
     const refTitle = useRef();
@@ -44,6 +48,7 @@ const Register = ({router: {query}}) => {
 
     // @ts-ignore
     const logedInUserId = getCookie("LOGIN_INFO")? JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"] : "";getCookie("LOGIN_INFO")
+    const logedInCompanyId = loadLocalStorage('SESSION_COMPANY_ID');
 
     const [files, setFiles] = useState('');
     //state for checking file size
@@ -58,7 +63,8 @@ const Register = ({router: {query}}) => {
 
     const loginInfo = {
         userId : JSON.parse(getCookie("LOGIN_INFO"))["USER_ID"],
-        userName : ""
+        userName : "",
+        companyId : logedInCompanyId
     }
 
     //base end point url
@@ -136,13 +142,18 @@ const Register = ({router: {query}}) => {
             {
                 linkId: number
                 link: string
+            }],
+        devLinks: [
+            {
+                linkId: number
+                link: string
             }
         ]
     }>({
         fileAttacheds: [null],
         progressives: [{assignUser: "", assignUserId: "", stepType: "", timeStamp: "", stepTypeCode: ""}],
         task: {
-            businessType: "BIZ1",
+            businessType: null,
             cause: null,
             completeDate: null,
             customNo: null,
@@ -150,12 +161,12 @@ const Register = ({router: {query}}) => {
             expectedCompleteDate: null,
             howToFix: null,
             id: null,
-            priorityType: "OPEN_READY",
+            priorityType: null,
             receiptDate: null,
             receiptNo: null,
             receiptOpinion: null,
             requestUserId: logedInUserId,
-            requireType: "NEW",
+            requireType: null,
             result: null,
             stepType: null,
             title: null,
@@ -164,27 +175,66 @@ const Register = ({router: {query}}) => {
             reviewApprover :  null,
             reviewApprovalDate : null
         }
-    })
+    });
 
     useEffect(() => {
+        let tempTask = {};
+
         axios.get(hostUrl + '/codes?codeType=BUSINESS_TYPE')
             .then(res => {
                 setBusinessType(res.data);
-            });
-        axios.get(hostUrl + '/codes?codeType=REQUIRE_TYPE')
-            .then(res => {
-                setRequireType(res.data);
-            });
-        axios.get(hostUrl + '/codes?codeType=PRIORITY_TYPE')
-            .then(res => {
-                setPriorityType(res.data);
-            });
-        axios.get(hostUrl + '/customers')
-            .then(res => {
-                setCustomers(res.data);
+
+                if(res.data.length > 0){
+                    tempTask = {
+                        ...tempTask,
+                        businessType : res.data[0].code
+                    }
+                }
+
+                axios.get(hostUrl + '/codes?codeType=REQUIRE_TYPE')
+                    .then(res => {
+                        setRequireType(res.data);
+
+                        if(res.data.length > 0){
+                            tempTask = {
+                                ...tempTask,
+                                requireType : res.data[0].code
+                            }
+                        }
+
+                        axios.get(hostUrl + '/codes?codeType=PRIORITY_TYPE')
+                            .then(res => {
+                                setPriorityType(res.data);
+                                if(res.data.length > 0){
+                                    tempTask = {
+                                        ...tempTask,
+                                        priorityType : res.data[0].code
+                                    }
+                                }
+
+                                axios.get(hostUrl + '/customers?companyId=' + logedInCompanyId)
+                                    .then(res => {
+                                        setCustomers(res.data);
+
+                                        if(res.data.length > 0){
+                                            tempTask = {
+                                                ...registerForm.task,
+                                                ...tempTask,
+                                                customNo : res.data[0].customerNo
+                                            }
+                                        }
+
+                                        setInitializeData(tempTask);
+                                    });
+                            });
+                    });
             });
 
         setIsLink(getParameterByName("screenType") == "LINK" ? true : false)
+    }, [])
+
+    const setInitializeData = (reviceTask) => {
+        let tempRegister = {};
 
         if (( query.inputType || getParameterByName("inputType") ) && ( query.inputType != "NEW" || getParameterByName("inputType") != "NEW")) {
             axios.get(hostUrl + '/register/tasks?id=' + ( getParameterByName("id") ?  getParameterByName("id") : query.id ) +"&userId=" + loginInfo.userId )
@@ -194,6 +244,7 @@ const Register = ({router: {query}}) => {
                         task: res.data.task,
                         progressives: res.data.progressives,
                         links: res.data.links,
+                        devLinks : res.data.devLinks,
                         fileAttacheds: res.data.fileAttacheds
                     });
 
@@ -202,6 +253,12 @@ const Register = ({router: {query}}) => {
                         list.push(item.link)
                     })
                     setLinks(list)
+
+                    const devList: [string | null] = [];
+                    res.data.devLinks.forEach(item => {
+                        devList.push(item.link)
+                    })
+                    setDevLinks(devList)
 
                     const fileList: [{
                         id: number
@@ -227,11 +284,19 @@ const Register = ({router: {query}}) => {
                                 }
                             })
                         });
+
+                    if(loginInfo.companyId != "SANHAIT"){
+                        setIsForCustomer(true)
+                    }
                 });
         } else {
             axios.get(hostUrl + '/register/progressives?id=00' +"&userId=" + loginInfo.userId)
                 .then(res => {
-                    setRegisterForm({...registerForm, progressives: res.data.progressives});
+                    setRegisterForm({
+                        ...registerForm
+                        , task : reviceTask
+                        , progressives: res.data.progressives
+                    });
                 });
 
             axios.get(hostUrl + '/register/progressives/dev?id=00'  +"&userId=" + loginInfo.userId)
@@ -244,10 +309,12 @@ const Register = ({router: {query}}) => {
                         }
                     })
                 });
-        }
 
-        console.log("on ready")
-    }, [])
+            if(loginInfo.companyId != "SANHAIT"){
+                setIsForCustomer(true)
+            }
+        }
+    }
 
     const prePage = () => {
         return <button className="btn btn-primary" onClick={() => router.back()} type="button">뒤로가기</button>
@@ -256,18 +323,29 @@ const Register = ({router: {query}}) => {
     const setDevelopmentStatus = (processCode : string, isOpen : boolean) => {
         switch (processCode) {
             case "DEVELOPMENT_BUILD" :
-                setIsShowCodeView(isOpen)
+                if(loginInfo.companyId != "SANHAIT"){
+                    setIsShowCodeView(false)
+                }else{
+                    setIsShowCodeView(isOpen)
+                }
                 break;
             case "DEVELOPMENT_CODE_APPROVAL" :
-                setIsShowCodeApprovalView(isOpen)
+                if(loginInfo.companyId != "SANHAIT"){
+                    setIsShowCodeApprovalView(false)
+                }else{
+                    setIsShowCodeApprovalView(isOpen)
+                }
                 break;
         }
     }
 
     const onRegisterFormHandler = (name: string, event: ChangeEvent) => {
+
         registerForm.task[name] = event.target.value;
 
-        setRegisterForm(registerForm);
+        setRegisterForm({
+            ...registerForm
+        });
     }
 
     const checkDevProcessStart = (stepTypeCode: String | null) =>{
@@ -295,6 +373,8 @@ const Register = ({router: {query}}) => {
                 checkDevProcessStart(stepTypeCode);
             }else if(res.data == "NotAll"){
                 alert("모든 개발 단계가 완료되어여 다음단계를 진행할 수 있습니다.")
+            }else if(res.data == "CheckNextStep"){
+                alert("이전단계가 완료되어야 다음단계를 진행할 수 있습니다.")
             }
         });
     }
@@ -317,15 +397,20 @@ const Register = ({router: {query}}) => {
         if(disable) return;
 
         if(devTypeCode == "DEVELOPMENT_DEVELOP_PUBLISH_REQUEST"){
+            if(!refReviewApprover.current && !refReviewApprover.current ){
+                alert("You cannot go to next step before approval code review")
+                return;
+            }
+
             if(!refReviewApprover.current.value && !refReviewApprovalDate.current.value){
-                alert("리뷰 승인을 진행하지 않으면 다음 단계로 진행할 수 없습니다. ")
+                alert("You cannot go to next step before approval code review")
                 return;
             }
         }
 
         if(devTypeCode == "DEVELOPMENT_CODE_REVIEW") {
             if (!registerForm.task.reviewContent) {
-                alert("리뷰할 내용이 저장되지 않으면 다음 단계로 진행할 수 없습니다.")
+                alert("You cannot go to next step until register review content.")
                 return;
             }else{
                 onSaveTask(true);
@@ -343,11 +428,13 @@ const Register = ({router: {query}}) => {
                         setDevProgressive(res.data.devProgressives)
 
                         res.data.devProgressives.forEach((item, index) => {
-                            if(item.timeStamp){
+                            if (item.timeStamp) {
                                 setDevelopmentStatus(item.devTypeCode, true)
                             }
                         })
                     });
+            }else if(res.data == "CheckNextStep"){
+                alert("Please check previous step before clicking next step")
             }
         });
     }
@@ -365,7 +452,7 @@ const Register = ({router: {query}}) => {
                 {assignUser: "", assignUserId: "", stepType: "고객적용", timeStamp: "", stepTypeCode: "CUSTOMER_APPLY"}
             ],
             task: {
-                businessType: "BIZ1",
+                businessType: "RESERVATION",
                 cause: "",
                 completeDate: "",
                 customNo: "",
@@ -404,6 +491,7 @@ const Register = ({router: {query}}) => {
         setIsShowCodeView(false);
         setIsShowCodeApprovalView(false)
         setLinks([null]);
+        setDevLinks([null]);
         setFileTags([null]);
     }
 
@@ -437,7 +525,7 @@ const Register = ({router: {query}}) => {
                             businessType: registerForm.task.businessType,
                             cause: registerForm.task.cause,
                             completeDate: registerForm.task.completeDate,
-                            customNo: taskRes.data.customNo,
+                            customNo: registerForm.task.customNo,
                             developerOpinion: registerForm.task.developerOpinion,
                             expectedCompleteDate: registerForm.task.expectedCompleteDate,
                             howToFix: registerForm.task.howToFix,
@@ -484,6 +572,18 @@ const Register = ({router: {query}}) => {
                 }
             })
     }
+
+    const onAddRelatedDeveyeLink = () => {
+        setDevLinks([...devLinks, refDevLinkInput.current.value]);
+
+        axios.post(hostUrl + '/register/srlink', {
+            taskId: registerForm.task.id,
+            link: refDevLinkInput.current.value
+        }).then(res => {
+            refDevLinkInput.current.value = ""
+        });
+    }
+
 
     const onRemoveFile = (fileId: number) => {
 
@@ -557,6 +657,18 @@ const Register = ({router: {query}}) => {
         setFileUploadProgress(false);
     };
 
+    const onDelete = () => {
+        axios.delete(hostUrl + '/register/task?id=' + query.id)
+            .then(res => {
+                if(res.data == "Success"){
+                    alert("Deleted!")
+                    router.back();
+                }else {
+                    alert("Delete not finished correctly!")
+                }
+            })
+    }
+
     const onRefresh = () => {
         axios.get(hostUrl + '/register/tasks?id=' + query.id)
             .then(res => {
@@ -607,15 +719,16 @@ const Register = ({router: {query}}) => {
                             <button className="btn btn-primary" onClick={onRefresh} type="button">Refresh</button>
                             <button className="btn btn-primary" onClick={onNewTask} type="button">New</button>
                             <button className="btn btn-primary" onClick={() => { onSaveTask(false) }} type="button">Save</button>
+                            <button className="btn btn-primary" onClick={onDelete} type="button">Delete</button>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 고객사</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* Customer</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.customNo}
+                                    <select className="form-control" value={registerForm.task.customNo}
                                             onChange={(event) => {
                                                 onRegisterFormHandler("customNo", event)
                                             }}>
@@ -629,9 +742,9 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 요청타입</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* Require Type</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.requireType}  onChange={(event) => { onRegisterFormHandler("requireType", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.requireType} value={registerForm.task.requireType}  onChange={(event) => { onRegisterFormHandler("requireType", event)}} >
                                         {
                                             requireType.map((item: { code: string ; value: string; }, index: Key | null | undefined) => <option key={index} value={item.code} >{item.value}</option>)
                                         }
@@ -642,7 +755,7 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">접수일시</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">Receipt Date</label>
                                 <div className="col-sm-8">
                                     <input type="date" aria-label="First name" max="2099-12-31"  className="form-control" defaultValue={registerForm.task.receiptDate}  onChange={(event) => { onRegisterFormHandler("receiptDate", event)}} />
                                 </div>
@@ -651,7 +764,7 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">요청자</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">Request ID</label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control" defaultValue={registerForm.task.requestUserId}  onChange={(event) => { onRegisterFormHandler("requestUserId", event)}} readOnly />
                                 </div>
@@ -662,9 +775,9 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 업무</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* Business Type</label>
                                 <div className="col-sm-8">
-                                    <select className="form-control" defaultValue={registerForm.task.businessType} onChange={(event) => { onRegisterFormHandler("businessType", event)}} >
+                                    <select className="form-control" defaultValue={registerForm.task.businessType}  value={registerForm.task.businessType} onChange={(event) => { onRegisterFormHandler("businessType", event)}} >
                                         {
                                             businessType.map((item: { code: string ; value: string; }, index: Key | null | undefined) => <option key={index} value={item.code} >{item.value}</option>)
                                         }
@@ -675,7 +788,7 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* 우선순위</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">* Priority</label>
                                 <div className="col-sm-8">
                                     <select className="form-control" defaultValue={registerForm.task.priorityType}  onChange={(event) => { onRegisterFormHandler("priorityType", event)}} >
                                         {
@@ -688,7 +801,7 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">완료예정</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">Expected</label>
                                 <div className="col-sm-8">
                                     <input type="date" aria-label="First name" max="2099-12-31"  className="form-control" defaultValue={registerForm.task.expectedCompleteDate} onChange={(event) => { onRegisterFormHandler("expectedCompleteDate", event)}} />
                                 </div>
@@ -697,7 +810,7 @@ const Register = ({router: {query}}) => {
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">접수번호</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">Receipt No</label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control" defaultValue={registerForm.task.receiptNo} onChange={(event) => { onRegisterFormHandler("receiptNo", event)}} readOnly />
                                 </div>
@@ -708,7 +821,7 @@ const Register = ({router: {query}}) => {
                         <div className="col-sm-6" >
                             <div className="input-group mb-3">
                                 <button className="btn btn-outline-secondary" type="button" onClick={onAddRelatedLink} id="button-addon1" disabled={registerForm.task.id ? false : true } >
-                                    연관링크 추가
+                                    Add Task Id Link
                                 </button>
                                 <input type="text" className="form-control" id="relatedLink"  ref={nameInput}  disabled={registerForm.task.id ? false : true }/>
                             </div>
@@ -734,39 +847,60 @@ const Register = ({router: {query}}) => {
                             })}
 
                         </div>
+
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-4 col-form-label col-form-label-sm text-end">상태</label>
+                                       className="col-sm-4 col-form-label col-form-label-sm text-end">Status</label>
                                 <div className="col-sm-8">
                                     <input type="text" className="form-control disabled" defaultValue={registerForm.task.stepType}  ref={statusInput} onChange={(event) => { onRegisterFormHandler("statusType", event)}} readOnly />
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div className="row mt-1" >
+                        <div className="col-sm-6" >
+                            <div className="input-group mb-3">
+                                <button className="btn btn-outline-secondary" type="button" onClick={onAddRelatedDeveyeLink} id="button-addon1" disabled={registerForm.task.id ? false : true } >
+                                    Add Dev Eye Link
+                                </button>
+                                <input type="text" className="form-control" id="relatedLink"  ref={refDevLinkInput}  disabled={registerForm.task.id ? false : true }/>
+                            </div>
+                        </div>
+                        <div className="col" >
+                            {devLinks?.map(item => {
+                                if(item){
+                                    return <a className="btn btn-outline-secondary me-1" rel="noopener noreferrer" href={"http://gw.sanhait.com:9005/csr/sr/SRDetailView.do?popup=true&SRID=" + item} target="_blank" type="button" id="button-addon1">{item}</a>
+                                }else{
+                                    return ""
+                                }
+                            })}
+                        </div>
+                    </div>
                     <div className="row mt-1 mb-1">
                         {
-                            registerForm.progressives.sort((a, b) =>  a.order - b.order  )
-                                .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, disable : boolean, assignUserId : string, stepTypeCode : string}, index) => {
-                                    return ( <div className="col-xl-2 col-md-2 p-1" key={index}>
-                                            <div className="card bg-pattern">
-                                                {
-                                                        <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode, item.disable)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={item.disable ? true : registerForm.task.id ? item.timeStamp ? true : false : true } >
-                                                            <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
-                                                            <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
-                                                            <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
-                                                        </button>
-                                                }
+                            (registerForm.progressives !== null && registerForm.progressives !== undefined) ?
+                                registerForm.progressives.sort((a, b) =>  a.order - b.order  )
+                                    .map((item: {assignUser: string, stepType: string,  timeStamp: string, lastStep : boolean, disable : boolean, assignUserId : string, stepTypeCode : string}, index) => {
+                                        return ( <div className="col-xl-2 col-md-2 p-1" key={index}>
+                                                <div className="card bg-pattern">
+                                                    {
+                                                            <button type="button" onClick={() => {onStartTask(logedInUserId, item.assignUser, item.stepTypeCode, item.disable)}} className={item.lastStep ? "btn btn-warning" : "btn btn-light" } disabled={item.disable ? true : registerForm.task.id ? item.timeStamp ? true : false : true } >
+                                                                <h6 className="text-muted mb-0 text-sm-center">{item.stepType} </h6>
+                                                                <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center"> { item.assignUserId ? "[" + item.assignUserId + "]" : " " }</h6>
+                                                                <h6 className="font-size-16 mt-0 mb-0 pt-1 text-sm-center">{item.timeStamp}</h6>
+                                                            </button>
+                                                    }
 
+                                                </div>
                                             </div>
-                                        </div>
-                                    )
-                            })
+                                        )
+                                }) : <></>
                         }
                     </div>
                     <div className="row mt-1 mb-1 justify-content-end">
                         {
-                            procesStart ?
+                            procesStart && !isForCustomer ?
                             devProgressive.sort((a, b) =>  a.order - b.order  )
                                 .map((item: {assignUser: string, devType: string,  timeStamp: string, lastStep : boolean, disable : boolean, assignUserId : string, devTypeCode : string}, index) => {
                                     return ( <div className="col-xl-1 col-md-1 p-1" key={index}>
@@ -791,28 +925,28 @@ const Register = ({router: {query}}) => {
                         <div className="col-md-8" >
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* 제목</label>
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* Title</label>
                                 <div className="col-sm-10">
                                     <textarea className="form-control" rows={1} id="title" ref={refTitle} defaultValue={registerForm.task.title}  onChange={(event) => { onRegisterFormHandler("title", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* 현상</label>
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* Cause</label>
                                 <div className="col-sm-10">
                                     <textarea className="form-control" rows={6} id="cause" ref={refCause}  defaultValue={registerForm.task.cause}  onChange={(event) => { onRegisterFormHandler("cause", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* 개선방안</label>
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">* How To Fix</label>
                                 <div className="col-sm-10">
                                     <textarea className="form-control" rows={6} id="howToFix" ref={refHowToFix} defaultValue={registerForm.task.howToFix}  onChange={(event) => { onRegisterFormHandler("howToFix", event)}} />
                                 </div>
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-2 col-form-label col-form-label-sm text-end">첨부파일</label>
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">Attached</label>
                                 <div className="col-sm-10">
                                     <form onSubmit={fileSubmitHandler}>
                                         <div className="row" >
@@ -857,27 +991,33 @@ const Register = ({router: {query}}) => {
                             </div>
                             <div className="form-group row mb-2">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-2 col-form-label col-form-label-sm text-end">처리결과</label>
+                                       className="col-sm-2 col-form-label col-form-label-sm text-end">Result</label>
                                 <div className="col-sm-10">
                                     <textarea className="form-control" rows={7} id="result" ref={refResult} defaultValue={registerForm.task.result}  onChange={(event) => { onRegisterFormHandler("result", event)}} />
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4" >
-                            <div className="form-group mb-2">
-                                <label htmlFor="comment">* 접수자 의견</label>
-                                <textarea className="form-control" rows={11} id="receiptOpinion" ref={refReceiptOpinion} defaultValue={registerForm.task.receiptOpinion}   onChange={(event) => { onRegisterFormHandler("receiptOpinion", event)}}  />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="comment">* 개발자 의견</label>
-                                <textarea className="form-control" rows={11} id="developerOpinion" ref={refDeveloperOpinion} defaultValue={registerForm.task.developerOpinion} onChange={(event) => { onRegisterFormHandler("developerOpinion", event)}}   />
-                            </div>
-                        </div>
+                        {
+                            isForCustomer ?
+                                <></>
+                                :
+                                <div className="col-md-4" >
+                                    <div className="form-group mb-2">
+                                        <label htmlFor="comment">* Receipt Opinion</label>
+                                        <textarea className="form-control" rows={11} id="receiptOpinion" ref={refReceiptOpinion} defaultValue={registerForm.task.receiptOpinion}   onChange={(event) => { onRegisterFormHandler("receiptOpinion", event)}}  />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="comment">* Develop Opinion</label>
+                                        <textarea className="form-control" rows={11} id="developerOpinion" ref={refDeveloperOpinion} defaultValue={registerForm.task.developerOpinion} onChange={(event) => { onRegisterFormHandler("developerOpinion", event)}}   />
+                                    </div>
+                                </div>
+                        }
+
                     </div>
                     {isShowCodeView ?
                         <div className="row" >
                             <div className="col-md-12" >
-                                <label htmlFor="comment">* 코드 리뷰 내용</label>
+                                <label htmlFor="comment">* Code Review Content</label>
                                 <textarea className="form-control" rows={11} id="reviewContent" ref={refReviewContent} defaultValue={registerForm.task.reviewContent}   onChange={(event) => { onRegisterFormHandler("reviewContent", event)}}  />
                             </div>
                         </div>
@@ -888,24 +1028,24 @@ const Register = ({router: {query}}) => {
                         isShowCodeApprovalView ?
                         <div className="row" >
                             <div className="col-md-8" >
-                                <label htmlFor="comment">* 코드 리뷰 승인</label>
+                                <label htmlFor="comment">* Code Review Approval</label>
                                 <textarea className="form-control" rows={11} id="reviewApprovalContent" ref={refReviewApprovalContent} defaultValue={registerForm.task.reviewApprovalContent}   onChange={(event) => { onRegisterFormHandler("reviewApprovalContent", event)}}  />
                             </div>
                             <div className="col-md-4" >
-                                <h6>코드 리뷰 승인 결과</h6>
+                                <h6>Approval Result</h6>
                                 <button type="button"  className="btn btn-warning" onClick={reviewApproval} >
-                                    <h6 className="text-muted mb-0 text-sm-center">Code Review 승인</h6>
+                                    <h6 className="text-muted mb-0 text-sm-center">Code Review Approval</h6>
                                 </button>
                                 <div className="form-group row mb-2 mt-2">
                                     <label htmlFor="colFormLabelSm"
-                                           className="col-sm-2 col-form-label col-form-label-sm text-end">승인자</label>
+                                           className="col-sm-2 col-form-label col-form-label-sm text-end">Approval ID</label>
                                     <div className="col-sm-10">
                                         <textarea className="form-control" rows={1} id="title" ref={refReviewApprover} defaultValue={registerForm.task.reviewApprover} value={registerForm.task.reviewApprover}  disabled />
                                     </div>
                                 </div>
                                 <div className="form-group row mb-2 mt-2">
                                     <label htmlFor="colFormLabelSm"
-                                           className="col-sm-2 col-form-label col-form-label-sm text-end">승인일시</label>
+                                           className="col-sm-2 col-form-label col-form-label-sm text-end">Approval Date</label>
                                     <div className="col-sm-10">
                                         <textarea className="form-control" rows={1} id="title" ref={refReviewApprovalDate} defaultValue={registerForm.task.reviewApprovalDate} value={registerForm.task.reviewApprovalDate} disabled />
                                     </div>
