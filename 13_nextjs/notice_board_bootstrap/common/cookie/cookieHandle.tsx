@@ -157,5 +157,9 @@ export const removeLocalStorage = (key) => {
  *
  */
 export const loadLocalStorage = (key) => {
-    return localStorage.getItem(key);
+    if (typeof localStorage !== 'undefined') {
+        return localStorage.getItem(key);
+    }else{
+        return "";
+    }
 }

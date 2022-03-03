@@ -20,14 +20,7 @@ const Auth = ({router: {query}}) => {
         EMAIL : string
     }>()
 
-    /**
-     *  <th scope="row">{item.COMPANY_ID}</th>
-     <td>{item.USER_ID}</td>
-     <td>{item.USER_NAME}</td>
-     <td> {item.EMAIL}</td>
-     */
-
-        // @ts-ignore
+    // @ts-ignore
     const authList = {
         height: "80vh",
         overflowY : "scroll"

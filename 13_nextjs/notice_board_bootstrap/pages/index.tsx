@@ -54,22 +54,23 @@ const Home: NextPage = () => {
                 type: 'login',
                 headers: {
                     'Content-Type': 'application/json',
-                    'API-KEY': '***',
+                    'API-KEY': '165f439f72ef3febda5ea2f59a4642d6a5a93d48e9df7a9971bb969cfcc8f95c',
                     'VENDOR_ID': ''
                 }
             };
 
             let loginParams = {
-                systemId: '',
+                systemId: 'WINGSINTEGRATION',
                 companyId: loginInfo.COMPANY_ID,
-                bsnsCode: '',
-                propertyNo: '',
+                bsnsCode: '11',
+                propertyNo: '11',
                 userId: loginInfo.USER_ID,
                 password: loginInfo.PASSWORD,
                 langTypeCode : 'KR'
             }
 
             api_call(loginHeader, convertFormData(loginParams), (result, request) => {
+                saveLocalStorage("SESSION_COMPANY_ID", loginInfo.COMPANY_ID);
                 if(idSave){
                     saveLocalStorage("ID_SAVE", 'Y');
                     saveLocalStorage("USER_ID", loginInfo.USER_ID);

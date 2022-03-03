@@ -1,108 +1,84 @@
-import { useRouter } from 'next/router'
-import {useState, useEffect, useRef, ChangeEvent, Key} from 'react'
-import {withRouter} from 'next/router';
-import Link from 'next/link'
+import {withRouter} from 'next/router'
+import {ChangeEvent, useState} from 'react'
 import axios from 'axios'
-import {getCookie, loadLocalStorage} from "../../common/cookie/cookieHandle";
 import Header from "../../common/components/elements/header";
 
-const AuthHistory = ({router: {query}}) => {
+const AuthHistory = ({ router: { query } }) => {
+
+    const [authType, setAuthType] = useState('DEV');
+
+    const hostUrl: string = process.env.NEXT_PUBLIC_BACK_API_HOST;
+
+    const [historyListData, setHistoryListData] = useState<[{
+        userId: string
+        type: string
+        authChangeDesc: string
+        authChangeDate: string
+    }]>([{
+        userId: "",
+        type: "",
+        authChangeDesc: "",
+        authChangeDate: "",
+    }]);
+
+    const onAuthTypeHandler = (event: ChangeEvent) => {
+        setAuthType(event.target.value);
+    }
+
+    const onSearchBtn = () => {
+        axios.get(hostUrl + '/auth/historys/' + authType)
+            .then(res => {
+                setHistoryListData(res.data.authHists);
+            });
+    }
 
     return (
         <>
             <Header />
+
             <div className="row">
-                <div className="col-xl-8" >
+                <div className="col-xl-12" >
                     <div className="row mt-2" >
                         <div className="col" >
                             <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">고객사</label>
-                                <div className="col-sm-9">
-                                    <select className="form-control">
-                                        <option value={""} >All</option>
-
+                                    className="col-sm-3 col-form-label col-form-label-sm text-end">권한 구분</label>
+                                <div className="col-sm-7">
+                                    <select className="form-control" onChange={(event) => { onAuthTypeHandler(event) }} >
+                                        <option value={"DEV"} >개발</option>
+                                        <option value={"STEP"} >고객</option>
+                                        <option value={"MENU"} >메뉴</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div className="col" >
-                            <div className="form-group row">
+                            {/* <div className="form-group row">
                                 <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">요청타입</label>
-                                <div className="col-sm-9">
-                                    <select className="form-control">
-                                        <option value={""} >All</option>
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row mt-2" >
-                        <div className="col" >
-                            <div className="form-group row">
-                                <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">업무</label>
-                                <div className="col-sm-9">
-                                    <select className="form-control" >
-                                        <option value={""} >All</option>
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col" >
-                            <div className="form-group row">
-                                <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end">우선순위</label>
-                                <div className="col-sm-9">
-                                    <select className="form-control" >
-                                        <option value={""} >All</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row mt-2" >
-                        <div className="col-md-8" >
-                            <div className="form-group row">
-                                <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>접수 기간</label>
-                                <div className="col-sm-9">
+                                    className="col-sm-3 col-form-label col-form-label-sm text-end" >기간</label>
+                                <div className="col-sm-7">
                                     <div className="input-group">
-                                        <input type="date" aria-label="First name" max="2099-12-31" className="form-control"  />
-                                        <input type="date" aria-label="Last name" max="2099-12-31" className="form-control"  />
+                                        <input type="date" aria-label="First name" max="2099-12-31" className="form-control" />
+                                        <input type="date" aria-label="Last name" max="2099-12-31" className="form-control" />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
-                        <div className="col-md-4" >
-                        </div>
+
                     </div>
+
                     <div className="row mt-2" >
-                        <div className="col-md-8" >
+
+                        <div className="col" >
                             <div className="form-group row">
-                                <label htmlFor="colFormLabelSm"
-                                       className="col-sm-3 col-form-label col-form-label-sm text-end" style={{width: 95 + "px"}}>완료 기간</label>
-                                <div className="col-sm-9">
-                                    <div className="input-group">
-                                        <input type="date" aria-label="First name" className="form-control" max="2099-12-31" />
-                                        <input type="date" aria-label="Last name" className="form-control" max="2099-12-31" />
-                                    </div>
+                                <div className="col-sm-11 col d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+                                    <button className="btn btn-primary" onClick={onSearchBtn} type="button">Search</button>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4" >
-                        </div>
                     </div>
+
                     <div className="row mt-2 mb-2" >
-                    </div>
-                </div>
-                <div className="col-xl-4" >
-                    <div className="row p-1">
-                    </div>
-                    <div className="row p-1">
                     </div>
                 </div>
             </div>
@@ -111,46 +87,26 @@ const AuthHistory = ({router: {query}}) => {
                     <div className="table-responsive project-list">
                         <table className="table project-table table-centered table-nowrap">
                             <thead>
-                            <tr>
-                                <th scope="col">번호</th>
-                                <th scope="col">고객사</th>
-                                <th scope="col">제목</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">우선순위</th>
-                                <th scope="col">우선순위</th>
-                            </tr>
+                                <tr>
+                                    <th scope="col">사용자 ID</th>
+                                    <th scope="col">구분</th>
+                                    <th scope="col">내경 내용</th>
+                                    <th scope="col">내경 일자</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {/*{
-                                        props.gridData &&
-                                        props.gridData
-                                            .map(item => {
-                                                return  <tr>
-                                                        <th scope="row">{item.receiptNo}</th>
-                                                        <td>{item.custmName}</td>
-                                                        <td>{item.title}</td>
-                                                        <td>
-                                                            {item.priorityType}
-                                                        </td>
-                                                        <td>
-                                                            {item.requireType}
-                                                        </td>
-                                                        <td>
-                                                            {item.receiptDate}
-                                                        </td>
-                                                        <td>
-                                                            {item.finishedDate}
-                                                        </td>
-                                                        <td>
-                                                            {item.stepType}
-                                                        </td>
-                                                    </tr>
-                                            })
-                                    }*/}
+                                {
+                                    historyListData &&
+                                    historyListData
+                                        .map(item => {
+                                            return <tr key={item.userId}>
+                                                <th scope="row">{item.userId}</th>
+                                                <td>{item.type}</td>
+                                                <td>{item.authChangeDesc}</td>
+                                                <td>{item.authChangeDate}</td>
+                                            </tr>
+                                        })
+                                }
 
                             </tbody>
                         </table>

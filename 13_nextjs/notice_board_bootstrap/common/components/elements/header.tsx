@@ -16,9 +16,9 @@ const Header = () => {
         authMenuId : number,
         userId : string
     }]>([
-        { menuId : "000001", menuName : "신규 등록" , useYN : "Y", authMenuId : 0 , userId : "" },
-        { menuId : "000002", menuName : "권한 설정" , useYN : "Y", authMenuId : 0 , userId : "" },
-        { menuId : "000003", menuName : "권한 이력조회" , useYN : "Y", authMenuId : 0 , userId : "" }
+        { menuId : "000001", menuName : "Register New Task" , useYN : "Y", authMenuId : 0 , userId : "" },
+        { menuId : "000002", menuName : "Auth Setting" , useYN : "Y", authMenuId : 0 , userId : "" },
+        { menuId : "000003", menuName : "Auth History" , useYN : "Y", authMenuId : 0 , userId : "" }
     ])
 
     const srHostUrl:string = process.env.NEXT_PUBLIC_BACK_API_HOST
@@ -78,7 +78,7 @@ const Header = () => {
                                     <Link href={{
                                         pathname: '/main/main' // array라 문자화
                                     }} >
-                                        <a className={home ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Home")} href="#">홈으로</a>
+                                        <a className={home ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Home")} href="#">Home</a>
                                     </Link>
                                 </li>
                                 {
@@ -93,7 +93,7 @@ const Header = () => {
                                                                     pathname: '/register/register',
                                                                     query: { inputType : "NEW",  assignUserId : loginInfo.userId } // array라 문자화
                                                                 }} >
-                                                                    <a className={register ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Register")} aria-current="page" href="#">신규 등록</a>
+                                                                    <a className={register ? "nav-link active" :  "nav-link"  }  onClick={() => onActive("Register")} aria-current="page" href="#">Register New Task</a>
                                                                 </Link>
                                                             </li>
                                                         }else{
@@ -111,7 +111,7 @@ const Header = () => {
                                                                 }}>
                                                                     <a className={register ? "nav-link active" : "nav-link"}
                                                                        onClick={() => onActive("Register")}
-                                                                       aria-current="page" href="#">권한 설정</a>
+                                                                       aria-current="page" href="#">Auth Setting</a>
                                                                 </Link>
                                                             </li>
                                                         }else{
@@ -129,7 +129,7 @@ const Header = () => {
                                                                 }}>
                                                                     <a className={register ? "nav-link active" : "nav-link"}
                                                                        onClick={() => onActive("Register")}
-                                                                       aria-current="page" href="#">권한 이력조회</a>
+                                                                       aria-current="page" href="#">Auth History</a>
                                                                 </Link>
                                                             </li>
                                                         }else{
