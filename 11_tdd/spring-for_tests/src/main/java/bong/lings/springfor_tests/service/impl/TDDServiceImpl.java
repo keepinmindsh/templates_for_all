@@ -21,7 +21,6 @@ public class TDDServiceImpl implements TDDService {
 
     @Override
     public void memberSave(String name) {
-
         Member member = new Member();
         member.setName(name);
 

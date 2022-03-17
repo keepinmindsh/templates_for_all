@@ -15,13 +15,13 @@ public class TddController {
 
     private final TDDService tddService;
 
-    @GetMapping("/helloworld")
-    List<Member> helloWorld(){
+    @GetMapping("/member")
+    List<Member> member(){
         return tddService.member();
     }
 
-    @PostMapping("/helloworld")
-    void helloWorldSave(String name){
+    @PostMapping("/member")
+    void memberSave(String name){
         tddService.memberSave(name);
     }
 }

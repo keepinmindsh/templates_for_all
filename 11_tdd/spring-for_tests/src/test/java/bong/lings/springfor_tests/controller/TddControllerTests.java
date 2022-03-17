@@ -1,6 +1,5 @@
-package bong.lings.springfor_tests;
+package bong.lings.springfor_tests.controller;
 
-import bong.lings.springfor_tests.controller.TddController;
 import bong.lings.springfor_tests.model.Member;
 import bong.lings.springfor_tests.service.TDDService;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TddController.class)
-class SpringForTestsApplicationTests {
+class TddControllerTests {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -31,7 +30,7 @@ class SpringForTestsApplicationTests {
 	public void helloWorldGetTests() throws Exception {
 		when(service.member()).thenReturn(new ArrayList<Member>());
 
-		this.mockMvc.perform(get("/helloworld"))
+		this.mockMvc.perform(get("/member"))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().json("[]"));
@@ -41,7 +40,7 @@ class SpringForTestsApplicationTests {
 	public void helloWorldPostTests() throws Exception {
 		when(service.member()).thenReturn(new ArrayList<Member>());
 
-		this.mockMvc.perform(post("/helloworld"))
+		this.mockMvc.perform(post("/member"))
 				.andDo(print())
 				.andExpect(status().isOk());
 
