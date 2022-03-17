@@ -5,10 +5,14 @@
 - TDD : Test Driven Development로 테스트가 개발을 주도한다.  
   - 보통 테스트의 경우 개발이 끝난 후에 하는 과정이라고 생각할 수 있는데, TDD의 경우 테스트를 먼저 만들고 테스트를 통과하기 위한 행들이 모두 개발을 주도하는 것을 목표로 한다. 
 
+![TDD](https://github.com/keepinmindsh/templates_for_all/blob/main/11_tdd/spring-for_tests/docs/assets/images/TDD.png)
+
 ### BDD
 
 - BDD : Behavior Driven Development 
   - BDD의 모든 근간은 TDD에서 착안되었기 때문에 TDD가 추가하는 가치와 크게 다르지 않다. 
+
+![BDD](https://github.com/keepinmindsh/templates_for_all/blob/main/11_tdd/spring-for_tests/docs/assets/images/BDD.png)
 
 ### @WebMvcTest
 
