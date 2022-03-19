@@ -76,3 +76,7 @@ test {
 }
 
 ```
+
+### References 
+
+> [Gradle Annotation Process with Query DSL - 버전별 처리](http://honeymon.io/tech/2020/07/09/gradle-annotation-processor-with-querydsl.html)
