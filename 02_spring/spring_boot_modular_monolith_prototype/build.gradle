@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.6.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -45,5 +51,31 @@ subprojects {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // Lombok with QueryDSL
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // Lombok with QueryDSL
+
     implementation project(":biz-sample")
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
