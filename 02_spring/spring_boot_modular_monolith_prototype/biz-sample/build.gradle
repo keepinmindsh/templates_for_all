@@ -1,17 +1,46 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
 }
 
-group 'bong.lines'
-version '0.0.1-SNAPSHOT'
+apply plugin: 'com.ewerk.gradle.plugins.querydsl'
+
+group = 'bong.lines'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // Lombok with QueryDSL
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // Lombok with QueryDSL
+
+    runtimeOnly 'com.h2database:h2'
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
 
 test {
