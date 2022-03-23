@@ -1,10 +1,8 @@
 package bong.lines.modular;
 
 import bong.lines.modular.modules.BoundedContext;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-
 
 public class ModularApplication {
 
@@ -12,6 +10,7 @@ public class ModularApplication {
         new SpringApplicationBuilder()
                 .parent(ModularApplication.class)
                 .child(BoundedContext.class)
+                .web(WebApplicationType.SERVLET)
                 .run(args);
     }
 
