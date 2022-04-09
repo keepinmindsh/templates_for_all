@@ -2,12 +2,16 @@ package bong.lines;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FilesBasic {
@@ -20,10 +24,44 @@ public class FilesBasic {
 
 //        readAllStringWithFilesLines();
 
-        writeStringToFileWithFilesSecondway();
+//        writeStringToFileWithFilesSecondWay();
+
+        fileSearchInDirectory();
+
+        tryCatchResource("hello world");
     }
 
-    private static void writeStringToFileWithFilesSecondway() throws IOException {
+    public static String tryCatchResource(String url) throws IOException {
+        URL targetUrl = new URL(url);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(targetUrl.openStream()))){
+            StringBuffer html = new StringBuffer();
+            String tmp;
+
+            while ((tmp = reader.readLine()) != null) {
+                html.append(tmp);
+            }
+            return html.toString();
+        }
+    }
+
+    private static void fileSearchInDirectory() {
+        String directoryPath = "D:\\GIT\\noticeboard_backend";
+
+        List<Path> list = Collections.emptyList();
+
+        try (Stream<Path> walk = Files.walk(Paths.get(directoryPath))) {
+
+            list = walk.filter(Files::isReadable)
+                    .collect(Collectors.toList());
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        list.forEach(System.out::println);
+    }
+
+    private static void writeStringToFileWithFilesSecondWay() throws IOException {
         String path = "C:\\Temp\\rc5.log";
 
         Files.writeString(Paths.get(path), "안녕하세요", StandardCharsets.UTF_8);
