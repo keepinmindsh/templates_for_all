@@ -1,4 +1,44 @@
-### QueryDSL with Lombok 
+# Query DSL Setting 하기 
+
+##### h2 최신 버전에서는 JPA의 일부 기능이 동작하지 않는 것이 존재함. 
+
+```groovy
+implementation 'com.h2database:h2:1.4.200'
+```
+
+###Logging
+
+##### 라이브러리 추가 방식 
+  
+```groovy
+
+// Query를 쉽게 볼 수 있게 해주는 Util
+// https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter
+implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+
+```
+
+```shell
+
+2022-04-16 19:59:59.228  INFO 19240 --- [           main] p6spy                                    : #1650106799228 | took 0ms | statement | connection 3| url jdbc:h2:tcp://localhost/~/querydsl
+insert into item (id) values (?)
+insert into item (id) values (1);
+
+```
+
+##### org.hibernate.type 설정 방식 
+
+```yaml
+logging:
+  level:
+    org.hibernate.SQL: debug
+    # org.hibernate.type: trace - 이 값을 사용하면 바인딩 되는 파라미터 확인 가능
+
+```
+
+다만 운영상에 Query를 남기는 경우에는 성능 테스트는 반드시 필요함. 
+
+# QueryDSL with Lombok 
 
 > [QueryDSL with Lombok](https://jaime-note.tistory.com/67)
 
