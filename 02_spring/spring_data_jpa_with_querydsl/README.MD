@@ -1,3 +1,42 @@
+# JPQL vs QueryDSL
+
+ - QueryDSL 이점
+   - PrepareStatement 에 파라미터 바인딩 방식을 사용 
+   - 컴파일 타임에 오류를 잡아준다.
+
+```java
+class QueryDSL{
+  @Test
+  public void startJPQL(){
+    // member1 조회
+    Member resultList = entityManager.createQuery("select m from Member m where m.username = :username", Member.class)
+            .setParameter("username", "member1")
+            .getSingleResult();
+
+    assertThat(resultList.getUsername()).isEqualTo("member1");
+  }
+
+  @Test
+  public void startQueryDSL(){
+    // member1 조회
+    JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+
+    QMember qMember = new QMember("m");  // 어떤 QMember인지를 구분하는 m값 지정
+
+    // prepare Statement에 파라미터 바인딩을 사용함. 
+    Member member = jpaQueryFactory
+            .select(qMember)
+            .from(qMember)
+            .where(qMember.username.eq("member1"))  // 파라미터 바인딩 처리 
+            .fetchOne();
+
+
+    assert member != null;
+    assertThat(member.getUsername()).isEqualTo("member1");
+  }
+}
+```
+
 # 도메인 모델 세팅하기 
 
 - ToString 정의시 주의 할 점 
