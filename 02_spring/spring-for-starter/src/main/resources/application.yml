@@ -1,2 +1,10 @@
 server:
-  port: 9090
+  port: 12000
+
+spring:
+  datasource:
+    url: 123124124
+    username:
+    driver-class-name:
+    password:
+

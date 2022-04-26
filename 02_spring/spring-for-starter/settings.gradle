@@ -1,2 +1,16 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "http://192.168.10.175:8081/nexus/content/repositories/wings-api-release"
+            allowInsecureProtocol = true
+        }
+        maven {
+            url "http://192.168.10.175:8081/nexus/content/repositories/wings-library"
+            allowInsecureProtocol = true
+        }
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'spring-for-starter'
 
