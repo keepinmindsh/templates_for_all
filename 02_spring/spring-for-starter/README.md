@@ -19,6 +19,13 @@ implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 implementation 'org.springframework.boot:spring-boot-devtools'
 
-``
+```
 
 - build > Recompile : 재시작 없이 재 컴파일하여 반영할 수 있음. 
+
+
+### H2 Database 설정
+
+
+
+> https://dololak.tistory.com/465
