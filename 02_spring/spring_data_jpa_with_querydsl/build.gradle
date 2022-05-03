@@ -26,7 +26,13 @@ dependencies {
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // Lombok with QueryDSL
     compileOnly 'org.projectlombok:lombok' // Lombok with QueryDSL
 
-    runtimeOnly 'com.h2database:h2'
+    // Query를 쉽게 볼 수 있게 해주는 Util
+    // https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+
+    implementation 'com.h2database:h2:1.4.200'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 

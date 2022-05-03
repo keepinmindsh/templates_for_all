@@ -1,4 +1,89 @@
-### QueryDSL with Lombok 
+# JPQL vs QueryDSL
+
+ - QueryDSL 이점
+   - PrepareStatement 에 파라미터 바인딩 방식을 사용 
+   - 컴파일 타임에 오류를 잡아준다.
+
+```java
+class QueryDSL{
+  @Test
+  public void startJPQL(){
+    // member1 조회
+    Member resultList = entityManager.createQuery("select m from Member m where m.username = :username", Member.class)
+            .setParameter("username", "member1")
+            .getSingleResult();
+
+    assertThat(resultList.getUsername()).isEqualTo("member1");
+  }
+
+  @Test
+  public void startQueryDSL(){
+    // member1 조회
+    JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+
+    QMember qMember = new QMember("m");  // 어떤 QMember인지를 구분하는 m값 지정
+
+    // prepare Statement에 파라미터 바인딩을 사용함. 
+    Member member = jpaQueryFactory
+            .select(qMember)
+            .from(qMember)
+            .where(qMember.username.eq("member1"))  // 파라미터 바인딩 처리 
+            .fetchOne();
+
+
+    assert member != null;
+    assertThat(member.getUsername()).isEqualTo("member1");
+  }
+}
+```
+
+# 도메인 모델 세팅하기 
+
+- ToString 정의시 주의 할 점 
+  - 연관관계로 세팅된 값에 대해서 ToString을 걸 경우 무한 Loop에 빠질 수 있다. 
+
+
+# Query DSL Setting 하기 
+
+##### h2 최신 버전에서는 JPA의 일부 기능이 동작하지 않는 것이 존재함. 
+
+```groovy
+implementation 'com.h2database:h2:1.4.200'
+```
+
+###Logging
+
+##### 라이브러리 추가 방식 
+  
+```groovy
+
+// Query를 쉽게 볼 수 있게 해주는 Util
+// https://mvnrepository.com/artifact/com.github.gavlyukovskiy/p6spy-spring-boot-starter
+implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+
+```
+
+```shell
+
+2022-04-16 19:59:59.228  INFO 19240 --- [           main] p6spy                                    : #1650106799228 | took 0ms | statement | connection 3| url jdbc:h2:tcp://localhost/~/querydsl
+insert into item (id) values (?)
+insert into item (id) values (1);
+
+```
+
+##### org.hibernate.type 설정 방식 
+
+```yaml
+logging:
+  level:
+    org.hibernate.SQL: debug
+    # org.hibernate.type: trace - 이 값을 사용하면 바인딩 되는 파라미터 확인 가능
+
+```
+
+다만 운영상에 Query를 남기는 경우에는 성능 테스트는 반드시 필요함. 
+
+# QueryDSL with Lombok 
 
 > [QueryDSL with Lombok](https://jaime-note.tistory.com/67)
 
