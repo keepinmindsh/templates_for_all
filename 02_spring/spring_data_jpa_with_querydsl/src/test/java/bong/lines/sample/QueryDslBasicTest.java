@@ -6,6 +6,8 @@ import bong.lines.sample.model.entity.QTeam;
 import bong.lines.sample.model.entity.Team;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -515,6 +517,65 @@ public class QueryDslBasicTest {
 
         for (Tuple tuple: fetch) {
             System.out.println("tuple = " + tuple) ;
+        }
+    }
+
+    @Test
+    public void testCase(){
+        List<String> fetch = jpaQueryFactory.select(member
+                        .age
+                        .when(10).then("열살")
+                        .when(20).then("스무살")
+                        .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        for (String value: fetch
+             ) {
+            System.out.println("value = " + value);
+        }
+    }
+
+    @Test
+    public void complexCase(){
+        List<String> values = jpaQueryFactory
+                .select(
+                        new CaseBuilder()
+                                .when(member.age.between(0, 20)).then("0~20살")
+                                .when(member.age.between(21, 30)).then("21~30살")
+                                .otherwise("기타"))
+                .from(member)
+                .fetch();
+
+        for (String value : values) {
+            System.out.println("value = " + value);
+        }
+    }
+
+    @Test
+    public void testPlusVlues(){
+        List<Tuple> fetch = jpaQueryFactory
+                .select(member.username, Expressions.constant("A"))
+                .from(member)
+                .fetch();
+
+        for (Tuple value: fetch
+             ) {
+            System.out.println("value = " + value);
+        }
+    }
+
+    @Test
+    public void testConcat(){
+        List<String> fetch = jpaQueryFactory
+                .select(member.username.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .where(member.username.eq("member1"))
+                .fetch();
+
+        for (String value :
+                fetch) {
+            System.out.println("value = " + value);
         }
     }
 }
