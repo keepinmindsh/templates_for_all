@@ -186,7 +186,7 @@ class Sample {
 }
 ```
 
-### QueryDSL
+### QueryDSL - Fetch
 
 - fetch()
 - fetchOne()
@@ -194,6 +194,14 @@ class Sample {
 - fetchResults() : deprecated
   - [QueryDSL에서 fetchResults()가 Deprecated 된 이유 ](https://velog.io/@nestour95/QueryDsl-fetchResults%EA%B0%80-deprecated-%EB%90%9C-%EC%9D%B4%EC%9C%A0)
 
+### QueryDSL - Join 
+
+조인의 기본 문법은 첫번째 파라미의 조인 대상을 지원하고, 두번째 파라미터에 별칭(alias)으로 사용할 Q 타입을 지정하면 된다. 
+    
 ### References 
 
-> [Gradle Annotation Process with Query DSL - 버전별 처리](http://honeymon.io/tech/2020/07/09/gradle-annotation-processor-with-querydsl.html)
+> [Gradle Annotation Process with Query DSL - 버전별 처리](http://honeymon.io/tech/2020/07/09/gradle-annotation-processor-with-querydsl.html)    
+> 
+> [Join, Index의 역할](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=jyc8618&logNo=220214553092)  
+> - http://haisins.epac.to/wordpress/?p=716     
+> - https://gent.tistory.com/306  

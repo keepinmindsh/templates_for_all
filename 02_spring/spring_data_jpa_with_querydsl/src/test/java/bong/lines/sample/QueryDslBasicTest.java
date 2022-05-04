@@ -269,8 +269,6 @@ public class QueryDslBasicTest {
                 .having(team.name.eq("Test!"))
                 .fetch();
 
-
-
         Tuple teamA = fetch.get(0);
         Tuple teamB = fetch.get(1);
 
@@ -286,7 +284,55 @@ public class QueryDslBasicTest {
 
         assertThat(teamB.get(team.name)).isEqualTo("teamB");
         assertThat(teamB.get(member.age.avg())).isEqualTo(35);
+    }
 
+    @Test
+    @DisplayName("Join 테스트")
+    public void testJoin(){
+        // given
+        List<Member> teamList = jpaQueryFactory
+                .selectFrom(member)
+                .join(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+        /**
+         * select member1
+         * from Member member1
+         *   inner join member1.team as team
+         * where team.name = 'teamA'
+         */
+
+        List<Member> leftJoinList = jpaQueryFactory
+                .selectFrom(member)
+                .leftJoin(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+        assertThat(teamList)
+                .extracting("username")
+                .containsExactly("member1", "member2");
+    }
+
+    @Test
+    @DisplayName("세타 조인 - 연관관계를 가지지 않는 필드에 대해서도 조인을 걸 수 있다.")
+    public void theta_join(){
+
+        // member의 모든 행과 team의 모든 행에 대해서 조인을 한 뒤 조건을 검색함.
+
+        /* select member1
+             from Member member1, Team team
+            where member1.username = team.name */
+
+        List<Member> fetch = jpaQueryFactory.selectFrom(member)
+                .select(member)
+                .from(member, team)
+                .where(member.username.eq(team.name))
+                .fetch();
+
+        assertThat(fetch)
+                .extracting("username")
+                .containsExactly("teamA", "teamB");
     }
 
 }
