@@ -27,5 +27,10 @@ implementation 'org.springframework.boot:spring-boot-devtools'
 ### H2 Database 설정
 
 
+### JPA Log Query Parameter 보기 
+
+- https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
+  - 운영 배포 시에는 반드시 고려해서 적용 필요
+
 
 > https://dololak.tistory.com/465

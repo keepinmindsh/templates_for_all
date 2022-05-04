@@ -1,4 +1,4 @@
-server:ßßß
+server:
   port: 9090
 
 spring:
@@ -19,3 +19,4 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+    org.hibernate.type: trace

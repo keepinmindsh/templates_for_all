@@ -14,8 +14,11 @@ public class MemberRepository {
 
     public Long save(Member member){
         entityManager.persist(member);
-
         return member.getId();
+    }
 
+    public Member find(Long id){
+        Member member = entityManager.find(Member.class, id);
+        return member;
     }
 }
