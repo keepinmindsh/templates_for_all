@@ -191,7 +191,8 @@ class Sample {
 - fetch()
 - fetchOne()
 - fetchFirst() 
-- fetchResults()
+- fetchResults() : deprecated
+  - [QueryDSL에서 fetchResults()가 Deprecated 된 이유 ](https://velog.io/@nestour95/QueryDsl-fetchResults%EA%B0%80-deprecated-%EB%90%9C-%EC%9D%B4%EC%9C%A0)
 
 ### References 
 

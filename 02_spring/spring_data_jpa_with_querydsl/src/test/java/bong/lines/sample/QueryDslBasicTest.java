@@ -204,4 +204,26 @@ public class QueryDslBasicTest {
         assertThat(member2.getUsername()).isNull();
     }
 
+    @Test
+    @DisplayName("페이징")
+    public void testPaging(){
+
+        /**
+         * offset - 시작지점
+         * limit - 페이지 사이즈
+         *
+         * select p from Post p offset 3 limit 10
+         * 이라고 한다면 3번째 로우에서부터 10개의 로우를 가져온다는 것이다.
+         * 주의할점은 Querydsl 에서 offset 은 0부터 시작한다.
+         */
+        List<Member> fetch = jpaQueryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc())
+                .offset(1)
+                .limit(2)
+                .fetch();
+
+        assertThat(fetch.size()).isEqualTo(2);
+    }
+
 }
