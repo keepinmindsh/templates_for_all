@@ -2,8 +2,10 @@ package bong.lines.sample;
 
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.QMember;
+import bong.lines.sample.model.entity.QTeam;
 import bong.lines.sample.model.entity.Team;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static bong.lines.sample.model.entity.QMember.*;
 import static bong.lines.sample.model.entity.QMember.member;
+import static bong.lines.sample.model.entity.QTeam.team;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -224,6 +227,66 @@ public class QueryDslBasicTest {
                 .fetch();
 
         assertThat(fetch.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("집합 처리")
+    public void testAggregation(){
+        List<Tuple> fetch = jpaQueryFactory
+                .select(
+                        member.count(),
+                        member.age.sum(),
+                        member.age.avg(),
+                        member.age.max(),
+                        member.age.min()
+                ).from(member)
+                .fetch();
+
+        Tuple tuple = fetch.get(0);
+
+        /***
+         * select count(member1), sum(member1.age), avg(member1.age), max(member1.age), min(member1.age)
+         * from Member member1
+         */
+
+        assertThat(tuple.get(member.count())).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("Group By - Aggregations")
+    public void testGroupBy(){
+        List<Tuple> fetch = jpaQueryFactory.select(team.name, member.age.avg())
+                .from(member)
+                .join(member.team, team)
+                .groupBy(team.name)
+                .fetch();
+
+
+        List<Tuple> fetchMember = jpaQueryFactory.select(team.name, member.age.avg())
+                .from(member)
+                .join(member.team, team)
+                .groupBy(team.name)
+                .having(team.name.eq("Test!"))
+                .fetch();
+
+
+
+        Tuple teamA = fetch.get(0);
+        Tuple teamB = fetch.get(1);
+
+        /**
+         * select team.name, avg(member1.age)
+         * from Member member1
+         *   inner join member1.team as team
+         * group by team.name
+         */
+
+        assertThat(teamA.get(team.name)).isEqualTo("teamA");
+        assertThat(teamA.get(member.age.avg())).isEqualTo(15);
+
+        assertThat(teamB.get(team.name)).isEqualTo("teamB");
+        assertThat(teamB.get(member.age.avg())).isEqualTo(35);
+
     }
 
 }
