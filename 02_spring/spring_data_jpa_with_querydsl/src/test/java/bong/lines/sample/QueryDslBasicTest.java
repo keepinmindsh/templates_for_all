@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
 import java.util.List;
@@ -402,6 +404,43 @@ public class QueryDslBasicTest {
                 fetch) {
             System.out.println("m = " + m);
         }
+    }
+
+    @PersistenceUnit
+    EntityManagerFactory emf;
+
+    @Test
+    @DisplayName("패치 조인 미적용 케이스")
+    public void nofetchJoin(){
+        entityManager.flush();
+        entityManager.clear();
+
+        Member memberOne = jpaQueryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1"))
+                .fetchOne();
+
+        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
+
+        assertThat(loaded).as("패치 조인 미적용").isFalse();
+    }
+
+    @Test
+    @DisplayName("패치 조인 적용 케이스")
+    public void fetchJoin(){
+        entityManager.flush();
+        entityManager.clear();
+
+        Member memberOne = jpaQueryFactory
+                .selectFrom(member)
+                // leftJoin, Join 뒤에 fetchJoin을 붙이면 fetchJoin이 적용된다.
+                .join(member.team, team).fetchJoin()
+                .where(member.username.eq("member1"))
+                .fetchOne();
+
+        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
+
+        assertThat(loaded).as("패치 조인 미적용").isTrue();ß
     }
 
 }
