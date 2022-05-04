@@ -162,6 +162,37 @@ test {
 
 ```
 
+### QueryDSL - Select Query 
+
+```java
+class Sample {
+    public static void main(String[] args) {
+        member.username.isNotNull();
+
+        member.age.in(10, 20);
+        member.age.notIn(10, 20);
+        member.age.between(10, 20);
+
+        member.age.goe(30); // age >= 30 
+        member.age.gt(20);  // age > 20
+        member.age.loe(20); // age <= 2ß0
+        member.age.lt(20);  // age < 20
+
+        member.username.like("kim%"); // like 검색 
+        member.username.contains("member"); // like '%member%' 검색 
+        member.username.statwith("member"); // like 'member%' 검색 
+                
+    }
+}
+```
+
+### QueryDSL
+
+- fetch()
+- fetchOne()
+- fetchFirst() 
+- fetchResults()
+
 ### References 
 
 > [Gradle Annotation Process with Query DSL - 버전별 처리](http://honeymon.io/tech/2020/07/09/gradle-annotation-processor-with-querydsl.html)
