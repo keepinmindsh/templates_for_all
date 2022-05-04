@@ -196,7 +196,43 @@ class Sample {
 
 ### QueryDSL - Join 
 
-조인의 기본 문법은 첫번째 파라미의 조인 대상을 지원하고, 두번째 파라미터에 별칭(alias)으로 사용할 Q 타입을 지정하면 된다. 
+조인의 기본 문법은 첫번째 파라미의 조인 대상을 지원하고, 두번째 파라미터에 별칭(alias)으로 사용할 Q 타입을 지정하면 된다.
+
+- leftJoin 
+
+```java
+
+class Sample {
+    public static void main(String[] args) {
+        List<Tuple> teamA = jpaQueryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(member.team, team)
+                .on(team.name.eq("teamA"))
+                .fetch();
+    }
+}
+
+```
+
+- onJoin 
+
+```java
+
+class Sample {
+    public static void main(String[] args) {
+        List<Tuple> fetch = jpaQueryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(team)
+                .on(member.username.eq(team.name))
+                .fetch();
+    }
+}
+```
+
+- fetchJoin 
+
     
 ### References 
 

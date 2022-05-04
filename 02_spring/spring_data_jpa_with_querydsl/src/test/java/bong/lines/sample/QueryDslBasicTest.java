@@ -335,4 +335,73 @@ public class QueryDslBasicTest {
                 .containsExactly("teamA", "teamB");
     }
 
+    @Test
+    public void testJoinOn(){
+        /**
+         * select
+         *         member1,
+         *         team
+         *     from
+         *         Member member1
+         *     left join
+         *         member1.team as team with team.name = ?1
+         */
+        List<Tuple> teamA = jpaQueryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(member.team, team)
+                .on(team.name.eq("teamA"))
+                .fetch();
+
+        /**
+         * select member1, team
+         * from Member member1
+         * left join member1.team as team with team.name = 'teamA'1
+         */
+        for (Tuple value: teamA) {
+            System.out.println("value = " + value);
+        }
+
+        // Join 절의 경우, join , where를 사용하는 방식과 동일함.
+        // leftOutJoin이 아닌 경우에는 아래의 두가지 모두 사용이 가능하다.
+        List<Tuple> teamJoin = jpaQueryFactory
+                .select(member, team)
+                .from(member)
+                .join(member.team, team)
+                .on(team.name.eq("teamA"))
+                .fetch();
+
+        List<Tuple> teamWhereLikeJoinOn = jpaQueryFactory
+                .select(member, team)
+                .from(member)
+                .join(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+    }
+
+    @Test
+    @DisplayName("연관 관계가 없는 Field에 대한 조건절 조인 처리")
+    public void testJoinOnNoRelations(){
+        List<Tuple> fetch = jpaQueryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(team)
+                .on(member.username.eq(team.name))
+                .fetch();
+
+        /**
+         * select
+         *         member1,
+         *         team
+         *     from
+         *         Member member1
+         *     left join
+         *         Team team with member1.username = team.name
+         */
+        for (Tuple m :
+                fetch) {
+            System.out.println("m = " + m);
+        }
+    }
+
 }
