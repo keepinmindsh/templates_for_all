@@ -187,4 +187,21 @@ public class QueryDslBasicTest {
 
     }
 
+    @Test
+    @DisplayName("정렬하기")
+    public void testResultWithOrder(){
+
+        List<Member> fetch = jpaQueryFactory.selectFrom(member)
+                .where(member.age.gt(1))
+                .orderBy(member.age.desc(), member.username.asc().nullsLast())
+                .fetch();
+
+        Member member1 = fetch.get(0);
+        Member member2 = fetch.get(1);
+        Member member3 = fetch.get(2);
+
+        assertThat(member1.getUsername()).isEqualTo("member1");
+        assertThat(member2.getUsername()).isNull();
+    }
+
 }
