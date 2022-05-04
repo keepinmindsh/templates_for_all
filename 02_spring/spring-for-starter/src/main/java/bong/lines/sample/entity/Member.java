@@ -3,6 +3,7 @@ package bong.lines.sample.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,5 +18,8 @@ public class Member {
     @GeneratedValue(strategy = AUTO)
     private Long id;
 
-    private String username;
+    @Embedded
+    private Address address;
+
+    private String name;
 }
