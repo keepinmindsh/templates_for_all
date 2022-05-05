@@ -23,14 +23,16 @@ implementation 'org.springframework.boot:spring-boot-devtools'
 
 - build > Recompile : 재시작 없이 재 컴파일하여 반영할 수 있음. 
 
-
 ### H2 Database 설정
-
 
 ### JPA Log Query Parameter 보기 
 
 - https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
   - 운영 배포 시에는 반드시 고려해서 적용 필요
+
+### 엔티티 클래스 개발
+- getter를 용인하는 것은 상관이 없지만, setter는 꼭 필요한 경우만 사용하는 것을 추천함. 
+- 값 타입은 Immutable한 객체로 생성하는 것이 최선임. 
 
 
 > https://dololak.tistory.com/465
