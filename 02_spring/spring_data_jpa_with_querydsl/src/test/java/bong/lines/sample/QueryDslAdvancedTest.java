@@ -2,6 +2,7 @@ package bong.lines.sample;
 
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.Team;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ public class QueryDslAdvancedTest {
     @Test
     public void simpleProjection(){
         List<String> strings = jpaQueryFactory
-                .select(member.username)
+                .select(member.username)  // select 구문에 나열 되는 것을 Projection 이라고 함.
                 .from(member)
                 .fetch();
 
@@ -61,6 +62,22 @@ public class QueryDslAdvancedTest {
         for (String user:strings
              ) {
             System.out.println("user = " + user);
+        }
+    }
+
+    @Test
+    public void tupleProjection(){
+        List<Tuple> tuples = jpaQueryFactory
+                .select(member.username, member.age)
+                .from(member)
+                .fetch();
+
+        for (Tuple item: tuples
+             ) {
+            String username = item.get(member.username);
+            System.out.println("username = " + username);
+            int age = item.get(member.age);
+            System.out.println("age = " + age);
         }
     }
 }
