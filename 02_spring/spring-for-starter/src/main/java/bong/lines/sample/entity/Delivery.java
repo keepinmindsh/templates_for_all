@@ -17,4 +17,7 @@ public class Delivery {
     @Column(name = "DELIVERY_STATUS")
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
+
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    private Orders orders;
 }

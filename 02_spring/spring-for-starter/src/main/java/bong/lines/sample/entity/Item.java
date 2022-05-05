@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.InheritanceType.JOINED;
 
 @Getter
@@ -27,4 +30,8 @@ public abstract class Item {
 
     @Column(name = "STOCK_QUANTITY")
     private int stockQuantity;
+
+    @ManyToMany(mappedBy = "items")
+    private List<Category> categories = new ArrayList<>();
+
 }
