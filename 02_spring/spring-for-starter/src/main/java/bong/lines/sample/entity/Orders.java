@@ -26,10 +26,26 @@ public class Orders {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
-    private List<OrderItem> list = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "DELIVERY_ID")
     private Delivery delivery;
+
+    // 연관 관계 편의 메서드
+    public void setMember(Member member){
+        this.member = member;
+        this.member.getOrders().add(this);
+    }
+
+    public void addOrderItem(OrderItem orderItem){
+        orderItems.add(orderItem);
+        orderItem.setOrders(this);
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrders(this);
+    }
 }

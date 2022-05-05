@@ -1,10 +1,13 @@
 package bong.lines.sample.entity;
 
 import bong.lines.sample.code.DeliveryStatus;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter @Setter
 public class Delivery {
 
     @Id
@@ -18,6 +21,6 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Orders orders;
 }

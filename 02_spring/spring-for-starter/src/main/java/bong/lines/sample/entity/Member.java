@@ -24,10 +24,11 @@ public class Member {
     @Column(name = "MEMBER_NAME")
     private String name;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<Orders> ordersList = new ArrayList<>();
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Orders> orders = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "DELIVERY_ID")
     private Delivery delivery;
+
 }
