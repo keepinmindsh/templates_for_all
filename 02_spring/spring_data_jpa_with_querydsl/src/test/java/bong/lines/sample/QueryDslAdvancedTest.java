@@ -1,8 +1,11 @@
 package bong.lines.sample;
 
+import bong.lines.sample.model.dto.MemberDto;
+import bong.lines.sample.model.dto.UserDto;
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.Team;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,6 +81,80 @@ public class QueryDslAdvancedTest {
             System.out.println("username = " + username);
             int age = item.get(member.age);
             System.out.println("age = " + age);
+        }
+    }
+
+    @Test
+    public void dtoProjection(){
+        List<MemberDto> result = entityManager.createQuery("select new bong.lines.sample.model.dto.MemberDto(m.username, m.age) from Member m",
+                MemberDto.class).getResultList();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    public void dtoWithQueryDSLProjection(){
+
+        List<MemberDto> memberDtos = jpaQueryFactory
+                .select(Projections.bean(MemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : memberDtos) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test // Field에 직접적으로 값을 바인딩하는 방식
+    public void dtoWithQueryDSLProjectionWithField() {
+
+        List<MemberDto> memberDtos = jpaQueryFactory
+                .select(Projections.fields(MemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : memberDtos) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test // 생성자를 이용하는 방식으로 실제 생성되는 생성자의 타입과 맞춰야함.
+    public void dtoWithQueryDSLProjectionWithConstructor() {
+
+        List<MemberDto> memberDtos = jpaQueryFactory
+                .select(Projections.constructor(MemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : memberDtos) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test // Field에 직접적으로 값을 바인딩하는 방식
+    public void userDtoWithQueryDSLProjectionWithField() {
+
+        List<UserDto> userDtos = jpaQueryFactory
+                .select(Projections.fields(UserDto.class,
+                        member.username.as("name"),
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        for (UserDto memberDto : userDtos) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 }
