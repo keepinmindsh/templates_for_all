@@ -137,6 +137,7 @@ public class QueryDslDynamicTest {
      * 여러가지 값의 조합으로 비교 메소드들을 우리가 원하는 방식으로 작성 가능.
      * 어떤 조건, 어떤 조건일 경우 이것이다 라는 비교 메서드 작성
      * 또는 메소드 자체에 대한 재활용이 가능함.
+     * 자유로운 컴포지션이 가능하다.
      * @param usernameCond
      * @param ageCond
      * @return
