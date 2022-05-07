@@ -9,7 +9,9 @@ import bong.lines.sample.model.entity.Team;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.Assertions;
@@ -91,5 +93,55 @@ public class QueryDslDynamicTest {
         return jpaQueryFactory.selectFrom(member)
                 .where(builder)
                 .fetch();
+    }
+
+    @Test
+    @DisplayName("Dynamic Query with where null or value by function condition")
+    public void dynamicQueryWithWhere(){
+        String usernameparameter = "member1";
+        Integer age = 10;
+
+        // 실무에서 좀더 이해도 있게 사용할 수 있는 방식
+        List<Member> result = searchMember2(usernameparameter, age);
+
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    private List<Member> searchMember2(String usernameparameter, Integer age) {
+        return jpaQueryFactory
+                .selectFrom(member)
+                .where(usernameEq(usernameparameter), ageEq(age))
+                .fetch();
+    }
+
+    private List<Member> searchMember3(String usernameparameter, Integer age) {
+        return jpaQueryFactory
+                .selectFrom(member)
+                .where(allEq(usernameparameter, age)) // 이와 같은 방식으로 작성할 수 있음
+                .fetch();
+    }
+
+    private BooleanExpression ageEq(Integer age) {
+        return age == null ? null : member.age.eq(age);
+    }
+
+    private BooleanExpression usernameEq(String usernameparameter) {
+        if(usernameparameter == null){
+            return null;
+        }
+
+        return member.username.eq(usernameparameter);
+    }
+
+    /**
+     * 여러가지 값의 조합으로 비교 메소드들을 우리가 원하는 방식으로 작성 가능.
+     * 어떤 조건, 어떤 조건일 경우 이것이다 라는 비교 메서드 작성
+     * 또는 메소드 자체에 대한 재활용이 가능함.
+     * @param usernameCond
+     * @param ageCond
+     * @return
+     */
+    private Predicate allEq(String usernameCond, Integer ageCond){
+        return usernameEq(usernameCond).and(ageEq(ageCond));
     }
 }
