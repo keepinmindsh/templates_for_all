@@ -76,6 +76,7 @@ public class QueryDslAdvancedTest {
 
     @Test
     public void tupleProjection(){
+        // Tuple은 Repository 계층 간에서만 사용할 것
         List<Tuple> tuples = jpaQueryFactory
                 .select(member.username, member.age)
                 .from(member)
