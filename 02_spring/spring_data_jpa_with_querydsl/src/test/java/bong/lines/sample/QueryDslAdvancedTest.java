@@ -1,6 +1,7 @@
 package bong.lines.sample;
 
 import bong.lines.sample.model.dto.MemberDto;
+import bong.lines.sample.model.dto.QMemberDto;
 import bong.lines.sample.model.dto.UserDto;
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.QMember;
@@ -201,6 +202,24 @@ public class QueryDslAdvancedTest {
                 .fetch();
 
         for (UserDto memberDto : memberDtos) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    @DisplayName("Qeury Projection을 활용하는 방식")
+    public void QueryProjectionTest(){
+        List<MemberDto> fetch = jpaQueryFactory
+                // Q 타입의 매핑 DTO를 정의해주며, 각 생성자 인자에 맞는 값을 초기화 할 수 있음.
+                // Compile 오류를 잡을 수 있음
+                // 실제 호출하면 생성자도 그대로 호출이 되는 구조임.
+                // 이슈 : Qfile을 생성해야하는 것, 의존관계의 문제 - 멤버 DTO가 QueryDSL의 의존성을 가지게 되는 이슈
+                // 다중 레이어에서 DTO를 사용할 경우, DTO가 흘러가는 DTO 가 순수한 객체가 아닌 것으로 흘러가게 됨.
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : fetch) {
             System.out.println("memberDto = " + memberDto);
         }
     }
