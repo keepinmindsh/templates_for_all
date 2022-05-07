@@ -84,6 +84,13 @@ public class QueryDslBasicTest {
                 .where(qMember.username.eq("member1"))
                 .fetchOne();
 
+        /**
+         * 식별자를 m으로 표시함. QMember 생성시에 Table의 식별자를 설정할 수 있음.
+         * select m
+         *   from Member m
+         *  where m.username = 'member'1
+         */
+
 
         assert member != null;
         assertThat(member.getUsername()).isEqualTo("member1");
@@ -116,6 +123,13 @@ public class QueryDslBasicTest {
 
         System.out.println("findMember.getUsername() = " + findMember.getUsername());
 
+        /**
+         * 임의의 식별자를 설정하는 방법
+         * select member1
+         *   from Member member1
+         *  where member1.username = 'member1'
+         */
+
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
 
@@ -145,8 +159,8 @@ public class QueryDslBasicTest {
 
         /**
          * select member1
-         * from Member member1
-         * where member1.username = 'member1'1 and member1.age = 102
+         *   from Member member1
+         *  where member1.username = 'member1'1 and member1.age = 102
          */
 
     }
@@ -167,8 +181,9 @@ public class QueryDslBasicTest {
 
         /**
          * select member1
-         * from Member member1
-         * where member1.username = 'member1'1 and member1.age = 102
+         *   from Member member1
+         *  where member1.username = 'member1'
+         *    and member1.age = 102
          */
     }
 
@@ -304,9 +319,9 @@ public class QueryDslBasicTest {
 
         /**
          * select member1
-         * from Member member1
-         *   inner join member1.team as team
-         * where team.name = 'teamA'
+         *   from Member member1
+         *  inner join member1.team as team
+         *  where team.name = 'teamA'
          */
 
         List<Member> leftJoinList = jpaQueryFactory
@@ -361,8 +376,8 @@ public class QueryDslBasicTest {
 
         /**
          * select member1, team
-         * from Member member1
-         * left join member1.team as team with team.name = 'teamA'1
+         *   from Member member
+         *   left join member1.team as team with team.name = 'teamA'1
          */
         for (Tuple value: teamA) {
             System.out.println("value = " + value);
@@ -500,7 +515,7 @@ public class QueryDslBasicTest {
         /**
          * JPA JPQL 서브 쿼리의 한계점으로 from 절의 서브 쿼리 (인라인 뷰)는 지원하지 않는다.
          * 딩연히 QueryDSL도 지원하지 않는다. 하이버네이트 구현체를 사용하면 select 절의 서브쿼리를 지원한다.
-         * QueryDSL도 하이버네이트 구현체를 사용하면 select 절의 서브쿼리를 지원한다. s
+         * QueryDSL도 하이버네이트 구현체를 사용하면 select 절의 서브쿼리를 지원한다.
          *  - 서브쿼리를 join으로 변경한다.
          *  - 애플리케이션 쿼리를 2번 분리해서 실행한다.
          *  - nativeSQL 를 사용한다.
@@ -521,7 +536,7 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testCase(){
+    public void testCaseWhenOtherwise(){
         List<String> fetch = jpaQueryFactory.select(member
                         .age
                         .when(10).then("열살")
@@ -530,8 +545,7 @@ public class QueryDslBasicTest {
                 .from(member)
                 .fetch();
 
-        for (String value: fetch
-             ) {
+        for (String value: fetch) {
             System.out.println("value = " + value);
         }
     }
@@ -553,7 +567,7 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testPlusVlues(){
+    public void testPlusValue(){
         List<Tuple> fetch = jpaQueryFactory
                 .select(member.username, Expressions.constant("A"))
                 .from(member)
