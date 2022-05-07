@@ -3,11 +3,16 @@ package bong.lines.sample;
 import bong.lines.sample.model.dto.MemberDto;
 import bong.lines.sample.model.dto.UserDto;
 import bong.lines.sample.model.entity.Member;
+import bong.lines.sample.model.entity.QMember;
 import bong.lines.sample.model.entity.Team;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -154,6 +159,48 @@ public class QueryDslAdvancedTest {
                 .fetch();
 
         for (UserDto memberDto : userDtos) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    @DisplayName("이름이 다를 때의 해결 방안")
+    public void userDTOWithExpressions(){
+        /**
+         * elect member1.username as name, (select max(MemberSub.age)
+         * from Member MemberSub) as age
+         * from Member member1
+         */
+        QMember memberSub = new QMember("MemberSub");
+        List<UserDto> resulst = jpaQueryFactory
+                .select(Projections.fields(UserDto.class,
+                        member.username.as("name"),
+                        //SubQuery의 처리 방식
+                        ExpressionUtils.as(JPAExpressions.select(
+                                memberSub.age.max()
+                                ).from(memberSub), "age")
+                        ))
+                .from(member)
+                .fetch();
+
+        for (UserDto userDto : resulst) {
+            System.out.println("userDto = " + userDto.getName());
+        }
+    }
+
+    @Test // 생성자를 이용하는 방식2
+    public void dtoWithQueryDSLProjectionWithConstructor2() {
+
+
+        List<UserDto> memberDtos = jpaQueryFactory
+                .select(Projections.constructor(UserDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        for (UserDto memberDto : memberDtos) {
             System.out.println("memberDto = " + memberDto);
         }
     }
