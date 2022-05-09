@@ -1,13 +1,23 @@
 package bong.lines.sample.repository;
 
+import bong.lines.sample.model.dto.MemberSearchCondition;
+import bong.lines.sample.model.dto.MemberTeamDto;
+import bong.lines.sample.model.dto.QMemberTeamDto;
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.QMember;
+import bong.lines.sample.model.entity.QTeam;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+
+import static bong.lines.sample.model.entity.QMember.member;
+import static bong.lines.sample.model.entity.QTeam.team;
+import static org.springframework.util.StringUtils.*;
 
 @Repository
 public class MemberJpaRepository {
@@ -38,7 +48,7 @@ public class MemberJpaRepository {
 
     public List<Member> findAll_QeuryDSL(){
         return jpaQueryFactory
-                .selectFrom(QMember.member)
+                .selectFrom(member)
                 .fetch();
     }
 
@@ -51,9 +61,49 @@ public class MemberJpaRepository {
     // 컴파일 시점에 에러가 나기 때문에 사전 코드 체크가 가능함.
     public List<Member> findByUsername_Querydsl(String username){
         return jpaQueryFactory
-                .selectFrom(QMember.member)
-                .where(QMember.member.username.eq(username))
+                .selectFrom(member)
+                .where(member.username.eq(username))
                 .fetch();
+    }
+
+    public List<MemberTeamDto> searchByBuilder(MemberSearchCondition condition) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(hasText(condition.getUsername())){
+            builder.and(member.username.eq(condition.getUsername()));
+        }
+
+        if(hasText(condition.getTeamName())){
+            builder.and(team.name.eq(condition.getTeamName()));
+        }
+
+        if(condition.getAgeGoe()  != null){
+            builder.and(member.age.goe(condition.getAgeGoe()));
+        }
+
+        if(condition.getAgeLoe() != null){
+            builder.and(member.age.loe(condition.getAgeLoe()));
+        }
+
+        /**
+         * 조건문이 모두 빠지는 경우에는 전체 데이터를 다 가져오기 때문에 필수값에 대한 유효성 검사를 반드시 체크해야한다.
+         * - 페이징 쿼리 적용
+         */
+        List<MemberTeamDto> fetch = jpaQueryFactory
+                .select(new QMemberTeamDto(
+                        member.id.as("memberId"),
+                        member.username,
+                        member.age,
+                        team.id.as("teamId"),
+                        team.name.as("teamName")))
+                .from(member)
+                .leftJoin(member.team, team)
+                .where(builder)
+                .fetch();
+
+
+        return fetch;
     }
 }
 
