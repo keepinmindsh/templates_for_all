@@ -43,7 +43,54 @@ class MemberJpaRepositoryTest {
     
     @Test
     @DisplayName("동적 쿼리 - Boolean Builder 사용")
-    public void SearchTest(){
+    public void SearchBooleanBuilderTest(){
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+
+        entityManager.persist(teamA);
+        entityManager.persist(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamA);
+
+        Member member3 = new Member("member3", 30, teamB);
+        Member member4 = new Member("member4", 40, teamB);
+
+        entityManager.persist(member1);
+        entityManager.persist(member2);
+        entityManager.persist(member3);
+        entityManager.persist(member4);
+
+        MemberSearchCondition memberSearchCondition = new MemberSearchCondition();
+        memberSearchCondition.setAgeGoe(35);
+        memberSearchCondition.setAgeLoe(40);
+        memberSearchCondition.setTeamName("teamB");
+
+        /**
+         *  select
+         *         member1.id as memberId,
+         *         member1.username,
+         *         member1.age,
+         *         team.id as teamId,
+         *         team.name as teamName
+         *     from
+         *         Member member1
+         *     left join
+         *         member1.team as team
+         *     where
+         *         team.name = ?1
+         *         and member1.age >= ?2
+         *         and member1.age <= ?3
+         */
+        List<MemberTeamDto> memberTeamDtos = memberJpaRepository.searchByBuilder(memberSearchCondition);
+
+        assertThat(memberTeamDtos).extracting("username").containsExactly("member4");
+
+    }
+
+    @Test
+    @DisplayName("동적 쿼리 - Where 사용")
+    public void SearchWhereTest(){
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
 
