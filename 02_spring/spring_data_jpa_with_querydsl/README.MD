@@ -1,3 +1,11 @@
+# Query DSL Web 지원 
+
+ - Join문을 이용해서 활용할 수 없음
+ - 권장하지 않는 기술 
+ - Controller가 QueryDSL에 의존해야함. 
+
+> https://docs.spring.io/spring-data/jpa/docs/2.2.3.RELEASE/reference/html/#core.web.type-safe
+
 # JPQL vs QueryDSL
 
  - QueryDSL 이점

@@ -125,6 +125,7 @@ class MemberRepositoryTest {
          * Predicate를 바로 활용은 가능하지만, 조인이 되지 않음. 이로 인해서 Root Entity에 대해서만 처리해야함.
          * Client가 QueryDSL에 의존해야한다. 서비스 클래스가 QueryDSL에 구현 기술을 의존해야한다.
          * Repository의 추상화 단계를 깨는 QueryDSL을 사용하기 때문에 의존도가 올라간다.
+         * 실무에서 권장하지 않음
          */
         Iterable<Member> findMember = memberRepository.findAll(member.age.between(10, 40).and(member.username.eq("member1")));
 
