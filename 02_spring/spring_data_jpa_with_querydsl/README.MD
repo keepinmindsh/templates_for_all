@@ -1,3 +1,10 @@
+# Query DSL - QueryDSL Query Support
+
+ - 스프링 데이터의 Sort기능이 정상동작하지 않음. 
+
+# Query DSL - QSort
+ - https://www.programcreek.com/java-api-examples/?api=org.springframework.data.querydsl.QSort
+
 # Query DSL Web 지원 
 
  - Join문을 이용해서 활용할 수 없음
