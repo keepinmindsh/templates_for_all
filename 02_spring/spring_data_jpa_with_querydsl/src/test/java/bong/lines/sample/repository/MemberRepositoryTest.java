@@ -91,20 +91,7 @@ class MemberRepositoryTest {
         memberSearchCondition.setTeamName("teamB");
 
         /**
-         *  select
-         *         member1.id as memberId,
-         *         member1.username,
-         *         member1.age,
-         *         team.id as teamId,
-         *         team.name as teamName
-         *     from
-         *         Member member1
-         *     left join
-         *         member1.team as team
-         *     where
-         *         team.name = ?1
-         *         and member1.age >= ?2
-         *         and member1.age <= ?3
+         * Custom을 활용한 방식의 Repository Custom을 구성해야한다.
          */
         List<MemberTeamDto> memberTeamDtos = memberRepository.search(memberSearchCondition);
 
