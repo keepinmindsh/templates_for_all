@@ -573,8 +573,7 @@ public class QueryDslBasicTest {
                 .from(member)
                 .fetch();
 
-        for (Tuple value: fetch
-             ) {
+        for (Tuple value: fetch) {
             System.out.println("value = " + value);
         }
     }
