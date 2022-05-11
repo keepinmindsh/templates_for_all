@@ -55,7 +55,7 @@ public class QueryBulkTest {
     @Test
     @DisplayName("벌크 연산에 대한 잘못된 예시")
 //    @Commit
-    public void bulkUpdatWrongCase(){
+    public void bulkUpdateWrongCase(){
         // bulk 연산은 영속성 컨텍스트를 무시하고 바로 DB에 반영한다.
         long count = jpaQueryFactory
                 .update(member)
