@@ -15,8 +15,14 @@
   - H2Dialect 재상속 및 함수 추가
 - QueryBulkTest
 - MemberJpaRepositoryTest
+  - 순수 JPA를 활용한 예제 
 - MemberRepositoryTest
+  - Spring Data JPA 활용
 - MemberRepositoryImplTest
+  - Spring JPA 지원 라이브러리 활용
+    - QuerydslPredicateExecutor
+    - QuerydslWeb
+    - QuerydslRepositorySupport
 
 # Query DSL - QueryDSL Query Support
 
