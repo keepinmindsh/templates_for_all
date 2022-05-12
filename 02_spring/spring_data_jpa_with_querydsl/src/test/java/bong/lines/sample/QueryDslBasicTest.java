@@ -66,7 +66,8 @@ public class QueryDslBasicTest {
     @Test
     public void startJPQL(){
         // member1 조회
-        Member resultList = entityManager.createQuery("select m from Member m where m.username = :username", Member.class)
+        Member resultList = entityManager
+                .createQuery("select m from Member m where m.username = :username", Member.class)
                 .setParameter("username", "member1")
                 .getSingleResult();
 
@@ -112,7 +113,7 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testQNamee(){
+    public void testQName(){
         QMember member = QMember.member;
 
         Member findMember = jpaQueryFactory
@@ -173,7 +174,7 @@ public class QueryDslBasicTest {
                 .selectFrom(member)
                 .where(  //and 인 경우, 콤마로 대체 가능
                         member.username.eq("member1"),
-                        (member.age.eq(10))
+                        member.age.eq(10)
                 )
                 .fetchOne();
 
@@ -276,18 +277,21 @@ public class QueryDslBasicTest {
     @Test
     @DisplayName("Group By - Aggregations")
     public void testGroupBy(){
-        List<Tuple> fetch = jpaQueryFactory.select(team.name, member.age.avg())
+        List<Tuple> fetch = jpaQueryFactory
+                .select(team.name,
+                        member.age.avg())
                 .from(member)
                 .join(member.team, team)
                 .groupBy(team.name)
                 .fetch();
 
 
-        List<Tuple> fetchMember = jpaQueryFactory.select(team.name, member.age.avg())
-                .from(member)
-                .join(member.team, team)
-                .groupBy(team.name)
-                .having(team.name.eq("Test!"))
+        List<Tuple> fetchMember = jpaQueryFactory
+                .select(team.name, member.age.avg())
+                    .from(member)
+                    .join(member.team, team)
+                    .groupBy(team.name)
+                    .having(team.name.eq("Test!"))
                 .fetch();
 
         Tuple teamA = fetch.get(0);
@@ -406,7 +410,7 @@ public class QueryDslBasicTest {
         List<Tuple> fetch = jpaQueryFactory
                 .select(member, team)
                 .from(member)
-                .leftJoin(team)
+                .leftJoin(member.team, team)
                 .on(member.username.eq(team.name))
                 .fetch();
 

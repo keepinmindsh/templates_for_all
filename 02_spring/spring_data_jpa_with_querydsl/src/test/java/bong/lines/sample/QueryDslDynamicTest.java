@@ -99,7 +99,7 @@ public class QueryDslDynamicTest {
     @DisplayName("Dynamic Query with where null or value by function condition")
     public void dynamicQueryWithWhere(){
         String usernameparameter = "member1";
-        Integer age = 10;
+        Integer age = null;
 
         // 실무에서 좀더 이해도 있게 사용할 수 있는 방식
         List<Member> result = searchMember2(usernameparameter, age);
@@ -110,7 +110,8 @@ public class QueryDslDynamicTest {
     private List<Member> searchMember2(String usernameparameter, Integer age) {
         return jpaQueryFactory
                 .selectFrom(member)
-                .where(usernameEq(usernameparameter), ageEq(age))
+                .where(usernameEq(usernameparameter)
+                        ,ageEq(age))
                 .fetch();
     }
 
