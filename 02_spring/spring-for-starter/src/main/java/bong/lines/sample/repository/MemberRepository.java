@@ -19,8 +19,7 @@ public class MemberRepository {
     }
 
     public Member findOne(Long id){
-        Member member = entityManager.find(Member.class, id);
-        return member;
+        return entityManager.find(Member.class, id);
     }
 
     public List<Member> findAll() {
