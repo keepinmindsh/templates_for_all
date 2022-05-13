@@ -64,34 +64,38 @@ public class QueryDslBasicTest {
 
 
     @Test
+    @DisplayName("JPQL을 활용한 Query 작성")
     public void startJPQL(){
         // member1 조회
         Member resultList = entityManager
-                .createQuery("select m from Member m where m.username = :username", Member.class)
+                .createQuery(
+                        "select m from Member m where m.username = :username",
+                        Member.class
+                )
                 .setParameter("username", "member1")
                 .getSingleResult();
 
         assertThat(resultList.getUsername()).isEqualTo("member1");
     }
 
+    /**
+     * @apiNote
+     * 식별자를 m으로 표시함. QMember 생성시에 Table의 식별자를 설정할 수 있음.
+     * select m
+     *   from Member m
+     *  where m.username = 'member'1
+     */
     @Test
-    public void startQueryDSL(){
-        QMember qMember = new QMember("m");  // 어떤 QMember인지를 구분하는 m값 지정
+    @DisplayName("QType 에 대한 소개 및 Table 식별자 지정하기")
+    void startQueryDSL(){
+        QMember qMember = new QMember("m");  // 어떤 QMember 인지를 구분하는 m값 지정
 
-        // prepare Statement에 파라미터 바인딩을 사용함.
+        // Prepare Statement 파라미터 바인딩을 사용함.
         Member member = jpaQueryFactory
                 .select(qMember)
                 .from(qMember)
                 .where(qMember.username.eq("member1"))
                 .fetchOne();
-
-        /**
-         * 식별자를 m으로 표시함. QMember 생성시에 Table의 식별자를 설정할 수 있음.
-         * select m
-         *   from Member m
-         *  where m.username = 'member'1
-         */
-
 
         assert member != null;
         assertThat(member.getUsername()).isEqualTo("member1");
