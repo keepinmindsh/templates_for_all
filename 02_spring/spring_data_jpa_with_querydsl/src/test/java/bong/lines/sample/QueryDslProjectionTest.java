@@ -11,7 +11,6 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ import static bong.lines.sample.model.entity.QMember.member;
 
 @SpringBootTest
 @Transactional
-public class QueryDslAdvancedTest {
+public class QueryDslProjectionTest {
 
     JPAQueryFactory jpaQueryFactory;
 
@@ -60,7 +59,8 @@ public class QueryDslAdvancedTest {
 
 
     @Test
-    public void simpleProjection(){
+    @DisplayName("Simple Projection 처리하기")
+    void simpleProjection(){
         List<String> strings = jpaQueryFactory
                 .select(member.username)  // select 구문에 나열 되는 것을 Projection 이라고 함.
                 .from(member)
@@ -68,22 +68,25 @@ public class QueryDslAdvancedTest {
 
         System.out.println("strings = " + strings);
 
-        for (String user:strings
-             ) {
+        for (String user:strings) {
             System.out.println("user = " + user);
         }
     }
 
+    /**
+     * @apiNote
+     *  - http://querydsl.com/static/querydsl/3.7.2/reference/ko-KR/html/ch03s02.html
+     */
     @Test
-    public void tupleProjection(){
+    @DisplayName("Tuple을 이용한 Projection 처리")
+    void tupleProjection(){
         // Tuple은 Repository 계층 간에서만 사용할 것
         List<Tuple> tuples = jpaQueryFactory
                 .select(member.username, member.age)
                 .from(member)
                 .fetch();
 
-        for (Tuple item: tuples
-             ) {
+        for (Tuple item: tuples) {
             String username = item.get(member.username);
             System.out.println("username = " + username);
             int age = item.get(member.age);
@@ -92,7 +95,8 @@ public class QueryDslAdvancedTest {
     }
 
     @Test
-    public void dtoProjection(){
+    @DisplayName("JPQL에서 생성자를 이용한 Projection 처리 방식")
+    void dtoProjection(){
         List<MemberDto> result =
                 entityManager.createQuery("select new bong.lines.sample.model.dto.MemberDto(m.username, m.age)  from Member m",
                 MemberDto.class).getResultList();
@@ -103,8 +107,10 @@ public class QueryDslAdvancedTest {
     }
 
     @Test
-    public void dtoWithQueryDSLProjection(){
+    @DisplayName("Projection Bean을 이용한 처리 방식")
+    void dtoWithQueryDSLProjection(){
 
+        // 해당 방식은 파라미터의 수와 인자에 대해서 컴파일 타임에 체크되지 않는 이슈가 있음.
         List<MemberDto> memberDtos = jpaQueryFactory
                 .select(Projections.bean(MemberDto.class,
                         member.username,
@@ -118,8 +124,9 @@ public class QueryDslAdvancedTest {
         }
     }
 
-    @Test // Field에 직접적으로 값을 바인딩하는 방식
-    public void dtoWithQueryDSLProjectionWithField() {
+    @Test
+    @DisplayName("Field 를 직접적으로 값을 바인딩 하는 방식 ")
+    void dtoWithQueryDSLProjectionWithField() {
 
         List<MemberDto> memberDtos = jpaQueryFactory
                 .select(Projections.fields(MemberDto.class,
@@ -134,8 +141,9 @@ public class QueryDslAdvancedTest {
         }
     }
 
-    @Test // 생성자를 이용하는 방식으로 실제 생성되는 생성자의 타입과 맞춰야함.
-    public void dtoWithQueryDSLProjectionWithConstructor() {
+    @Test
+    @DisplayName("생성자를 이용하는 방식으로 실제 생성되는 생성자의 타입과 맞춰야함.")
+    void dtoWithQueryDSLProjectionWithConstructor() {
 
         List<MemberDto> memberDtos = jpaQueryFactory
                 .select(Projections.constructor(MemberDto.class,
@@ -150,8 +158,9 @@ public class QueryDslAdvancedTest {
         }
     }
 
-    @Test // Field에 직접적으로 값을 바인딩하는 방식
-    public void userDtoWithQueryDSLProjectionWithField() {
+    @Test
+    @DisplayName("Field에 직접적으로 값을 바인딩하는 방식")
+    void userDtoWithQueryDSLProjectionWithField() {
 
         List<UserDto> userDtos = jpaQueryFactory
                 .select(Projections.fields(UserDto.class,
@@ -167,33 +176,35 @@ public class QueryDslAdvancedTest {
     }
 
     @Test
-    @DisplayName("이름이 다를 때의 해결 방안")
-    public void userDTOWithExpressions(){
+    @DisplayName("Projection 시에 이름이 다를 때의 해결 방안")
+    void userDTOWithExpressions(){
         /**
          * elect member1.username as name, (select max(MemberSub.age)
          * from Member MemberSub) as age
          * from Member member1
          */
         QMember memberSub = new QMember("MemberSub");
-        List<UserDto> resulst = jpaQueryFactory
+        List<UserDto> result = jpaQueryFactory
                 .select(Projections.fields(UserDto.class,
                         member.username.as("name"),
                         //SubQuery의 처리 방식
-                        ExpressionUtils.as(JPAExpressions.select(
-                                memberSub.age.max()
-                                ).from(memberSub), "age")
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select(memberSub.age.max())
+                                        .from(memberSub),
+                                "age")
                         ))
                 .from(member)
                 .fetch();
 
-        for (UserDto userDto : resulst) {
+        for (UserDto userDto : result) {
             System.out.println("userDto = " + userDto.getName());
         }
     }
 
-    @Test // 생성자를 이용하는 방식2
-    public void dtoWithQueryDSLProjectionWithConstructor2() {
-
+    @Test
+    @DisplayName("생성자를 이용하는 방식 - Way 2")
+    void dtoWithQueryDSLProjectionWithConstructor2() {
 
         List<UserDto> memberDtos = jpaQueryFactory
                 .select(Projections.constructor(UserDto.class,
@@ -208,15 +219,18 @@ public class QueryDslAdvancedTest {
         }
     }
 
+    /**
+     * @apiNote
+     * Q 타입의 매핑 DTO를 정의해주며, 각 생성자 인자에 맞는 값을 초기화 할 수 있음.
+     * Compile 오류를 잡을 수 있음
+     * 실제 호출하면 생성자도 그대로 호출이 되는 구조임.
+     * 이슈 : Qfile을 생성해야하는 것, 의존관계의 문제 - 멤버 DTO가 QueryDSL의 의존성을 가지게 되는 이슈
+     * 다중 레이어에서 DTO를 사용할 경우, 흘러가는 DTO 가 순수한 객체가 아닌 것으로 흘러가게 됨
+     */
     @Test
     @DisplayName("Qeury Projection을 활용하는 방식")
     public void QueryProjectionTest(){
         List<MemberDto> fetch = jpaQueryFactory
-                // Q 타입의 매핑 DTO를 정의해주며, 각 생성자 인자에 맞는 값을 초기화 할 수 있음.
-                // Compile 오류를 잡을 수 있음
-                // 실제 호출하면 생성자도 그대로 호출이 되는 구조임.
-                // 이슈 : Qfile을 생성해야하는 것, 의존관계의 문제 - 멤버 DTO가 QueryDSL의 의존성을 가지게 되는 이슈
-                // 다중 레이어에서 DTO를 사용할 경우, 흘러가는 DTO 가 순수한 객체가 아닌 것으로 흘러가게 됨.
                 .select(new QMemberDto(member.username, member.age))
                 .from(member)
                 .fetch();
