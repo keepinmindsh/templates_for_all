@@ -28,6 +28,7 @@ public class MemberTestRepository extends Querydsl4RepositorySupport {
         return selectFrom(member)
                 .fetch();
     }
+
     public Page<Member> searchPageByApplyPage(MemberSearchCondition condition,
                                               Pageable pageable) {
         JPAQuery<Member> query = selectFrom(member)
@@ -41,6 +42,7 @@ public class MemberTestRepository extends Querydsl4RepositorySupport {
         return PageableExecutionUtils.getPage(content, pageable,
                 query::fetchCount);
     }
+
     public Page<Member> applyPagination(MemberSearchCondition condition,
                                         Pageable pageable) {
         return applyPagination(pageable, contentQuery -> contentQuery

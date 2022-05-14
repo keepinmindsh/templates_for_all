@@ -100,7 +100,7 @@ public class QueryBulkTest {
 
     @Test
     @DisplayName("추가, 곱하기 연산")
-    public void bulkAdd(){
+    void bulkAdd(){
         jpaQueryFactory.update(member)
                 .set(member.age, member.age.add(1))
                 .execute();
@@ -113,7 +113,7 @@ public class QueryBulkTest {
 
     @Test
     @DisplayName("Bulk 삭제")
-    public void bulkDelete(){
+    void bulkDelete(){
         jpaQueryFactory
                 .delete(member)
                 .where(member.age.gt(18))

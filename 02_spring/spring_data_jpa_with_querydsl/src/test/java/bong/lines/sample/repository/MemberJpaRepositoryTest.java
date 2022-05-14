@@ -25,8 +25,8 @@ class MemberJpaRepositoryTest {
     @Autowired MemberJpaRepository memberJpaRepository;
 
     @Test
-    @DisplayName("")
-    public void basicTest(){
+    @DisplayName("순수 JPA 와 QueryDSL를 활용한 Repository 개발")
+    void basicTest(){
         Member member = new Member("member1", 10);
         memberJpaRepository.save(member);
 
@@ -38,9 +38,9 @@ class MemberJpaRepositoryTest {
 
         List<Member> result2 = memberJpaRepository.findByUsername_Querydsl("member1");
         assertThat(result2).containsExactly(member);
-        
+
     }
-    
+
     @Test
     @DisplayName("동적 쿼리 - Boolean Builder 사용")
     public void SearchBooleanBuilderTest(){
