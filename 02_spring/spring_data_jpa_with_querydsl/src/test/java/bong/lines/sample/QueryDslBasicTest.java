@@ -214,18 +214,18 @@ public class QueryDslBasicTest {
         assertThat(member2.getUsername()).isNull();
     }
 
+    /**
+     * @apiNote
+     * offset - 시작지점
+     * limit - 페이지 사이즈
+     *
+     * select p from Post p offset 3 limit 10
+     * 이라고 한다면 3번째 로우에서부터 10개의 로우를 가져온다는 것이다.
+     * 주의할점은 Querydsl 에서 offset 은 0부터 시작한다.
+     */
     @Test
     @DisplayName("페이징")
-    public void testPaging(){
-
-        /**
-         * offset - 시작지점
-         * limit - 페이지 사이즈
-         *
-         * select p from Post p offset 3 limit 10
-         * 이라고 한다면 3번째 로우에서부터 10개의 로우를 가져온다는 것이다.
-         * 주의할점은 Querydsl 에서 offset 은 0부터 시작한다.
-         */
+    void testPaging(){
         List<Member> fetch = jpaQueryFactory
                 .selectFrom(member)
                 .orderBy(member.username.desc())
@@ -233,12 +233,12 @@ public class QueryDslBasicTest {
                 .limit(2)
                 .fetch();
 
-        assertThat(fetch.size()).isEqualTo(2);
+        assertThat(fetch).hasSize(2);
     }
 
     @Test
     @DisplayName("집합 처리")
-    public void testAggregation(){
+    void testAggregation(){
         List<Tuple> fetch = jpaQueryFactory
                 .select(
                         member.count(),
@@ -261,7 +261,7 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("Group By - Aggregations")
-    public void testGroupBy(){
+    void testGroupBy(){
         List<Tuple> fetch = jpaQueryFactory
                 .select(team.name,
                         member.age.avg())
@@ -296,22 +296,24 @@ public class QueryDslBasicTest {
         assertThat(teamB.get(member.age.avg())).isEqualTo(35);
     }
 
+    /**
+     * @apiNote
+     *  - https://superman28.tistory.com/23
+     */
     @Test
     @DisplayName("Join 테스트")
-    public void testJoin(){
-        // given
-        List<Member> teamList = jpaQueryFactory
-                .selectFrom(member)
-                .join(member.team, team)
-                .where(team.name.eq("teamA"))
-                .fetch();
-
+    void testJoin(){
         /**
          * select member1
          *   from Member member1
          *  inner join member1.team as team
          *  where team.name = 'teamA'
          */
+        List<Member> teamList = jpaQueryFactory
+                .selectFrom(member)
+                .join(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
 
         List<Member> leftJoinList = jpaQueryFactory
                 .selectFrom(member)
@@ -326,7 +328,7 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("세타 조인 - 연관관계를 가지지 않는 필드에 대해서도 조인을 걸 수 있다.")
-    public void theta_join(){
+    void theta_join(){
 
         // member의 모든 행과 team의 모든 행에 대해서 조인을 한 뒤 조건을 검색함.
 
@@ -346,7 +348,8 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testJoinOn(){
+    @DisplayName("Join 에 대해서 On 사용")
+    void testJoinOn(){
         /**
          * select
          *         member1,
@@ -391,7 +394,7 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("연관 관계가 없는 Field에 대한 조건절 조인 처리")
-    public void testJoinOnNoRelations(){
+    void testJoinOnNoRelations(){
         List<Tuple> fetch = jpaQueryFactory
                 .select(member, team)
                 .from(member)
@@ -419,7 +422,7 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("패치 조인 미적용 케이스")
-    public void nofetchJoin(){
+    void nofetchJoin(){
         entityManager.flush();
         entityManager.clear();
 
@@ -435,14 +438,15 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("패치 조인 적용 케이스")
-    public void fetchJoin(){
+    void fetchJoin(){
         entityManager.flush();
         entityManager.clear();
 
         Member memberOne = jpaQueryFactory
                 .selectFrom(member)
                 // leftJoin, Join 뒤에 fetchJoin을 붙이면 fetchJoin이 적용된다.
-                .join(member.team, team).fetchJoin()
+                .join(member.team, team)
+                .fetchJoin()
                 .where(member.username.eq("member1"))
                 .fetchOne();
 
