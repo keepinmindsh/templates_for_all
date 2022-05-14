@@ -18,7 +18,7 @@ import static bong.lines.sample.model.entity.QMember.member;
 
 @SpringBootTest
 @Transactional
-public class QuerySQLFunctionTest {
+class QuerySQLFunctionTest {
 
 
     JPAQueryFactory jpaQueryFactory;
@@ -51,8 +51,8 @@ public class QuerySQLFunctionTest {
     }
 
     @Test
-    @DisplayName("")
-    public void sqlFunction(){
+    @DisplayName("DB 에서 제공하는 함수 사용하기")
+    void sqlFunction(){
         List<String> stringList = jpaQueryFactory
                 .select(Expressions.stringTemplate(
                         "function('replace', {0}, {1}, {2})",
@@ -70,7 +70,7 @@ public class QuerySQLFunctionTest {
 
     @Test
     @DisplayName("")
-    public void sqlFunction2(){
+    void sqlFunction2(){
         // 일반화된 함수들은 대부분의 DB들에서 존재함.
         // 따라서 이를 다른 방식으로 구현할 수 있는데,
         List<String> fetch = jpaQueryFactory

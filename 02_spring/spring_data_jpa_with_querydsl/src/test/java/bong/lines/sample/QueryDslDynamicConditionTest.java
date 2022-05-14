@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-public class QueryDslDynamicTest {
+public class QueryDslDynamicConditionTest {
 
     JPAQueryFactory jpaQueryFactory;
 
@@ -65,15 +65,15 @@ public class QueryDslDynamicTest {
     @Test
     @DisplayName("Dynamic Query Boolean Builder")
     public void dynamicQueryBooleanBuilder(){
-        String usernameparameter = "member1";
+        String userName = "member1";
         Integer age = 10;
 
-        List<Member> result = searchMember1(usernameparameter, age);
+        List<Member> result = searchMember1(userName, age);
 
         assertThat(result.size()).isEqualTo(1);
     }
 
-    private List<Member> searchMember1(String usernameparameter, Integer age) {
+    private List<Member> searchMember1(String userName, Integer age) {
 
         /**
          * select member1
@@ -82,8 +82,8 @@ public class QueryDslDynamicTest {
          */
         BooleanBuilder builder = new BooleanBuilder();
 
-        if(usernameparameter != null){
-            builder.and(member.username.eq(usernameparameter));
+        if(userName != null){
+            builder.and(member.username.eq(userName));
         }
 
         if(age != null){
@@ -98,27 +98,27 @@ public class QueryDslDynamicTest {
     @Test
     @DisplayName("Dynamic Query with where null or value by function condition")
     public void dynamicQueryWithWhere(){
-        String usernameparameter = "member1";
+        String userName = "member1";
         Integer age = null;
 
         // 실무에서 좀더 이해도 있게 사용할 수 있는 방식
-        List<Member> result = searchMember2(usernameparameter, age);
+        List<Member> result = searchMember2(userName, age);
 
         assertThat(result.size()).isEqualTo(1);
     }
 
-    private List<Member> searchMember2(String usernameparameter, Integer age) {
+    private List<Member> searchMember2(String userName, Integer age) {
         return jpaQueryFactory
                 .selectFrom(member)
-                .where(usernameEq(usernameparameter)
+                .where(usernameEq(userName)
                         ,ageEq(age))
                 .fetch();
     }
 
-    private List<Member> searchMember3(String usernameparameter, Integer age) {
+    private List<Member> searchMember3(String userName, Integer age) {
         return jpaQueryFactory
                 .selectFrom(member)
-                .where(allEq(usernameparameter, age)) // 이와 같은 방식으로 작성할 수 있음
+                .where(allEq(userName, age)) // 이와 같은 방식으로 작성할 수 있음
                 .fetch();
     }
 
@@ -126,12 +126,12 @@ public class QueryDslDynamicTest {
         return age == null ? null : member.age.eq(age);
     }
 
-    private BooleanExpression usernameEq(String usernameparameter) {
-        if(usernameparameter == null){
+    private BooleanExpression usernameEq(String userName) {
+        if(userName == null){
             return null;
         }
 
-        return member.username.eq(usernameparameter);
+        return member.username.eq(userName);
     }
 
     /**
