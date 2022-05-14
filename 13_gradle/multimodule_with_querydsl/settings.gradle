@@ -3,4 +3,5 @@ include 'entity_member'
 include 'entity_team'
 include 'domain_register'
 include 'starter'
+include 'comm_jpa_manager'
 
