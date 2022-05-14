@@ -1,0 +1,6 @@
+rootProject.name = 'multimodule_with_querydsl'
+include 'entity_member'
+include 'entity_team'
+include 'domain_register'
+include 'starter'
+
