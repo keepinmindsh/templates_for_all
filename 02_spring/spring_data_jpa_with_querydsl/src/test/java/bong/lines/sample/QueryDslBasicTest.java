@@ -22,6 +22,7 @@ import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 import static bong.lines.sample.model.entity.QMember.*;
 import static bong.lines.sample.model.entity.QMember.member;
@@ -102,7 +103,9 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testQType(){
+    @DisplayName("QType 내의 Entity 객체를 사용할 경우, 임의의 식별자가 정의됨.")
+    void testQType() {
+
         QMember member = QMember.member;
 
         Member findMember = jpaQueryFactory
@@ -111,36 +114,15 @@ public class QueryDslBasicTest {
                 .where(member.username.eq("member1"))
                 .fetchOne();
 
+        assert findMember != null; // https://offbyone.tistory.com/294
         System.out.println("findMember.getUsername() = " + findMember.getUsername());
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
 
     @Test
-    public void testQName(){
-        QMember member = QMember.member;
-
-        Member findMember = jpaQueryFactory
-                .select(member)
-                .from(member)
-                .where(member.username.eq("member1"))
-                .fetchOne();
-
-        System.out.println("findMember.getUsername() = " + findMember.getUsername());
-
-        /**
-         * 임의의 식별자를 설정하는 방법
-         * select member1
-         *   from Member member1
-         *  where member1.username = 'member1'
-         */
-
-        assertThat(findMember.getUsername()).isEqualTo("member1");
-    }
-
-    @Test
-    public void testQAlias(){
-        // Alias 를 직접 정의하는 경우, 같은 테이블의 조인해야하는 경우, 식별자를 통한 테이블 분리 가능함.
+    @DisplayName("Alias 를 직접 정의하는 경우, 같은 테이블의 조인해야하는 경우, 식별자를 통한 테이블 분리 가능함.")
+    void testQAlias(){
         QMember qMember = new QMember("memb");
 
         Member findMember = jpaQueryFactory.select(qMember)
@@ -148,12 +130,12 @@ public class QueryDslBasicTest {
                 .where(qMember.username.eq("member1"))
                 .fetchOne();
 
-        assertThat(findMember.getUsername()).isEqualTo("member1");
+        assertThat(Objects.requireNonNull(findMember).getUsername()).isEqualTo("member1");
     }
 
     @Test
-    @DisplayName("Where 절을 정의하는 and에 의해 정의하는 방식")
-    public void testSelectFrom(){
+    @DisplayName("Where 절을 정의하는 and 에 의해 정의하는 방식")
+    void testSelectFrom(){
 
         Member findMember = jpaQueryFactory
                 .selectFrom(member)
@@ -167,12 +149,11 @@ public class QueryDslBasicTest {
          *   from Member member1
          *  where member1.username = 'member1'1 and member1.age = 102
          */
-
     }
 
     @Test
     @DisplayName("Where 절을 정의하는 콤마의 의해 정의하는 방식")
-    public void testSelectFromSecond(){
+    void testSelectFromSecond(){
 
         Member findMember = jpaQueryFactory
                 .selectFrom(member)
@@ -182,7 +163,7 @@ public class QueryDslBasicTest {
                 )
                 .fetchOne();
 
-        assertThat(findMember.getUsername()).isEqualTo("member1");
+        assertThat(Objects.requireNonNull(findMember).getUsername()).isEqualTo("member1");
 
         /**
          * select member1
@@ -193,13 +174,13 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    @DisplayName("Result를 fetch로 가져오는 방식")
-    public void testResultWithFetchType(){
+    @DisplayName("Result 를 fetch 를 통해서 가져오는 방식")
+    void testResultWithFetchType(){
 
         List<Member> fetchListMember = jpaQueryFactory
                 .selectFrom(member).fetch();
 
-        fetchListMember.size();
+        int rowCount = fetchListMember.size();
 
         Member fetchOneMember = jpaQueryFactory.selectFrom(member)
                 .fetchOne();
@@ -218,7 +199,7 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("정렬하기")
-    public void testResultWithOrder(){
+    void testResultWithOrder(){
 
         List<Member> fetch = jpaQueryFactory.selectFrom(member)
                 .where(member.age.gt(1))
