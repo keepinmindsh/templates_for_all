@@ -457,9 +457,9 @@ public class QueryDslBasicTest {
 
     @Test
     @DisplayName("Sub Query 작성시 JPA Expression 활용 예제")
-    public void testSubQuery(){
+    void testSubQuery(){
 
-        /***
+        /**
          * select member1
          * from Member member1
          * where member1.age = (select max(MemberSub.age)
@@ -503,7 +503,8 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testSelectSubQuery(){
+    @DisplayName("from 절의 한계 - JPQL의 한계")
+    void testSelectSubQuery(){
 
         /**
          * JPA JPQL 서브 쿼리의 한계점으로 from 절의 서브 쿼리 (인라인 뷰)는 지원하지 않는다.
@@ -529,7 +530,8 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testCaseWhenOtherwise(){
+    @DisplayName("Case When Statement - Way 1")
+    void testCaseWhenOtherwise(){
         List<String> fetch = jpaQueryFactory.select(member
                         .age
                         .when(10).then("열살")
@@ -544,7 +546,8 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void complexCase(){
+    @DisplayName("Case When Statement - Way 2")
+    void complexCase(){
         List<String> values = jpaQueryFactory
                 .select(
                         new CaseBuilder()
@@ -560,7 +563,8 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testPlusValue(){
+    @DisplayName("Select 내에 임의의 상수 지정하기")
+    void testPlusValue(){
         List<Tuple> fetch = jpaQueryFactory
                 .select(member.username, Expressions.constant("A"))
                 .from(member)
@@ -572,7 +576,8 @@ public class QueryDslBasicTest {
     }
 
     @Test
-    public void testConcat(){
+    @DisplayName("문자열 합치기")
+    void testConcat(){
         List<String> fetch = jpaQueryFactory
                 .select(member.username.concat("_").concat(member.age.stringValue()))
                 .from(member)
