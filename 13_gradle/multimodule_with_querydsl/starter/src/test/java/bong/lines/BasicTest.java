@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @EnableJPAConfiguration
 @SpringBootTest( classes = StarterApplication.class)
+@Transactional
 public class BasicTest {
 
     @Autowired
@@ -27,6 +29,9 @@ public class BasicTest {
     @Test
     @DisplayName("Test Code")
     public void BasicQueryDSL(){
+        // Given
+        Team insertTeam = new Team();
+        entityManager.persist(insertTeam);
 
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
 
