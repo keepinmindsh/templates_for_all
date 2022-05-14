@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
 
     group 'org.example'
     version '1.0-SNAPSHOT'
