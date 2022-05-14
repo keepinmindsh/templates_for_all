@@ -1,7 +1,43 @@
 plugins{
     id 'org.springframework.boot' version "${springBootVersion}"
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"  // Lombok with QueryDSL
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // Lombok with QueryDSL
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // Lombok with QueryDSL
+
+}
+
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }

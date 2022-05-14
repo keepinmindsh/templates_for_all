@@ -11,4 +11,12 @@ dependencies {
     implementation project(":comm_jpa_manager")
     implementation project(":entity_member")
     implementation project(":entity_team")
+
+    testImplementation project(":entity_team")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+test {
+    useJUnitPlatform()
+}
+
