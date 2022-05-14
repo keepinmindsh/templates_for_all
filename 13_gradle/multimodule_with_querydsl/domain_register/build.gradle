@@ -4,4 +4,12 @@ plugins{
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation project(":entity_team")
+
+
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // Lombok with QueryDSL
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // Lombok with QueryDSL
+
 }

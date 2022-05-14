@@ -8,6 +8,8 @@ dependencies {
 
     implementation 'com.h2database:h2'
 
+    implementation project(":domain_register")
+
     implementation project(":comm_jpa_manager")
     implementation project(":entity_member")
     implementation project(":entity_team")
