@@ -28,7 +28,7 @@ public class BasicTest {
 
     @Test
     @DisplayName("Test Code")
-    public void BasicQueryDSL(){
+    void BasicQueryDSL(){
         // Given
         Team insertTeam = new Team();
         entityManager.persist(insertTeam);
