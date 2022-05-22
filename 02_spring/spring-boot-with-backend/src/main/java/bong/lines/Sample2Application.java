@@ -8,6 +8,5 @@ import org.springframework.context.annotation.ComponentScan;
 public class Sample2Application {
     public static void main(String[] args) {
 
-
     }
 }
