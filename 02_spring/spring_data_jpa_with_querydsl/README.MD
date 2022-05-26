@@ -1,6 +1,7 @@
 # Query DSL - Index 
 
 - QueryDslBasicTest
+  - QueryDSL 기본
   - Join
     - 일반 Join : join 조건을 제외하고 실제 질의하는 대상 Entity에 대한 컬럼만 SELECT
     - Fetch Join : 실제 질의하는 대상 Entity와 Fetch join이 걸려있는 Entity를 포함한 컬럼 함께 SELECT
