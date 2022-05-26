@@ -4,14 +4,10 @@ import bong.lines.sample.model.dto.MemberSearchCondition;
 import bong.lines.sample.model.dto.MemberTeamDto;
 import bong.lines.sample.model.dto.QMemberTeamDto;
 import bong.lines.sample.model.entity.Member;
-import bong.lines.sample.model.entity.QMember;
-import bong.lines.sample.model.entity.QTeam;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -19,7 +15,7 @@ import java.util.Optional;
 
 import static bong.lines.sample.model.entity.QMember.member;
 import static bong.lines.sample.model.entity.QTeam.team;
-import static org.springframework.util.StringUtils.*;
+import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 public class MemberJpaRepository {

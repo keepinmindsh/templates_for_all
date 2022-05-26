@@ -3,7 +3,6 @@ package bong.lines.sample.repository;
 import bong.lines.sample.model.dto.MemberSearchCondition;
 import bong.lines.sample.model.dto.MemberTeamDto;
 import bong.lines.sample.model.dto.QMemberTeamDto;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

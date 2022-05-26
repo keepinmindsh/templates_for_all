@@ -1,7 +1,6 @@
 package bong.lines.sample;
 
 import bong.lines.sample.model.entity.Member;
-import bong.lines.sample.model.entity.QMember;
 import bong.lines.sample.model.entity.Team;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,11 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 import static bong.lines.sample.model.entity.QMember.member;

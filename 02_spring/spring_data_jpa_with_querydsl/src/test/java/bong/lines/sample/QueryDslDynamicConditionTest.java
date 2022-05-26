@@ -1,20 +1,11 @@
 package bong.lines.sample;
 
-import bong.lines.sample.model.dto.MemberDto;
-import bong.lines.sample.model.dto.QMemberDto;
-import bong.lines.sample.model.dto.UserDto;
 import bong.lines.sample.model.entity.Member;
-import bong.lines.sample.model.entity.QMember;
 import bong.lines.sample.model.entity.Team;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
