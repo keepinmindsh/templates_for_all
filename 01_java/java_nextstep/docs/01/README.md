@@ -8,3 +8,6 @@
    - 필드 이름 : 필드값1, 필드값2 ... 
  - 요청 데이터의 빈 공백 문자열부터 본문 데이터 
 
+
+
+> favicon.io - https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests

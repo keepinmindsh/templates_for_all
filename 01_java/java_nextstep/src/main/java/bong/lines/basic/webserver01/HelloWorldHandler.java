@@ -1,14 +1,14 @@
 package bong.lines.basic.webserver01;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
+@Slf4j
 public class HelloWorldHandler extends Thread{
-    private static final Logger log = LoggerFactory.getLogger(HelloWorldHandler.class);
 
     private Socket connection;
 
@@ -21,6 +21,20 @@ public class HelloWorldHandler extends Thread{
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try(InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+
+            String requestLine = bufferedReader.readLine();
+            log.debug("Request Line : {}", requestLine);
+
+            if(!Optional.ofNullable(requestLine).isPresent()){
+                return;
+            }
+
+            while (!requestLine.isEmpty()){
+                requestLine = bufferedReader.readLine();
+                log.debug("Request Header : {}", requestLine);
+            }
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes(StandardCharsets.UTF_8);
