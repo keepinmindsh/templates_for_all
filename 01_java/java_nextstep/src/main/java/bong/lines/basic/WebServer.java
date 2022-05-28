@@ -1,7 +1,7 @@
 package bong.lines.basic;
 
 import bong.lines.basic.comm.WebHandlerInf;
-import bong.lines.basic.webserver01.HelloWorldHandler;
+import bong.lines.basic.handler.helloworld.HelloWorldHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

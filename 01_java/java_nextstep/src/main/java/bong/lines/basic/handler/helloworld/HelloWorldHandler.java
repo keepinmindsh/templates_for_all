@@ -1,4 +1,4 @@
-package bong.lines.basic.webserver01;
+package bong.lines.basic.handler.helloworld;
 
 import lombok.extern.slf4j.Slf4j;
 

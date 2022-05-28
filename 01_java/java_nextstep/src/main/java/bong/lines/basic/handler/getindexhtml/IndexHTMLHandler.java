@@ -1,10 +1,11 @@
-package bong.lines.basic.webserver02;
+package bong.lines.basic.handler.getindexhtml;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
 
 public class IndexHTMLHandler extends Thread{
     private static final Logger log = LoggerFactory.getLogger(IndexHTMLHandler.class);
@@ -25,27 +26,23 @@ public class IndexHTMLHandler extends Thread{
 
             String line = " ";
 
-            StringBuffer resultContent = new StringBuffer();
             byte[] body = null;
 
             do {
-
                 line = bufferedReader.readLine();
 
-                if(line != null && line.indexOf("GET") > -1 && line.indexOf(".html") > -1){
+                if(line != null && line.contains("GET") && line.contains(".html")){
                     String screenName = line.split(" ")[1];
-                    body = IndexHTMLHandler
-                            .class
-                            .getResourceAsStream("/templates" + screenName)
-                            .readAllBytes();
+                    body = Objects.requireNonNull(
+                            IndexHTMLHandler.class
+                                    .getResourceAsStream("/templates" + screenName))
+                                    .readAllBytes();
                 }
             } while (body == null);
 
-            if(body != null){
-                DataOutputStream dos = new DataOutputStream(out);
-                response200Header(dos, body.length);
-                responseBody(dos, body);
-            }
+            DataOutputStream dos = new DataOutputStream(out);
+            response200Header(dos, body.length);
+            responseBody(dos, body);
         }catch (Exception exception){
             log.error(exception.getMessage());
             exception.printStackTrace();
