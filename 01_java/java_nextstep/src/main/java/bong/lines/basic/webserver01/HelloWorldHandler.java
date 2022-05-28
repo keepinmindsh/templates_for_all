@@ -3,18 +3,16 @@ package bong.lines.basic.webserver01;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class RequestHandler extends Thread{
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+public class HelloWorldHandler extends Thread{
+    private static final Logger log = LoggerFactory.getLogger(HelloWorldHandler.class);
 
     private Socket connection;
 
-    public RequestHandler(Socket connection) {
+    public HelloWorldHandler(Socket connection) {
         this.connection = connection;
     }
 
@@ -23,6 +21,7 @@ public class RequestHandler extends Thread{
         log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(), connection.getPort());
 
         try(InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = "Hello World".getBytes(StandardCharsets.UTF_8);
             response200Header(dos, body.length);

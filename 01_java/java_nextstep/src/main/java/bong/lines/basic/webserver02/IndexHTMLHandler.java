@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 
-public class RequestHandler extends Thread{
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+public class IndexHTMLHandler extends Thread{
+    private static final Logger log = LoggerFactory.getLogger(IndexHTMLHandler.class);
 
     private Socket connection;
 
-    public RequestHandler(Socket connection) {
+    public IndexHTMLHandler(Socket connection) {
         this.connection = connection;
     }
 
@@ -33,20 +33,8 @@ public class RequestHandler extends Thread{
                 line = bufferedReader.readLine();
 
                 if(line != null && line.indexOf("GET") > -1 && line.indexOf(".html") > -1){
-
                     String screenName = line.split(" ")[1];
-                    // body = Files.readAllBytes(new File("/Users/dream/GIT/sample/java/next-step-sample/src/main/resources/templates/index.html").toPath());
-                    // body = Files.readAllBytes(new File("D:/GIT/01_GIT/02_sample/java/next-step-sample/src/main/resources/templates/index.html").toPath());
-
-                    //Class clazz = RequestHandler.class;
-                    //body = Files.readAllBytes(new File(clazz.getResource("/templates/index.html").getFile()).toPath());
-
-                    //Class clazz = RequestHandler.class;
-                    //InputStream inputStream = clazz.getResourceAsStream("/templates/index.html");
-                    //log.info("Length Size : {}" , inputStream.available());
-                    //body = inputStream.readAllBytes();
-
-                    body = RequestHandler
+                    body = IndexHTMLHandler
                             .class
                             .getResourceAsStream("/templates" + screenName)
                             .readAllBytes();
