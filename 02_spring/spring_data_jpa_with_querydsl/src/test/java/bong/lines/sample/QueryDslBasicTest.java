@@ -138,6 +138,13 @@ public class QueryDslBasicTest {
                 .where(member.username.eq("member1").and(member.age.eq(10)))
                 .fetchOne();
 
+        /**
+         * select *
+         *   from MEMBER
+         *  where username = 'member1'
+         *    and age = 10
+         */
+
         assertThat(findMember.getUsername()).isEqualTo("member1");
 
         /**
@@ -152,7 +159,8 @@ public class QueryDslBasicTest {
     void testSelectFromSecond(){
 
         Member findMember = jpaQueryFactory
-                .selectFrom(member)
+                .select(member)
+                .from(member)
                 .where(  //and 인 경우, 콤마로 대체 가능
                         member.username.eq("member1"),
                         member.age.eq(10)
@@ -173,8 +181,11 @@ public class QueryDslBasicTest {
     @DisplayName("Result 를 fetch 를 통해서 가져오는 방식")
     void testResultWithFetchType(){
 
-        List<Member> fetchListMember = jpaQueryFactory
-                .selectFrom(member).fetch();
+
+        List<Member> fetchListMember =
+                jpaQueryFactory
+                        .selectFrom(member)
+                        .fetch();
 
         int rowCount = fetchListMember.size();
 
@@ -236,8 +247,7 @@ public class QueryDslBasicTest {
     @DisplayName("집합 처리")
     void testAggregation(){
         List<Tuple> fetch = jpaQueryFactory
-                .select(
-                        member.count(),
+                .select(member.count(),
                         member.age.sum(),
                         member.age.avg(),
                         member.age.max(),
@@ -248,8 +258,12 @@ public class QueryDslBasicTest {
         Tuple tuple = fetch.get(0);
 
         /***
-         * select count(member1), sum(member1.age), avg(member1.age), max(member1.age), min(member1.age)
-         * from Member member1
+         * select count(member1),
+         *        sum(member1.age),
+         *        avg(member1.age),
+         *        max(member1.age),
+         *        min(member1.age)
+         *   from Member member1
          */
 
         assertThat(tuple.get(member.count())).isEqualTo(4);
@@ -330,7 +344,16 @@ public class QueryDslBasicTest {
 
         /* select member1
              from Member member1, Team team
-            where member1.username = team.name */
+            where member1.username = team.name
+         */
+
+        /*
+        * Optimizer
+        *   select -> table full access scan -> 시스템의 성능 저하
+        * primary - index
+        * constraint , table key, index
+        * index -> 스터디
+         */
 
         List<Member> fetch = jpaQueryFactory.selectFrom(member)
                 .select(member)
