@@ -8,6 +8,7 @@
 
 ![](https://keepinmindsh.github.io/lines/assets/img/Reactive.png)
 
+***
 
 #### Responsive : 사용자에 대한 반응
 
@@ -28,3 +29,18 @@ Reactive System은 서비스에 제공되기 위한 입력을 할당한 자원�
 
 **Reactive 시스템은 Location Transparency, Isolation, Loose Coupling을 보장하는 컴포넌트들 사이의 경계를 관리하기 위해서 비동기적인 Message 전달 (Asynchronouse message-passing)에 의존합니다.**  
 이 경계는 메세지로서 장애를 위임하기 위한 의도를 제공합니다. 명시적인 Message 전달을 이용하면 부하관리, 탄력성, 흐름제어 및 시스템에서의 메세지 큐 모니터링, 필요에 따라 Back Pressure를 적용하는 것을 가능하게 합니다. 통신수단으로의 Location Transparent Message는 동일한 구조와 의미의 단일 호스트 또는 클러스터와 동작하기 위한 장애의 관리를 가능하게 합니다. Non-Blocking Communication은 수신자로 하여금 활성 상태에서만 자원을 소모할 수 있게 하여 시스템의 오버헤드를 줄일 수 있습니다.
+
+# Reactive Stream 의 API Component
+
+***
+
+<https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.0/README.md#specification>
+
+Reactive Stream 에서 제공하는 기본 4가지 컴포넌트를 알아보고자합니다. 아래의 컴포넌트들은 초기에 Observer 패턴을 기반으로하여 Observer/Observable에서 부족한 부분을 보완한 컴포넌트입니다.
+
+- Publisher
+- Subscriber
+- Subscription
+- Processor
+
+![](https://keepinmindsh.github.io/lines/assets/img/subscriber_process.png)
