@@ -21,7 +21,7 @@ public class PullPush {
         // 넣다 ( Push )
         // 내가 다른 사람에게 역할을 주고 그결과가 오는 동안 뭐든지 다른걸 할 수 있어
         // Thread -> 여유가 있음. 이 Thread는 일을 던져주고 그이후 결과만 알면됨.
-        LoopCouter loopCounter = new LoopCouter(integers);
+        LoopCounter loopCounter = new LoopCounter(integers);
         loopCounter.count();
 
         // Thread B - Event Loop ( Worker Thread 5 )
