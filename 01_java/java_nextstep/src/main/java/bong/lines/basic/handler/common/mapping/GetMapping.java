@@ -1,6 +1,7 @@
 package bong.lines.basic.handler.common.mapping;
 
-import bong.lines.basic.handler.common.mapping.HandlerMapping;
+import bong.lines.basic.handler.common.code.GET_TYPE;
+import bong.lines.basic.handler.common.factory.GetFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -10,16 +11,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class GetMapping extends HandlerMapping {
 
-    private final int KEY_ONLY = 1;
-    private final int KEY_AND_VALUE = 2;
-    private final int KEY = 0;
-    private final int VALUE = 1;
-
-    private final int HAS_QEURYSTRING = 1;
-    private final int QEURYSTRING = 1;
-
-    private final int URI = 1;
-
+    private GET_TYPE get_type;
+    private byte[] responseBody;
 
     private final StringBuffer responseContent = new StringBuffer();
 
@@ -40,52 +33,32 @@ public class GetMapping extends HandlerMapping {
 
     @Override
     public void doProcess(String requestContent) throws Exception{
-        log.debug("For Mapping Value : {}", requestContent);
-
-        String[] request_args = requestContent.split(" ");
-
-        if(!request_args[URI].contains("?"))
-            return;
-
-        String[] url_and_queryString = request_args[URI].split("\\?");
-
-        if(url_and_queryString.length <= HAS_QEURYSTRING)
-            return;
-
-        if(!url_and_queryString[QEURYSTRING].contains("&") && !url_and_queryString[QEURYSTRING].contains("="))
-            return;
-
-        String[] queryString = url_and_queryString[QEURYSTRING].split("&");
-
-        for (String key_and_value : queryString) {
-
-            String key = "";
-            String value = "";
-
-
-            if(key_and_value.split("=").length == KEY_ONLY){
-                key = key_and_value.split("=")[KEY];
-            }
-
-            if(key_and_value.split("=").length == KEY_AND_VALUE){
-                key = key_and_value.split("=")[KEY];
-                value = key_and_value.split("=")[VALUE];
-            }
-
-            responseContent.append("{\"");
-            responseContent.append(key);
-            responseContent.append("\":\"");
-            responseContent.append(value);
-            responseContent.append("\"}");
+        if(requestContent != null && requestContent.contains("GET") && requestContent.contains(".html")) {
+            responseBody = (byte[])GetFactory.get(GET_TYPE.SCREEN, requestContent).get();
+            get_type = GET_TYPE.SCREEN;
+        }else{
+            responseContent.append(GetFactory.get(GET_TYPE.QUERY_STRING, requestContent).get());
+            get_type = GET_TYPE.QUERY_STRING;
         }
     }
 
     @Override
     public void responseHandling(OutputStream outputStream) {
         DataOutputStream dos = new DataOutputStream(outputStream);
-        byte[] body = responseContent
-                .toString()
-                .getBytes(StandardCharsets.UTF_8);
+
+        byte[] body = null;
+
+        switch (get_type){
+            case SCREEN:
+                body = responseBody;
+                break;
+            case QUERY_STRING:
+                body = responseContent
+                        .toString()
+                        .getBytes(StandardCharsets.UTF_8);
+        }
+
+
         response200Header(dos, body.length);
         responseBody(dos, body);
     }
@@ -93,7 +66,16 @@ public class GetMapping extends HandlerMapping {
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent){
         try{
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: application/json;charset=utf-8 \r\n");
+
+            switch (get_type){
+                case SCREEN:
+                    dos.writeBytes("Content-Type: text/html;charset=utf-8 \r\n");
+                    break;
+                case QUERY_STRING:
+                    dos.writeBytes("Content-Type: application/json;charset=utf-8 \r\n");
+                    break;
+            }
+
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         }catch (Exception exception){
