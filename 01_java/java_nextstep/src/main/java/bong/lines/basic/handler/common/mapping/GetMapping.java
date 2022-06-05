@@ -22,17 +22,12 @@ public class GetMapping extends HandlerMapping {
     @Override
     public String readFirstLineOfRequest(BufferedReader bufferedReader) throws Exception
     {
-        String requestLine = bufferedReader.readLine();
-        log.debug("First Request Line : {}", requestLine);
-        return requestLine;
+        return bufferedReader.readLine();
     }
 
     @Override
-    public void doProcess(BufferedReader bufferedReader, String request) throws Exception{
-        while (!request.isEmpty()){
-            request = bufferedReader.readLine();
-            log.debug("Request Header : {}", request);
-        }
+    public void doProcess(String requestContent) throws Exception{
+        log.debug("For Mapping Value : {}", requestContent);
     }
 
     @Override

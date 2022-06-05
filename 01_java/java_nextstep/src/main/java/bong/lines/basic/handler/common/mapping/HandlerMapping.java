@@ -1,11 +1,14 @@
 package bong.lines.basic.handler.common.mapping;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
 
+@Slf4j
 public abstract class HandlerMapping {
 
     private final InputStream inputStream;
@@ -19,11 +22,13 @@ public abstract class HandlerMapping {
     public void process() throws Exception {
         BufferedReader bufferedReader = getBufferedReaderForRequest(inputStream);
 
-        String firstRequestLine = readFirstLineOfRequest(bufferedReader);
+        String requestContent = readFirstLineOfRequest(bufferedReader);
 
-        if (checkNullofRequestLine(firstRequestLine)) return;
+        if (checkNullofRequestLine(requestContent)) return;
 
-        doProcess(bufferedReader, firstRequestLine);
+        getHeaderInfo(bufferedReader);
+
+        doProcess(requestContent);
 
         responseHandling(outputStream);
     }
@@ -32,6 +37,11 @@ public abstract class HandlerMapping {
         if(!Optional.ofNullable(requestLine).isPresent()){
             return true;
         }
+
+        if(requestLine.indexOf("/favicon.ico") > -1){
+            return true;
+        }
+
         return false;
     }
 
@@ -39,7 +49,17 @@ public abstract class HandlerMapping {
 
     protected abstract String readFirstLineOfRequest(BufferedReader bufferedReader) throws IOException, Exception;
 
-    protected abstract void doProcess(BufferedReader bufferedReader, String request) throws Exception;
+    private void getHeaderInfo(BufferedReader bufferedReader) throws Exception{
+        String request = "";
+
+        do{
+            request = bufferedReader.readLine();
+            log.debug("Request Header : {}", request);
+        }
+        while (!request.isEmpty());
+    }
+
+    protected abstract void doProcess(String request) throws Exception;
 
     protected abstract void responseHandling(OutputStream outputStream);
 }
