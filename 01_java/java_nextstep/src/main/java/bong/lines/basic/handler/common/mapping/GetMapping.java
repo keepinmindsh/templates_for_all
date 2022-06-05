@@ -20,6 +20,9 @@ public class GetMapping extends HandlerMapping {
 
     private final int URI = 1;
 
+
+    private final StringBuffer responseContent = new StringBuffer();
+
     public GetMapping(InputStream inputStream, OutputStream outputStream) {
         super(inputStream, outputStream);
     }
@@ -49,7 +52,7 @@ public class GetMapping extends HandlerMapping {
         if(url_and_queryString.length <= HAS_QEURYSTRING)
             return;
 
-        if(!url_and_queryString[QEURYSTRING].contains("&"))
+        if(!url_and_queryString[QEURYSTRING].contains("&") && !url_and_queryString[QEURYSTRING].contains("="))
             return;
 
         String[] queryString = url_and_queryString[QEURYSTRING].split("&");
@@ -69,15 +72,20 @@ public class GetMapping extends HandlerMapping {
                 value = key_and_value.split("=")[VALUE];
             }
 
-            System.out.println("key = " + key);
-            System.out.println("value = " + value);
+            responseContent.append("{\"");
+            responseContent.append(key);
+            responseContent.append("\":\"");
+            responseContent.append(value);
+            responseContent.append("\"}");
         }
     }
 
     @Override
     public void responseHandling(OutputStream outputStream) {
         DataOutputStream dos = new DataOutputStream(outputStream);
-        byte[] body = "Hello World".getBytes(StandardCharsets.UTF_8);
+        byte[] body = responseContent
+                .toString()
+                .getBytes(StandardCharsets.UTF_8);
         response200Header(dos, body.length);
         responseBody(dos, body);
     }
@@ -85,7 +93,7 @@ public class GetMapping extends HandlerMapping {
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent){
         try{
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8 \r\n");
+            dos.writeBytes("Content-Type: application/json;charset=utf-8 \r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         }catch (Exception exception){
