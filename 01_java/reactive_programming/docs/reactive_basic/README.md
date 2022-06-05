@@ -43,4 +43,66 @@ Reactive Stream 에서 제공하는 기본 4가지 컴포넌트를 알아보고�
 - Subscription
 - Processor
 
+***
+
+### Subscriber
+ - Subscriber 는 Observer 입니다.
+
 ![](https://keepinmindsh.github.io/lines/assets/img/subscriber_process.png)
+
+
+```java
+
+// 아래의 4개의 메소드는 반드시 implement 되어야 합니다.                                   
+public interface Subscriber {
+  public void onSubscribe(Subscription s);
+  public void onNext(T t);
+  public void onError(Throwable t);
+  public void onComplete();
+}   
+
+```
+
+- onSubscribe : 최초 호출되는 메소드, Subscriber를 사용할 때는 무조건 처음에 호출해야합니다.
+- onNext : 기존의 Observer에서 update와 같은 역할을 합니다. 데이터를 받을 때 사용합니다.
+- onComplete : 완료 되었을 때,
+- onError : 에러가 발생했을 때,
+
+***
+
+### Publisher
+- Publisher는 Observable 입니다. Subscriber는 Publisher의 subscribe를 통해 등록합니다.
+
+```java
+
+public interface Publisher {
+  public void subscribe(Subscriber<? super T> s);
+}
+
+```
+
+***
+
+### Subscription
+
+```java
+
+public interface Subscription {
+  public void request(long n);
+  public void cancel();
+}
+
+```
+
+request는 long 타입의 파라미터를 받고 있는데 Subscriber가 이 메소드를 통해 요청을 하게 됩니다. 만약 5개의 데이터를 필요하다고 가정했을 때, reqeust 에 5를 넣어서 호출하면 Subscription은 5개를 호출하게 됩니다. 즉, 10개의 데이터가 있을 때, reqeust가 5를 받아 처리한다면 5개 -> 5개 를 보내줄 수 있게 처리합니다.
+이는 publisher를 통해서 들어오는 데이터 스트림을 request를 이용해 subscriber에서 처리하는데 적절한 범위로 처리될 수 있게 제어를 할 수 있습니다. 이를 Reactive Stream에서 가장 중요한 Back-Pressure를 제어할 수 있는 방법입니다. 
+
+# Reactive Basic Flow : Publisher - Subscriber - Subscription
+
+
+![](https://keepinmindsh.github.io/lines/assets/img/reactive_basic_flow.png)
+
+- Publisher에 Subscriber가 구독(등록)되면, Publisher가 실행(subscribe)될 때 Publisher 통해서 데이터(스트림) 또는 시퀀스를 Subscriber로 전달하게됩니다.
+- 이때 Publisher는 Subscriber에 정의된 OnSubscribe()를 호출하고, Subscriber는 request(n)를 호출하여 몇개의 데이터를 보내달라고 Publisher에게 Subscription을 통해서 요청하게 됩니다.
+- Subscrition을 통해 정의된 요청 갯수에 의해서 request 메소드 내에서 Subscriber의 onNext, onError, OnComplete를 제어할 수 있습니다.
+- Subscriber가 동작하던 도중에 장애/에러 발생으로 인하여 처리를 중단해야할 때 subscription 객체를 이용해서 cancel을 호출 하고 Flag를 관리한다면, 해당 Flow 전체를 중단할 수 있습니다.
