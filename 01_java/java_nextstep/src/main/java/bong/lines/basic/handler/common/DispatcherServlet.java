@@ -1,5 +1,6 @@
 package bong.lines.basic.handler.common;
 
+import bong.lines.basic.handler.common.mapping.GetMapping;
 import bong.lines.basic.handler.common.mapping.HandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 

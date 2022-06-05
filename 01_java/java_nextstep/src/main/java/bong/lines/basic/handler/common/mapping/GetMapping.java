@@ -1,4 +1,4 @@
-package bong.lines.basic.handler.common;
+package bong.lines.basic.handler.common.mapping;
 
 import bong.lines.basic.handler.common.mapping.HandlerMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class GetMapping extends HandlerMapping {
     public String readFirstLineOfRequest(BufferedReader bufferedReader) throws Exception
     {
         String requestLine = bufferedReader.readLine();
-        log.debug("Request Line : {}", requestLine);
+        log.debug("First Request Line : {}", requestLine);
         return requestLine;
     }
 
