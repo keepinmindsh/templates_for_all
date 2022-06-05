@@ -45,6 +45,19 @@ Reactive Stream 에서 제공하는 기본 4가지 컴포넌트를 알아보고�
 
 ***
 
+### Publisher
+- Publisher는 Observable 입니다. Subscriber는 Publisher의 subscribe를 통해 등록합니다.
+
+```java
+
+public interface Publisher {
+  public void subscribe(Subscriber<? super T> s);
+}
+
+```
+
+***
+
 ### Subscriber
  - Subscriber 는 Observer 입니다.
 
@@ -67,19 +80,6 @@ public interface Subscriber {
 - onNext : 기존의 Observer에서 update와 같은 역할을 합니다. 데이터를 받을 때 사용합니다.
 - onComplete : 완료 되었을 때,
 - onError : 에러가 발생했을 때,
-
-***
-
-### Publisher
-- Publisher는 Observable 입니다. Subscriber는 Publisher의 subscribe를 통해 등록합니다.
-
-```java
-
-public interface Publisher {
-  public void subscribe(Subscriber<? super T> s);
-}
-
-```
 
 ***
 
