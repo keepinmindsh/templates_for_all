@@ -10,6 +10,16 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class GetMapping extends HandlerMapping {
 
+    private final int KEY_ONLY = 1;
+    private final int KEY_AND_VALUE = 2;
+    private final int KEY = 0;
+    private final int VALUE = 1;
+
+    private final int HAS_QEURYSTRING = 1;
+    private final int QEURYSTRING = 1;
+
+    private final int URI = 1;
+
     public GetMapping(InputStream inputStream, OutputStream outputStream) {
         super(inputStream, outputStream);
     }
@@ -28,6 +38,40 @@ public class GetMapping extends HandlerMapping {
     @Override
     public void doProcess(String requestContent) throws Exception{
         log.debug("For Mapping Value : {}", requestContent);
+
+        String[] request_args = requestContent.split(" ");
+
+        if(!request_args[URI].contains("?"))
+            return;
+
+        String[] url_and_queryString = request_args[URI].split("\\?");
+
+        if(url_and_queryString.length <= HAS_QEURYSTRING)
+            return;
+
+        if(!url_and_queryString[QEURYSTRING].contains("&"))
+            return;
+
+        String[] queryString = url_and_queryString[QEURYSTRING].split("&");
+
+        for (String key_and_value : queryString) {
+
+            String key = "";
+            String value = "";
+
+
+            if(key_and_value.split("=").length == KEY_ONLY){
+                key = key_and_value.split("=")[KEY];
+            }
+
+            if(key_and_value.split("=").length == KEY_AND_VALUE){
+                key = key_and_value.split("=")[KEY];
+                value = key_and_value.split("=")[VALUE];
+            }
+
+            System.out.println("key = " + key);
+            System.out.println("value = " + value);
+        }
     }
 
     @Override
