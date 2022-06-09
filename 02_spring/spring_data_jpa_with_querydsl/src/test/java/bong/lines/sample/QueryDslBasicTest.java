@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,6 +28,7 @@ import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Commit
 @Transactional
 public class QueryDslBasicTest {
 
@@ -447,7 +449,7 @@ public class QueryDslBasicTest {
 
         Member memberOne = jpaQueryFactory
                 .selectFrom(member)
-                .where(member.username.eq("member1"))
+                //.where(member.username.eq("member1"))
                 .fetchOne();
 
         boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
