@@ -23,4 +23,4 @@ Main Thread 가 Blocking을 바탕으로 처리하는 업무를 다른 Thread( W
   - 관리 ( Main Thread) : 업무 지시 
   - 처리 ( Worker Thread ) : 업무 처리 - 업무 처리 내역은 Blocking 업무이든 그외의 다른 업무이든 상관 없음. 
 
-##### **Non Blocking I/O** 는 Blocking에 대한 업무를 역할을 분리하여 처리할 수 있게 해주는 것! 
+##### **Non Blocking I/O** 는 WorkerThread와 Main Thread의 역할을 분리하여 처리할 수 있게 해주는 것! 
