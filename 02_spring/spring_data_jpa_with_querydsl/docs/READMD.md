@@ -83,7 +83,7 @@ class FetchJoin {
 
     boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
 
-    assertThat(loaded).as("패치 조인 미적용").isTrue();
+    assertThat(loaded).as("패치 조인 적용").isTrue();
   }
 }
 ```
@@ -126,5 +126,4 @@ where
 Join, FetchJoin 에서 대상으로 도메인에 따른 요구사항에 따라 다를 수 있다!   
 FetchJoin은 불필요한 영속성을 로드하는 것이 될 수 있음. 
 
-따라서 Entity의 데이터 조회 전략은 Lazy로 하되 QueryDSL를 도입하여 요구사항 및 프로세스에 따라 Fetch Join을 적잘히 
-활용하자. 
+따라서 Entity 의 데이터 조회 전략은 Lazy 로 하되 QueryDSL 를 도입하여 요구사항 및 프로세스에 따라 Fetch Join 을 적절히 활용하자. 
