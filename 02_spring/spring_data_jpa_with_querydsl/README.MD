@@ -300,6 +300,6 @@ class Sample {
 
 > [Gradle Annotation Process with Query DSL - 버전별 처리](http://honeymon.io/tech/2020/07/09/gradle-annotation-processor-with-querydsl.html)    
 > 
-> [Join, Index의 역할](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=jyc8618&logNo=220214553092)  
+> [Join, Index 의 역할](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=jyc8618&logNo=220214553092)  
 > - http://haisins.epac.to/wordpress/?p=716     
 > - https://gent.tistory.com/306  

@@ -1,4 +1,4 @@
-package bong.lines.sample;
+package bong.lines.sample.study.bulk;
 
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.Team;
@@ -17,7 +17,7 @@ import static bong.lines.sample.model.entity.QMember.member;
 
 @SpringBootTest
 @Transactional
-public class QueryBulkTest {
+public class QueryDslBulkTest {
 
 
     JPAQueryFactory jpaQueryFactory;

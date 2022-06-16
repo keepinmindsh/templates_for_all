@@ -1,4 +1,4 @@
-package bong.lines.sample;
+package bong.lines.sample.study.projection;
 
 import bong.lines.sample.model.dto.MemberDto;
 import bong.lines.sample.model.dto.QMemberDto;

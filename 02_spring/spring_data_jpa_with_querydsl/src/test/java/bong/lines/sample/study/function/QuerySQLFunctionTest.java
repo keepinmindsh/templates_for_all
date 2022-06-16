@@ -1,4 +1,4 @@
-package bong.lines.sample;
+package bong.lines.sample.study.function;
 
 import bong.lines.sample.model.entity.Member;
 import bong.lines.sample.model.entity.Team;
