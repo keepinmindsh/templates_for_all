@@ -449,7 +449,7 @@ public class QueryDslBasicTest {
 
         Member memberOne = jpaQueryFactory
                 .selectFrom(member)
-                //.where(member.username.eq("member1"))
+                .where(member.username.eq("member1"))
                 .fetchOne();
 
         boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
