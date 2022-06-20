@@ -438,44 +438,6 @@ public class QueryDslBasicTest {
         }
     }
 
-    @PersistenceUnit
-    EntityManagerFactory emf;
-
-    @Test
-    @DisplayName("패치 조인 미적용 케이스")
-    void nofetchJoin(){
-        entityManager.flush();
-        entityManager.clear();
-
-        Member memberOne = jpaQueryFactory
-                .selectFrom(member)
-                .where(member.username.eq("member1"))
-                .fetchOne();
-
-        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
-
-        assertThat(loaded).as("패치 조인 미적용").isFalse();
-    }
-
-    @Test
-    @DisplayName("패치 조인 적용 케이스")
-    void fetchJoin(){
-        entityManager.flush();
-        entityManager.clear();
-
-        Member memberOne = jpaQueryFactory
-                .selectFrom(member)
-                // leftJoin, Join 뒤에 fetchJoin을 붙이면 fetchJoin이 적용된다.
-                .join(member.team, team)
-                .fetchJoin()
-                .where(member.username.eq("member1"))
-                .fetchOne();
-
-        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(memberOne.getTeam());
-
-        assertThat(loaded).as("패치 조인 미적용").isTrue();
-    }
-
     @Test
     @DisplayName("Sub Query 작성시 JPA Expression 활용 예제")
     void testSubQuery(){
