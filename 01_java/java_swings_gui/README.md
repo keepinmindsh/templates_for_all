@@ -6,3 +6,4 @@
 
 ##### Swing Gui Form 추가 
 
+![Crazy Java 001](https://github.com/keepinmindsh/templates_for_all/blob/main/01_java/java_swings_gui/assets/0001_crazy_java.png)
