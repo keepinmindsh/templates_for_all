@@ -298,4 +298,7 @@ Log4J 기본적인 설정은 아래와 같이 할 수 있다.
 
 > [Spring Legacy Sample](https://readinggeneral.tistory.com/entry/Spring-Study-Group-Spring-Legacy-Project-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0-IntelliJ-IDEA?category=1013715)
 
-
+> https://yjh5369.tistory.com/entry/Tomcat-%EC%8B%A4%ED%96%89-%EC%8B%9C-%EB%91%98-%EC%9D%B4%EC%83%81%EC%9D%98-fragment%EB%93%A4%EC%9D%B4-%EB%B0%9C%EA%B2%AC%EB%90%98%EC%97%88%EC%8A%B5%EB%8B%88%EB%8B%A4-%EC%9D%B4%EB%8A%94-%EC%83%81%EB%8C%80%EC%A0%81-%EC%88%9C%EC%84%9C%EB%B0%B0%EC%97%B4%EC%97%90%EC%84%9C-%EB%B6%88%ED%97%88%EB%90%A9%EB%8B%88%EB%8B%A4-%EC%97%90%EB%9F%AC-%EB%B0%9C%EC%83%9D  
+> https://blog.naver.com/PostView.nhn?isHttpsRedirect=true&blogId=webwizard83&logNo=221920497267&parentCategoryNo=18&categoryNo=&viewDate=&isShowPopularPosts=true&from=search  
+> https://stackoverflow.com/questions/32034329/spring-java-lang-nosuchmethoderror-org-springframework-expression-spel-spelpars  
+> http://1004lucifer.blogspot.com/2017/06/maven-package-webxml-attribute-is.html  
