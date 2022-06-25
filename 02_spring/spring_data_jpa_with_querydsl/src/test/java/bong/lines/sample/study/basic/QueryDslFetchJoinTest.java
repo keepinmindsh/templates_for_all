@@ -1,12 +1,7 @@
 package bong.lines.sample.study.basic;
 
 import bong.lines.sample.model.entity.Member;
-import bong.lines.sample.model.entity.QMember;
 import bong.lines.sample.model.entity.Team;
-import com.querydsl.core.QueryResults;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,12 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Objects;
 
 import static bong.lines.sample.model.entity.QMember.member;
 import static bong.lines.sample.model.entity.QTeam.team;
-import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

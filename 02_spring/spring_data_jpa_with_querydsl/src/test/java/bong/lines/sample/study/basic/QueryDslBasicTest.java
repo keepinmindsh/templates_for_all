@@ -16,15 +16,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 import static bong.lines.sample.model.entity.QMember.member;
 import static bong.lines.sample.model.entity.QTeam.team;
-import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
