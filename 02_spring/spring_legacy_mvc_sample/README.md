@@ -366,7 +366,7 @@ Log4J 기본적인 설정은 아래와 같이 할 수 있다.
 
 Project Structure 에서의 Artifact 에 아래와 같이 우측의 Element 요소에서 WEB-INF/lib 로 library를 추가해야한다. 
 
-![Tomcat Server Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0004_tomcatSetting_003.png)
+![Tomcat Server Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0004_tomcatSetting_004.png)
 
 
 # Hello World 
