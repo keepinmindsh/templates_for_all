@@ -12,3 +12,5 @@
 ##### Dependency 추가 
 
 Pom.xml에서 ⌘ + N 을 클릭하면 아래와 같이 Add Dependency 가 가능함.
+
+![Package Structure](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0003_addDependency.png)
