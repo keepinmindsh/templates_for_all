@@ -7,3 +7,7 @@
 ##### Swing Gui Form 추가 
 
 ![Crazy Java 001](https://github.com/keepinmindsh/templates_for_all/blob/main/01_java/java_swings_gui/assets/0001_crazy_java.png)
+
+
+> [Swing IntelliJ Coding](https://examples.javacodegeeks.com/desktop-java/ide/intellij-idea/intellij-idea-gui-designer-tutorial/)    
+> [Swing IDEA with GUI](https://javawithus.com/en/how-to-create-gui-forms-in-idea-correctly/)  
