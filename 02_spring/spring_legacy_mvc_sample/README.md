@@ -234,3 +234,68 @@ Pom.xml에서 ⌘ + N 을 클릭하면 아래와 같이 Add Dependency 가 가�
   - web.xml <servlet-mapping>이 /로 시작하는 모든 요청을 <servlet> 의 dispatcher 가 다 받아서 handlermapping 이 그 요청을 받아주는 controller 가 있는지 물어보고 매핑시키는 것  
   - css 나 js나 image 는 controller 필요 없다    
   - /res/로 시작하는 요청이 들어오면 dispatcher 가 관여하지 않고 얘가 담당해서 "webapp"에 /static/ 폴더 로 연결시키겠다  
+
+# Log4J 설정 
+
+Log4J 기본적인 설정은 아래와 같이 할 수 있다. 
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" >
+    
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+        </layout>
+    </appender>
+    
+    <logger name="bong.lines" >
+        <level value="info" />
+    </logger>
+
+    <logger name="org.springframework.core" >
+        <level value="info" />
+    </logger>
+
+    <logger name="org.springframework.beans" >
+        <level value="info" />
+    </logger>
+
+    <logger name="org.springframework.context" >
+        <level value="info" />
+    </logger>
+
+    <logger name="org.springframework.web" >
+        <level value="info" />
+    </logger>
+    
+    <root>
+        <priority value="warn" />
+        <appender-ref ref="console"/>
+    </root>
+    
+    
+</log4j:configuration>
+
+```
+
+# Tomcat 설정하기 
+
+##### Configuration 의 Service 추가 하기 
+
+![Tomcat Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0004_tomcatSetting_001.png)
+
+##### Tomcat Deploy 설정 
+
+![Deploy Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0004_tomcatSetting_002.png)
+
+##### Tomcat Server 설정
+
+![Tomcat Server Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0004_tomcatSetting_003.png)
+
+
+> [Spring Legacy Sample](https://readinggeneral.tistory.com/entry/Spring-Study-Group-Spring-Legacy-Project-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0-IntelliJ-IDEA?category=1013715)
+
+
