@@ -387,6 +387,10 @@ public class HelloWorldController {
 }
 ```
 
+# Spring Dispatcher Servlet 
+
+![Tomcat Server Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0005_dispatcher_servlet.png)
+
 
 > [Spring Legacy Sample](https://readinggeneral.tistory.com/entry/Spring-Study-Group-Spring-Legacy-Project-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0-IntelliJ-IDEA?category=1013715)
 
