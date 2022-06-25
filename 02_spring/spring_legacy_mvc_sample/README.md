@@ -5,3 +5,6 @@
 # Framework Support 추가 하기 
 
 ![Framework Support Image](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0001_addframework.png)
+
+##### 생성된 Package 구조 ( 아래 이미지 참조 )
+![Package Structure](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0002_packagestructure.png)
