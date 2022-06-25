@@ -9,9 +9,9 @@ fun main() {
 
     standard_readLine_toInt()
 
-    standard_readFile()
-
     standard_multiReadLine()
+
+    standard_readFile()
 }
 
 private fun standard_readLine_toInt() {
