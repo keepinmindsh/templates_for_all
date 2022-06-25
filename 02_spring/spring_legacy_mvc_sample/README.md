@@ -371,6 +371,8 @@ Project Structure 에서의 Artifact 에 아래와 같이 우측의 Element 요�
 
 # Hello World 
 
+[Controller Mapping](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch15s03.html)
+
 ```java
 package bong.lines;
 
@@ -391,6 +393,14 @@ public class HelloWorldController {
 
 ![Tomcat Server Setting](https://github.com/keepinmindsh/templates_for_all/blob/main/02_spring/spring_legacy_mvc_sample/assets/0005_dispatcher_servlet.png)
 
+- [Common Configuration](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch17s02.html)
+- [Handler Mapping](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch15s04.html)
+- [Resolving Views](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch15s05.html)
+- [MultiPart Upload](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch15s08.html)
+- [Handling Exceptions](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch15s09.html)
+- [JSP, JSTL](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch16s02.html)
+- [Document View](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch16s06.html)
+- [Jasper Report View](https://docs.spring.io/spring-framework/docs/3.0.0.M4/spring-framework-reference/html/ch16s07.html)
 
 > [Spring Legacy Sample](https://readinggeneral.tistory.com/entry/Spring-Study-Group-Spring-Legacy-Project-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0-IntelliJ-IDEA?category=1013715)
 
