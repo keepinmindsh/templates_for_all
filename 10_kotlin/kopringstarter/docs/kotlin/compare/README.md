@@ -65,7 +65,7 @@ suspend fun main() = coroutineScope {
 
 ```
 
-# 표준 출력 
+# 표준 출력 - Output
 
 ### Java 
 
@@ -93,5 +93,19 @@ fun standardOutputPrint() {
     print("Hello ")
     print("World! ")
 }
+
+```
+
+# 표준 출력 - Input 
+
+### Java
+
+```java
+
+```
+
+### Kotlin 
+
+```kotlin
 
 ```
