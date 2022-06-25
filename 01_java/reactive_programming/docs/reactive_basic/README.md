@@ -106,3 +106,86 @@ request는 long 타입의 파라미터를 받고 있는데 Subscriber가 이 메
 - 이때 Publisher는 Subscriber에 정의된 OnSubscribe()를 호출하고, Subscriber는 request(n)를 호출하여 몇개의 데이터를 보내달라고 Publisher에게 Subscription을 통해서 요청하게 됩니다.
 - Subscrition을 통해 정의된 요청 갯수에 의해서 request 메소드 내에서 Subscriber의 onNext, onError, OnComplete를 제어할 수 있습니다.
 - Subscriber가 동작하던 도중에 장애/에러 발생으로 인하여 처리를 중단해야할 때 subscription 객체를 이용해서 cancel을 호출 하고 Flag를 관리한다면, 해당 Flow 전체를 중단할 수 있습니다.
+
+```java
+public class BasicSample {
+    public static void main(String[] args) {
+        
+        // Publisher 객체 
+        Publisher<Integer> publisher = new Publisher() {
+
+            Stack<Integer> stack;
+
+            @Override
+            public void subscribe(Subscriber subscriber) {
+
+                stack = new Stack<>();
+
+                for (int i = 0; i < 10; i++) {
+                    stack.push(i);
+                }
+
+                subscriber.onSubscribe(new Subscription() {
+                    @Override
+                    public void request(long n) {
+                        System.out.println("request " + n);
+
+                        if(n < 0){
+                            subscriber.onError(new Exception(" 0 이상의 숫자를 넣어야 합니다. "));
+                        }
+
+                        for (int i = 0; i < n; i++) {
+                            if(stack.isEmpty()){
+                                subscriber.onComplete();
+                            }
+
+                            if(!stack.isEmpty()){
+                                subscriber.onNext(stack.pop());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+                });
+
+            }
+        };
+
+        // Subscriber 객체 
+        Subscriber<Integer> subscriber = new Subscriber<Integer>() {
+
+            Subscription subscription;
+
+            @Override
+            public void onSubscribe(Subscription subscription) {
+                this.subscription = subscription;
+
+                subscription.request(1);
+            }
+
+            @Override
+            public void onNext(Integer o) {
+                System.out.println(" onNext - " + o);
+
+                subscription.request(1);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println(" onError - " + throwable.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println(" onComplete");
+            }
+        };
+
+        // Publisher 가 구독중인 Subscriber 에게 통지를 실행한다. 
+        publisher.subscribe(subscriber);
+    }
+}
+```

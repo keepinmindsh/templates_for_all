@@ -31,11 +31,13 @@ public class BasicSample {
                         }
 
                         for (int i = 0; i < n; i++) {
-                            if(stack.empty()){
+                            if(stack.isEmpty()){
                                 subscriber.onComplete();
                             }
 
-                            subscriber.onNext(stack.pop());
+                            if(!stack.isEmpty()){
+                                subscriber.onNext(stack.pop());
+                            }
                         }
                     }
 
