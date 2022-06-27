@@ -15,9 +15,7 @@ public class GetMapping extends HandlerMapping {
 
     private GET_TYPE get_type;
     private byte[] responseBody;
-
     private final StringBuffer responseContent = new StringBuffer();
-
     public GetMapping(InputStream inputStream, OutputStream outputStream) {
         super(inputStream, outputStream);
     }
