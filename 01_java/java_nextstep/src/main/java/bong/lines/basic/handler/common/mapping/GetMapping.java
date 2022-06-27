@@ -2,6 +2,8 @@ package bong.lines.basic.handler.common.mapping;
 
 import bong.lines.basic.handler.common.code.GET_TYPE;
 import bong.lines.basic.handler.common.factory.GetFactory;
+import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
+import bong.lines.basic.handler.common.method.HTTP_METHOD;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -33,13 +35,19 @@ public class GetMapping extends HandlerMapping {
 
     @Override
     public void doProcess(String requestContent) throws Exception{
-        if(requestContent != null && requestContent.contains("GET") && requestContent.contains(".html")) {
+        if(isGetForScreen(requestContent)) {
             responseBody = (byte[])GetFactory.get(GET_TYPE.SCREEN, requestContent).get();
             get_type = GET_TYPE.SCREEN;
-        }else{
+        }
+
+        if (!isGetForScreen(requestContent)){
             responseContent.append(GetFactory.get(GET_TYPE.QUERY_STRING, requestContent).get());
             get_type = GET_TYPE.QUERY_STRING;
         }
+    }
+
+    private boolean isGetForScreen(String requestContent) {
+        return requestContent != null && HTTP_METHOD.GET.isContain(requestContent) && requestContent.contains(".html");
     }
 
     @Override

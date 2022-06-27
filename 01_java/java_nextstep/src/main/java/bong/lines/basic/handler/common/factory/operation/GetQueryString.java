@@ -65,7 +65,7 @@ public class GetQueryString implements LinesGet<Object>{
             responseContent.append(value);
             responseContent.append("\"");
 
-            if( --keyCount != 0)
+            if(--keyCount != 0)
                 responseContent.append(",");
 
         }

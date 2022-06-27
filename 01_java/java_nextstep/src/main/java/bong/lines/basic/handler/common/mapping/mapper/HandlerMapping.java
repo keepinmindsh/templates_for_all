@@ -1,4 +1,4 @@
-package bong.lines.basic.handler.common.mapping;
+package bong.lines.basic.handler.common.mapping.mapper;
 
 import lombok.extern.slf4j.Slf4j;
 
