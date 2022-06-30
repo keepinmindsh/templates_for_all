@@ -8,6 +8,8 @@
 프로듀서와 컨슈머로 분리할 경우의 이점은 프로듀서와 컨슈머의 처리능력에 따라서 **조율**할 수 있다는 것이다.  
 프로듀서의 갯수를 늘리면 컨슈머에게 많은 처리를 요청할 수 있으며, 컨슈머가 느릴 경우 Queue를 활용하여 처리량을 조절할 수 있다.
 
+![Producer/Consumer](https://github.com/keepinmindsh/templates_for_all/blob/main/01_java/reactive_programming/docs/assets/Producer%2C%20Consumer%20Pattern.png)
+
 이 때 사용하게 되는 큐는 **적절한 특성을 가진 큐**를 사용해야 한다.
 
 - 무제한 큐
@@ -20,6 +22,9 @@
 위의 항목에서 중요한 건은 **제어**의 방향이 컨슈머에 의한 것이 아닌 프로듀서에 의한 Push 모델 방식으로 사용하기 때문에 많은 부작용을 만들 수 있다.
 
 #### Reactive Programming 은 시스템이 부하에 적절히 대응하는 방법, 즉 BackPressure 메커니즘의 중요성을 언급한다.
+
+![BackPressuer](https://github.com/keepinmindsh/templates_for_all/blob/main/01_java/reactive_programming/docs/assets/Publisher%2C%20Subscriber.png)
+
 
 # Reactive Stream - BackPressure
 
