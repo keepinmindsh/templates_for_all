@@ -101,11 +101,66 @@ fun standardOutputPrint() {
 ### Java
 
 ```java
+public class Sample {
+    public static void standardInputTest() throws Exception {
+        InputStream inputStream = System.in;
+        int inputValue = inputStream.read();
+        
+        log.info("Input Value : {}", inputValue);
+    }
+}
 
+```
+
+```java
+public class Sample {
+    public static void standardInputTest() throws Exception {
+        InputStream inputStream = System.in;
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        String bufferedContent = bufferedReader.readLine();
+
+        log.info("Input Value : {}", bufferedContent);
+    }
+}
 ```
 
 ### Kotlin 
 
 ```kotlin
+
+private fun standardReadLineToInt() {
+    val numberInput = readLine()!!.toInt()
+    println("입력 받은 내용(Int): $numberInput")
+}
+
+private fun standardReadLine() {
+    val input = readLine()
+    println("입력 받은 내용: $input")
+}
+
+private fun standardMultiReadLine(){
+    val s = Scanner(System.`in`)
+    val a = s.nextInt()
+    val n = s.nextInt()
+    s.nextLine()
+    val line = s.nextLine()
+    val arr = line.split(" ")
+
+    for(it in arr){
+        if(it.toInt() < n)
+            print("$it ")
+    }
+}
+
+private fun standardReadFile(){
+    val path = "/Users/lines/sources/01_bonggit/templates_for_all/10_kotlin/kopringstarter/docs/kotlin/compare/README.md"
+    val file = File(path)
+    val inputStream: InputStream = file.inputStream()
+    val text = inputStream.bufferedReader().use { it.readText() }
+    println(text)
+}
+
 
 ```

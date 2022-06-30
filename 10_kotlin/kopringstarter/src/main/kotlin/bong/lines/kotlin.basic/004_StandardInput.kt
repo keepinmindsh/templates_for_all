@@ -5,6 +5,15 @@ import java.io.InputStream
 import java.util.*
 
 fun main() {
+
+    // Kotlin Call
+    standardInput_forKotlin();
+
+    // Java Call
+    //StandardInput.standardInputTest()
+}
+
+private fun standardInput_forKotlin(){
     standard_readLine()
 
     standard_readLine_toInt()
