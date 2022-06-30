@@ -14,11 +14,11 @@ fun main() {
 }
 
 private fun standardInput_forKotlin(){
-    standard_readLine()
+    //standard_readLine()
 
-    standard_readLine_toInt()
+    //standard_readLine_toInt()
 
-    standard_multiReadLine()
+    //standard_multiReadLine()
 
     standard_readFile()
 }
