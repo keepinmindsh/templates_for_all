@@ -30,6 +30,31 @@ Reactive System은 서비스에 제공되기 위한 입력을 할당한 자원�
 **Reactive 시스템은 Location Transparency, Isolation, Loose Coupling을 보장하는 컴포넌트들 사이의 경계를 관리하기 위해서 비동기적인 Message 전달 (Asynchronouse message-passing)에 의존합니다.**  
 이 경계는 메세지로서 장애를 위임하기 위한 의도를 제공합니다. 명시적인 Message 전달을 이용하면 부하관리, 탄력성, 흐름제어 및 시스템에서의 메세지 큐 모니터링, 필요에 따라 Back Pressure를 적용하는 것을 가능하게 합니다. 통신수단으로의 Location Transparent Message는 동일한 구조와 의미의 단일 호스트 또는 클러스터와 동작하기 위한 장애의 관리를 가능하게 합니다. Non-Blocking Communication은 수신자로 하여금 활성 상태에서만 자원을 소모할 수 있게 하여 시스템의 오버헤드를 줄일 수 있습니다.
 
+
+# Producer - Consumer 패턴 ( 생산자 - 소비자 패턴 )
+
+어떤 데이터가 생성되면, 그 생성된 데이터를 받아 처리하는 상황에서 멀티 스레드를 활용하여 처리량과 속도를 늘리고자할 때 적용할 수 있는 패턴이다.
+
+- 생산를 하는 주체 ( 프로듀서 )
+- 소비를 하는 주체 ( 컨슈머 )
+
+프로듀서와 컨슈머로 분리할 경우의 이점은 프로듀서와 컨슈머의 처리능력에 따라서 **조율**할 수 있다는 것이다.  
+프로듀서의 갯수를 늘리면 컨슈머에게 많은 처리를 요청할 수 있으며, 컨슈머가 느릴 경우 Queue를 활용하여 처리량을 조절할 수 있다.
+
+이 때 사용하게 되는 큐는 **적절한 특성을 가진 큐**를 사용해야 한다.
+
+- 무제한 큐
+  - 무제한의 큐는 실제 무제한의 리소스를 사용할 수 없기 때문에 메세지 손상이 온다. 
+- 크키가 제한된 드롭 큐
+  - 메시지의 중요성이 낮을 경우 사용 가능하다. 메세지 손실이 발생한다. 
+- 크기가 제한된 블로킹 큐
+  - 컨슈머의 처리 능력이 부족하다면, 시스템 전체의 처리량이 제한된다. 
+
+위의 항목에서 중요한 건은 **제어**의 방향이 컨슈머에 의한 것이 아닌 프로듀서에 의한 Push 모델 방식으로 사용하기 때문에 많은 부작용을 만들 수 있다.
+
+#### Reactive Programming 은 시스템이 부하에 적절히 대응하는 방법, 즉 BackPressure 메커니즘의 중요성을 언급한다.
+
+
 # Reactive Stream 의 API Component
 
 ***
@@ -39,8 +64,12 @@ Reactive System은 서비스에 제공되기 위한 입력을 할당한 자원�
 Reactive Stream 에서 제공하는 기본 4가지 컴포넌트를 알아보고자합니다. 아래의 컴포넌트들은 초기에 Observer 패턴을 기반으로하여 Observer/Observable에서 부족한 부분을 보완한 컴포넌트입니다.
 
 - Publisher
+  - 구독을 위한 데이터를 생성하는 주체로 Subscriber 에서 데이터 처리량을 제어하기에 처리량을 초과하지 않음을 확신할 수 있다. 
 - Subscriber
+  - Subscriber 는 구독이 실행되면 Subscription 에 의해서 자신이 처리할 수 있는 용량 만큼을 받을 수 있다. 
+  - Subscription::request(n)
 - Subscription
+  - Publisher 와 Subscriber 사이에서 데이터 생성을 제어하기 위한 기본적인 사항을 제공한다. 
 - Processor
 
 ***
@@ -107,8 +136,10 @@ request는 long 타입의 파라미터를 받고 있는데 Subscriber가 이 메
 - Subscrition을 통해 정의된 요청 갯수에 의해서 request 메소드 내에서 Subscriber의 onNext, onError, OnComplete를 제어할 수 있습니다.
 - Subscriber가 동작하던 도중에 장애/에러 발생으로 인하여 처리를 중단해야할 때 subscription 객체를 이용해서 cancel을 호출 하고 Flag를 관리한다면, 해당 Flow 전체를 중단할 수 있습니다.
 
+# Reactive Programming 을 위한 기본 코드 
+
 ```java
-public class BasicSample {
+public class BasicCode {
     public static void main(String[] args) {
         
         // Publisher 객체 
@@ -188,4 +219,7 @@ public class BasicSample {
         publisher.subscribe(subscriber);
     }
 }
-```
+``` 
+
+# BackPressure 를 관리하는 Reactive Programming 
+

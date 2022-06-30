@@ -6,7 +6,7 @@ import org.reactivestreams.Subscription;
 
 import java.util.Stack;
 
-public class BasicSample {
+public class Basic001 {
     public static void main(String[] args) {
         Publisher<Integer> publisher = new Publisher() {
 
