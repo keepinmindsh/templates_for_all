@@ -187,6 +187,12 @@ public class QueryDslJoinTest {
     @Test
     @DisplayName("Case When Statement - Way 1")
     void testCaseWhenOtherwise(){
+
+        /* select case when member1.age = 101 then '열살'2
+                       when member1.age = 203 then '스무살'4
+                       else '기타' end
+         */
+
         List<String> fetch = jpaQueryFactory.select(member
                         .age
                         .when(10).then("열살")

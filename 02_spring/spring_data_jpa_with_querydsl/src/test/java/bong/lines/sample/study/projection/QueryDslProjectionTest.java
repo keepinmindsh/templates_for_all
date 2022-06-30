@@ -107,7 +107,7 @@ public class QueryDslProjectionTest {
     }
 
     @Test
-    @DisplayName("Projection Bean을 이용한 처리 방식")
+    @DisplayName("Projection Bean 을 이용한 처리 방식")
     void dtoWithQueryDSLProjection(){
 
         // 해당 방식은 파라미터의 수와 인자에 대해서 컴파일 타임에 체크되지 않는 이슈가 있음.
@@ -159,7 +159,7 @@ public class QueryDslProjectionTest {
     }
 
     @Test
-    @DisplayName("Field에 직접적으로 값을 바인딩하는 방식")
+    @DisplayName("Custom DTO - Field 에 직접적으로 값을 바인딩하는 방식")
     void userDtoWithQueryDSLProjectionWithField() {
 
         List<UserDto> userDtos = jpaQueryFactory
@@ -176,7 +176,7 @@ public class QueryDslProjectionTest {
     }
 
     @Test
-    @DisplayName("Projection 시에 이름이 다를 때의 해결 방안")
+    @DisplayName("Custom DTO - Projection 시에 이름이 다를 때의 해결 방안")
     void userDTOWithExpressions(){
         /**
          * elect member1.username as name, (select max(MemberSub.age)
@@ -187,7 +187,7 @@ public class QueryDslProjectionTest {
         List<UserDto> result = jpaQueryFactory
                 .select(Projections.fields(UserDto.class,
                         member.username.as("name"),
-                        //SubQuery의 처리 방식
+                        //Sub Query 의 처리 방식
                         ExpressionUtils.as(
                                 JPAExpressions
                                         .select(memberSub.age.max())
@@ -203,7 +203,7 @@ public class QueryDslProjectionTest {
     }
 
     @Test
-    @DisplayName("생성자를 이용하는 방식 - Way 2")
+    @DisplayName("Custom DTO - 생성자를 이용하는 방식 - Way 2")
     void dtoWithQueryDSLProjectionWithConstructor2() {
 
         List<UserDto> memberDtos = jpaQueryFactory
@@ -228,7 +228,7 @@ public class QueryDslProjectionTest {
      * 다중 레이어에서 DTO를 사용할 경우, 흘러가는 DTO 가 순수한 객체가 아닌 것으로 흘러가게 됨
      */
     @Test
-    @DisplayName("Qeury Projection을 활용하는 방식")
+    @DisplayName("Custom DTO - Query Projection 을 활용하는 방식")
     public void QueryProjectionTest(){
         List<MemberDto> fetch = jpaQueryFactory
                 .select(new QMemberDto(member.username, member.age))
