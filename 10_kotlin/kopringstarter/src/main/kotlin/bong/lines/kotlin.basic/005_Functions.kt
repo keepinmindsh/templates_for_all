@@ -56,6 +56,16 @@ fun reformat(
     println(wordSeparator)
 }
 
+fun printHello(name: String?): Unit {
+    if(name != null){
+        println("Hello $name")
+    }else{
+        println("Hi There!")
+    }
+}
+
+fun ourDream(x : Int) : Int = x * 50
+
 fun main() {
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
@@ -80,6 +90,10 @@ fun main() {
         "Value",
         upperCaseFirstLetter = false
     )
+
+    printHello("Value")
+
+    println(ourDream(50))
 }
 
 

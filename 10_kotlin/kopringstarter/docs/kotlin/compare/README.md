@@ -271,4 +271,36 @@ fun main(){
 }
 ```
 
+##### Unit 를 반환하는 함수 
+
+어떤 함수가 유용한 값을 반환하지 않은 경우, 반환 타입은 Unit 다.  
+Unit 반환 타입에 대한 선언은 선택적으로 선언하거나 선언하지 않아도 된다.  
+
+```kotlin
+fun printHello(name: String?): Unit {
+    if(name != null){
+        println("Hello $name")
+    }else{
+        println("Hi There!")
+    }
+}
+
+fun main(){
+    printHello("Value")
+}
+```
+
+##### Single-Expression 함수 
+
+ Function 에 대해서 block body 없이 사용할 수 있다. 
+
+```kotlin
+
+fun ourDream(x : Int) : Int = x * 50
+
+fun main(){
+    println(ourDream(50))
+}
+```
+
 
