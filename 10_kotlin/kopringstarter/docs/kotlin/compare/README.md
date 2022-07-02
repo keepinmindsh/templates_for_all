@@ -203,7 +203,8 @@ fun main(){
 
 ###### Default Parameter 지정 
 
- 함수에서 각 파라미터의 기본 값을 설정할 수 있다. 값이 인자를 통해서 전달되지 않을 경우 기본 값을 세팅되어 사용된다. 
+ 함수에서 각 파라미터의 기본 값을 설정할 수 있다. 값이 인자를 통해서 전달되지 않을 경우 기본 값을 세팅되어 사용된다.  
+ 기본 값으로 설정된 경우에는 해당 함수가 호출될 때의 파라미터 인자가 정의되어 있지 않아도 사용 가능하다. 
 
 ```kotlin
 fun read(
@@ -224,7 +225,7 @@ fun main(){
 
 ##### 함수 Override 
 
-Class를 상속한 메소드를 재정의 할 때는 Default Parameter 는 사용할 수 없음. 
+Class를 상속한 메소드를 재정의 할 때는 Default Parameter 는 사용할 수 없음.
 
 ```kotlin
 open class A {
@@ -241,6 +242,32 @@ class B : A() {
 
 fun main(){
     println(B().foo(300))
+}
+```
+##### Named Arguments 
+
+ 함수 내의 파라미터 명에 대해서 지정하여 사용 가능하다. 
+
+```kotlin
+fun reformat(
+    str: String,
+    normalizeCase: Boolean = true,
+    upperCaseFirstLetter: Boolean = true,
+    divideByCamelHumps: Boolean = false,
+    wordSeparator: Char = ' ',
+) {
+    println(str)
+    println(normalizeCase)
+    println(upperCaseFirstLetter)
+    println(divideByCamelHumps)
+    println(wordSeparator)
+}
+
+fun main(){
+    reformat(
+        "Value",
+        upperCaseFirstLetter = false
+    )
 }
 ```
 

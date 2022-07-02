@@ -42,6 +42,20 @@ class B : A() {
     }
 }
 
+fun reformat(
+    str: String,
+    normalizeCase: Boolean = true,
+    upperCaseFirstLetter: Boolean = true,
+    divideByCamelHumps: Boolean = false,
+    wordSeparator: Char = ' ',
+) {
+    println(str)
+    println(normalizeCase)
+    println(upperCaseFirstLetter)
+    println(divideByCamelHumps)
+    println(wordSeparator)
+}
+
 fun main() {
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
@@ -61,6 +75,11 @@ fun main() {
     )
 
     println(B().foo(300))
+
+    reformat(
+        "Value",
+        upperCaseFirstLetter = false
+    )
 }
 
 
