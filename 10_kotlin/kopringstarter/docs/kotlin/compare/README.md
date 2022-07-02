@@ -303,4 +303,22 @@ fun main(){
 }
 ```
 
+##### Variable Number 인자 
+
+vararg 를 이용한 다수 파라미터에 대한 인자 전달이 가능합니다. 
+
+```kotlin
+fun <T> asList(vararg ts: T): List<T> {
+    val result = ArrayList<T>()
+    for(t in ts)
+        result.add(t)
+    return result
+}
+
+fun main(){
+    println(asList(1,2,3,4,5,6,7,8,9,10))
+}
+```
+
+##### Infix 정의
 

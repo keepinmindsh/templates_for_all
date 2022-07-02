@@ -66,6 +66,13 @@ fun printHello(name: String?): Unit {
 
 fun ourDream(x : Int) : Int = x * 50
 
+fun <T> asList(vararg ts: T): List<T> {
+    val result = ArrayList<T>()
+    for(t in ts)
+        result.add(t)
+    return result
+}
+
 fun main() {
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
@@ -94,6 +101,8 @@ fun main() {
     printHello("Value")
 
     println(ourDream(50))
+
+    println(asList(1,2,3,4,5,6))
 }
 
 
