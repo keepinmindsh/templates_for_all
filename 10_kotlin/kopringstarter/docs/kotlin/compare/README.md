@@ -168,6 +168,55 @@ private fun standardReadFile(){
 
 ### Java
 
+```java
+
+@FunctionalInterface
+public interface Function<T, R> {
+    R apply(T t);
+}
+
+public class JavaMoney {
+    public static void main(String[] args) {
+        // Normal function
+        getLength(); 
+        
+        // Interface Lambda 
+        Function<String, Integer> func = x -> x.length();
+        Integer apply = func.apply("Bong Lines");
+        System.out.println(apply);
+
+        // Interface Lambda 
+        Function<String, Integer> func = x -> x.length();
+        Function<Integer, Integer> func2 = x -> x * 2;
+        Integer result = func.andThen(func2).apply("Bong Lines"); 
+        System.out.println(result);
+
+        JavaMoney obj = new JavaMoney();
+        // Method Reference 
+        List<String> result = obj.map(list, obj::sha256);
+        result.forEach(System.out::println);
+    }
+
+    public <T, R> List<R> map(List<T> list, Function<T, R> func) {
+
+        List<R> result = new ArrayList<>();
+        for (T t : list) {
+            result.add(func.apply(t));
+        }
+        return result;
+
+    }
+
+    public String sha256(String str) {
+        return DigestUtils.sha256Hex(str);
+    }
+
+    public Integer getLength(String str) {
+        return str.length();
+    }
+}
+```
+
 
 ### Kotlin
 
