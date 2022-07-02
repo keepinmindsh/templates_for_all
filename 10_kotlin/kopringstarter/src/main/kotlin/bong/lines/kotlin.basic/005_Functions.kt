@@ -83,6 +83,12 @@ infix fun String.substringMatches(r: Regex) : List<String> {
         .toList()
 }
 
+fun add(x: Int): (Int) -> Int {
+    return fun(y: Int): Int {
+        return x + y
+    }
+}
+
 fun main() {
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
@@ -118,6 +124,11 @@ fun main() {
 
     val matches = "a bc def" substringMatches ".*? ".toRegex()
     println(matches)
+
+    val func = add(10)
+    func(20)
+    val closureValue = func(20)
+    println(closureValue)
 }
 
 

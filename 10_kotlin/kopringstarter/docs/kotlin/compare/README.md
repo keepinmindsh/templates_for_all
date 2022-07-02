@@ -347,7 +347,32 @@ fun main(){
 
 ```
 
-##### Function Scope 
+##### Function Scope / Closure
+
+ - Closure
+   - 클로저(Closure)는 outer scope(상위 함수의 영역)의 변수를 접근할 수 있는 함수를 말합니다.
+   - 코틀린은 클로저를 지원하며 그렇기 때문에 익명함수는 함수 밖에서 정의된 변수에 접근할 수 있습니다.
+
+```kotlin
+fun add(x: Int): (Int) -> Int {
+    return fun(y: Int): Int {
+        return x + y
+    }
+}
+
+fun main(){
+ val func = add(10)
+ 
+ func(20)
+ 
+ val closureValue = func(20)
+ println(closureValue)
+}
+```
+
+##### Higher-order 함수 
+
+
 
 
 
