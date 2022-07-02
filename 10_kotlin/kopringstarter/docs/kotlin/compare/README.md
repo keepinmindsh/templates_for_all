@@ -372,7 +372,49 @@ fun main(){
 
 ##### Higher-order 함수 
 
+고차 함수는 함수를 파라미터(인자)로써 가질 수 있고, 함수를 반환할 수 있는 함수를 말한다. 
 
+```kotlin
+
+fun <T, R> Collection<T>.fold(
+    initial: R,
+    combine: (acc: R, nextElement: T) -> R
+): R {
+    var accumulator: R = initial
+    for (element: T in this) {
+        accumulator = combine(accumulator, element)
+    }
+    return accumulator
+}
+
+fun higherOrderFunction(){
+    val items = listOf(1, 2, 3, 4, 5)
+
+    // Lambdas are code blocks enclosed in curly braces.
+    items.fold(0) {
+        // When a lambda has parameters, they go first, followed by '->'
+            acc: Int, i: Int ->
+        print("acc = $acc, i = $i, ")
+        val result = acc + i
+        println("result = $result")
+        // The last expression in a lambda is considered the return value:
+        result
+    }
+
+    // Parameter types in a lambda are optional if they can be inferred:
+    val joinedToString = items.fold("Elements:") { acc, i -> "$acc $i" }
+    println(joinedToString)
+
+    // Function references can also be used for higher-order function calls:
+    val product = items.fold(1, Int::times)
+    println(product)
+
+}
+
+fun main(){
+    higherOrderFunction()
+}
+```
 
 
 
