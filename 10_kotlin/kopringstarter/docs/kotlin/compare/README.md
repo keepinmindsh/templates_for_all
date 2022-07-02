@@ -96,7 +96,7 @@ fun standardOutputPrint() {
 
 ```
 
-# 표준 출력 - Input 
+# 표준 입력 - Input 
 
 ### Java
 
@@ -162,5 +162,64 @@ private fun standardReadFile(){
     println(text)
 }
 
-
 ```
+
+# 함수 - Functions 
+
+### Java
+
+
+### Kotlin
+
+Kotlin 함수는 키워드 fun 을 사용하여 선언된다. 
+
+```kotlin
+fun double(x: Int): Int {
+    return 2 * x
+}
+
+fun main(){
+    val result = double(2)
+
+    print(result)
+}
+```
+
+##### Parameters 정의 
+
+ 변수에 대한 Type을 지정한다. 
+
+```kotlin
+fun powerOf(number : Int, exponent : Int) : Int {
+    return number * exponent
+}
+
+fun main(){
+    val result = powerOf(10, 10)
+    
+    print(result)
+}
+```
+
+###### Default Parameter 지정 
+
+ 함수에서 각 파라미터의 기본 값을 설정할 수 있다. 값이 인자를 통해서 전달되지 않을 경우 기본 값을 세팅되어 사용된다. 
+
+```kotlin
+fun read(
+    b: ByteArray,
+    off: Int = 0,
+    len: Int = b.size
+) : Int {
+    return off * len
+}
+
+fun main(){
+    print(read(
+        "value".toByteArray(),
+        10
+    ))
+}
+```
+
+
