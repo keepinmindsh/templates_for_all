@@ -222,4 +222,26 @@ fun main(){
 }
 ```
 
+##### 함수 Override 
+
+Class를 상속한 메소드를 재정의 할 때는 Default Parameter 는 사용할 수 없음. 
+
+```kotlin
+open class A {
+    open fun foo(i: Int = 10): Int {
+        return i
+    }
+}
+
+class B : A() {
+    override fun foo(i: Int): Int {
+        return i
+    }
+}
+
+fun main(){
+    println(B().foo(300))
+}
+```
+
 

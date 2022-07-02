@@ -30,6 +30,18 @@ fun read(
     return off * len
 }
 
+open class A {
+    open fun foo(i: Int = 10): Int {
+        return i
+    }
+}
+
+class B : A() {
+    override fun foo(i: Int): Int {
+        return i
+    }
+}
+
 fun main() {
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
@@ -41,12 +53,14 @@ fun main() {
     printSumOmitted(30, 40)
 
     val result = double(2.0)
-    print("$result")
+    println("$result")
 
     read(
         "value".toByteArray(),
         10
     )
+
+    println(B().foo(300))
 }
 
 
