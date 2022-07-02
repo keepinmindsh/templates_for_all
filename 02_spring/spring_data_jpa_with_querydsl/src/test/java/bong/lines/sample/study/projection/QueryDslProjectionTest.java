@@ -61,6 +61,10 @@ public class QueryDslProjectionTest {
     @Test
     @DisplayName("Simple Projection 처리하기")
     void simpleProjection(){
+        /**
+         * select a.age
+         *   from dual
+         */
         List<String> strings = jpaQueryFactory
                 .select(member.username)  // select 구문에 나열 되는 것을 Projection 이라고 함.
                 .from(member)

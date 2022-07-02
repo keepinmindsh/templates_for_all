@@ -193,11 +193,21 @@ public class QueryDslJoinTest {
                        else '기타' end
          */
 
-        List<String> fetch = jpaQueryFactory.select(member
+        /**
+         * SELECT CASE WHEN A.AGE == 10 THEN '열살'
+         *             WHEN A.AGE == 20 THEN '스무살'
+         *             ELSE '기타'
+         *             END AS age
+         *   FROM TB_IC_PROFILE A
+         */
+
+        List<String> fetch = jpaQueryFactory
+                .select(member
                         .age
-                        .when(10).then("열살")
-                        .when(20).then("스무살")
-                        .otherwise("기타"))
+                            .when(10).then("열살")
+                            .when(20).then("스무살")
+                            .otherwise("기타")
+                )
                 .from(member)
                 .fetch();
 
