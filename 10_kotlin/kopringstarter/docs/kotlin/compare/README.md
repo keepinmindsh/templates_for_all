@@ -322,3 +322,32 @@ fun main(){
 
 ##### Infix 정의
 
+- Infix function 은 멤버 함수 이거나 확장 함수 여야 한다. 
+- Infix function 단일 파라미터를 가진다. 
+- Infix function 는 기본 값과 다수 파라미터 인자 전달은 할 수 없다. 
+
+```kotlin
+
+infix fun Int.plus(x: Int): Int {
+    return this + x
+}
+
+infix fun String.substringMatches(r: Regex) : List<String> {
+    return r.findAll(this)
+        .map { it.value }
+        .toList()
+}
+
+fun main(){
+    println(10 plus 5)
+
+    val matches = "a bc def" substringMatches ".*? ".toRegex()
+    println(matches)
+}
+
+```
+
+##### Function Scope 
+
+
+

@@ -73,6 +73,16 @@ fun <T> asList(vararg ts: T): List<T> {
     return result
 }
 
+infix fun Int.plus(x: Int): Int {
+    return this + x
+}
+
+infix fun String.substringMatches(r: Regex) : List<String> {
+    return r.findAll(this)
+        .map { it.value }
+        .toList()
+}
+
 fun main() {
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
@@ -103,6 +113,11 @@ fun main() {
     println(ourDream(50))
 
     println(asList(1,2,3,4,5,6))
+
+    println(10 plus 5)
+
+    val matches = "a bc def" substringMatches ".*? ".toRegex()
+    println(matches)
 }
 
 
