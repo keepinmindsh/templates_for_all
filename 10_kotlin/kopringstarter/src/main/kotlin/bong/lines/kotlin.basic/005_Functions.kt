@@ -125,7 +125,21 @@ fun higherOrderFunction(){
 }
 
 
+fun noCheckNull(value  : Int?) : Int? {
+    return value;
+}
+
+
+fun checkNull(value  : Int) : Int {
+    return value;
+}
+
 fun main() {
+
+
+    noCheckNull(null)
+    //checkNull(null)
+
     print("sum of 3 and 5 is ")
     println(sum(3, 5))
 
