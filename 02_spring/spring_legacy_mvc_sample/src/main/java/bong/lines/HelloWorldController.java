@@ -10,4 +10,8 @@ public class HelloWorldController {
     public String helloWorld(){
         return "helloworld";
     }
+
+    @GetMapping("/loginform")
+    public String loginform() {
+        return "loginform"; }
 }
