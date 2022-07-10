@@ -3,7 +3,6 @@ package bong.lines.basic.handler.common.mapping.mapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public abstract class HandlerMapping {
     public void process() throws Exception {
         BufferedReader bufferedReader = getBufferedReaderForRequest(inputStream);
 
-        String requestContent = readFirstLineOfRequest(bufferedReader);
+        String requestContent = readRequestContent(bufferedReader);
 
         if (checkNullofRequestLine(requestContent)) return;
 
@@ -32,6 +31,10 @@ public abstract class HandlerMapping {
 
         responseHandling(outputStream);
     }
+
+    protected abstract BufferedReader getBufferedReaderForRequest(InputStream inputStream);
+
+    protected abstract String readRequestContent(BufferedReader bufferedReader) throws Exception;
 
     private boolean checkNullofRequestLine(String requestLine) {
         if(!Optional.ofNullable(requestLine).isPresent()){
@@ -44,10 +47,6 @@ public abstract class HandlerMapping {
 
         return false;
     }
-
-    protected abstract BufferedReader getBufferedReaderForRequest(InputStream inputStream);
-
-    protected abstract String readFirstLineOfRequest(BufferedReader bufferedReader) throws IOException, Exception;
 
     private void getHeaderInfo(BufferedReader bufferedReader) throws Exception{
         String request = "";

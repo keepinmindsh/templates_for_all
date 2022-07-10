@@ -1,6 +1,8 @@
 package bong.lines.basic.handler.common.code;
 
-public enum GET_TYPE {
+public enum TYPE {
     QUERY_STRING,
-    SCREEN
+    SCREEN,
+
+    REQUEST_BODY_JSON
 }

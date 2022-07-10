@@ -1,6 +1,6 @@
 package bong.lines.basic.handler.common.mapping;
 
-import bong.lines.basic.handler.common.code.GET_TYPE;
+import bong.lines.basic.handler.common.code.TYPE;
 import bong.lines.basic.handler.common.factory.GetFactory;
 import bong.lines.basic.handler.common.mapping.mapper.HandlerMapping;
 import bong.lines.basic.handler.common.method.HTTP_METHOD;
@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class GetMapping extends HandlerMapping {
 
-    private GET_TYPE get_type;
+    private TYPE _type;
     private byte[] responseBody;
     private final StringBuffer responseContent = new StringBuffer();
     public GetMapping(InputStream inputStream, OutputStream outputStream) {
@@ -26,7 +26,7 @@ public class GetMapping extends HandlerMapping {
     }
 
     @Override
-    public String readFirstLineOfRequest(BufferedReader bufferedReader) throws Exception
+    public String readRequestContent(BufferedReader bufferedReader) throws Exception
     {
         return bufferedReader.readLine();
     }
@@ -34,13 +34,13 @@ public class GetMapping extends HandlerMapping {
     @Override
     public void doProcess(String requestContent) throws Exception{
         if(isGetForScreen(requestContent)) {
-            responseBody = (byte[])GetFactory.get(GET_TYPE.SCREEN, requestContent).get();
-            get_type = GET_TYPE.SCREEN;
+            responseBody = (byte[])GetFactory.get(TYPE.SCREEN, requestContent).get();
+            _type = TYPE.SCREEN;
         }
 
         if (!isGetForScreen(requestContent)){
-            responseContent.append(GetFactory.get(GET_TYPE.QUERY_STRING, requestContent).get());
-            get_type = GET_TYPE.QUERY_STRING;
+            responseContent.append(GetFactory.get(TYPE.QUERY_STRING, requestContent).get());
+            _type = TYPE.QUERY_STRING;
         }
     }
 
@@ -54,7 +54,7 @@ public class GetMapping extends HandlerMapping {
 
         byte[] body = null;
 
-        switch (get_type){
+        switch (_type){
             case SCREEN:
                 body = responseBody;
                 break;
@@ -73,7 +73,7 @@ public class GetMapping extends HandlerMapping {
         try{
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
 
-            switch (get_type){
+            switch (_type){
                 case SCREEN:
                     dos.writeBytes("Content-Type: text/html;charset=utf-8 \r\n");
                     break;

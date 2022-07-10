@@ -19,13 +19,24 @@ public class PostMapping extends HandlerMapping {
     }
 
     @Override
-    protected String readFirstLineOfRequest(BufferedReader bufferedReader) throws IOException, Exception {
-        return null;
+    protected String readRequestContent(BufferedReader bufferedReader) throws IOException, Exception {
+        return bufferedReader.readLine();
     }
 
     @Override
     protected void doProcess(String request) throws Exception {
+        switch (whichPostType(request)){
+            case "Value" :
+                break;
+            default:
+                throw new RuntimeException("POST Type Missing");
+        }
 
+
+    }
+
+    private String whichPostType(String request) {
+        return "Value";
     }
 
     @Override

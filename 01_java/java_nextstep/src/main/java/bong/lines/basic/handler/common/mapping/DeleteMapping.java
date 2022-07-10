@@ -19,7 +19,7 @@ public class DeleteMapping extends HandlerMapping {
     }
 
     @Override
-    protected String readFirstLineOfRequest(BufferedReader bufferedReader) throws IOException, Exception {
+    protected String readRequestContent(BufferedReader bufferedReader) throws IOException, Exception {
         return null;
     }
 
