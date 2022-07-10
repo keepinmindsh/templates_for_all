@@ -7,10 +7,19 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.util.StopWatch;
 
+import java.util.ArrayList;
 import java.util.Stack;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-public class Basic002 {
+public class Basic002_Parrellel {
+
+    private final static ExecutorService executors = Executors.newFixedThreadPool(3);
+
 
     public static void main(String[] args) {
 
@@ -25,16 +34,17 @@ public class Basic002 {
                 subscriber.onSubscribe(new Subscription() {
                     @Override
                     public void request(long n) {
+                        log.info("최초 실행값 : {}", n);
 
-                        if (!stopWatch.isRunning()) {
+                        if(!stopWatch.isRunning()){
                             stopWatch.start();
                         }
-
-                        log.info("최초 실행값 : {}", n);
 
                         if(n < 0){
                             subscriber.onError(new Exception("에러가 발생하였다."));
                         }
+
+                        ArrayList<Future> futures = new ArrayList<>();
 
                         for (int i = 0; i < n; i++) {
                             if(stack.empty()){
@@ -46,7 +56,9 @@ public class Basic002 {
                             if(stack.isEmpty()){
                                 break;
                             }else{
-                                subscriber.onNext(stack.pop());
+                                futures.add(executors.submit(() -> {
+                                    subscriber.onNext(stack.pop());
+                                }));
                             }
                         }
                     }
@@ -62,7 +74,7 @@ public class Basic002 {
 
                 Subscription subscription;
 
-                int pressureCount = 0;
+                AtomicInteger pressureCount = new AtomicInteger();
 
                 @Override
                 public void onSubscribe(Subscription subscription) {
@@ -77,13 +89,14 @@ public class Basic002 {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
+                        e.printStackTrace();
                         throw new RuntimeException(e);
                     }
 
-                    pressureCount ++;
+                    pressureCount.incrementAndGet();
 
-                    if(pressureCount == 3){
-                        pressureCount = 0;
+                    if(pressureCount.get() == 3){
+                        pressureCount.set(0);
                         subscription.request(3);
                     }
                 }
