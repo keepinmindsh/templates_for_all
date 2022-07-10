@@ -59,12 +59,13 @@ public class QueryDslDynamicConditionTest {
         String userName = "member1";
         Integer age = 10;
 
-        List<Member> result = searchMember1(userName, age);
+        // Boolean Builder 를 활용한 Dynamic Query 적용
+        List<Member> result = searchMemberWithBooleanBuilder(userName, age);
 
         assertThat(result.size()).isEqualTo(1);
     }
 
-    private List<Member> searchMember1(String userName, Integer age) {
+    private List<Member> searchMemberWithBooleanBuilder(String userName, Integer age) {
 
         /**
          * select member1
@@ -92,17 +93,18 @@ public class QueryDslDynamicConditionTest {
         String userName = "member1";
         Integer age = null;
 
-        // 실무에서 좀더 이해도 있게 사용할 수 있는 방식
-        List<Member> result = searchMember2(userName, age);
+        List<Member> result1 = searchMember2(userName, age);
 
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result1.size()).isEqualTo(1);
+
+        List<Member> result2 = searchMember3(userName, age);
+        assertThat(result2.size()).isEqualTo(1);
     }
 
     private List<Member> searchMember2(String userName, Integer age) {
         return jpaQueryFactory
                 .selectFrom(member)
-                .where(usernameEq(userName)
-                        ,ageEq(age))
+                .where(usernameEq(userName),ageEq(age))
                 .fetch();
     }
 
