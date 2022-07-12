@@ -465,5 +465,20 @@ fun main(){
 }
 ```
 
+# 변수 - Variables 
+
+### Java
+
+
+### Kotlin 
+
+```kotlin
+
+val a: Int = 1  // immediate assignment
+val b = 2   // `Int` type is inferred
+val c: Int  // Type required when no initializer is provided
+c = 3       // deferred assignment
+
+```
 
 
