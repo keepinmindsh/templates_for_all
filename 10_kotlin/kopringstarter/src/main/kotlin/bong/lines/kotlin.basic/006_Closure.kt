@@ -1,5 +1,20 @@
 package bong.lines.kotlin.basic
 
+/**
+ * const references = () => {
+ *      var a = new change()
+ *
+ *      ~
+ * }
+ *
+ * refernces();
+ *  start : ref count - 1
+ *
+ *  end - method close -> ref count = 0
+ *
+ *  a 참조 값은 어디에서도 참조되지 않기 때문에 Garbage Collector 에 의해서 제거된다.
+ */
+
 fun main(args: Array<String>) {
     val func = addFunc(10)
     val result = func(20)
