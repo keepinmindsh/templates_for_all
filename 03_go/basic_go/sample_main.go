@@ -4,5 +4,7 @@ func main() {
 
 	printHelloWorld()
 
+	variables()
+
 	httpCall()
 }
