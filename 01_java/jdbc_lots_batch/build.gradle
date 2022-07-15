@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.oracle.jdbc/ojdbc7
+    implementation 'com.oracle.database.jdbc:ojdbc10:19.3.0.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2
+    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
