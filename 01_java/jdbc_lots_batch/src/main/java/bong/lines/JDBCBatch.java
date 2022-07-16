@@ -62,10 +62,10 @@ public class JDBCBatch {
 
         BasicDataSource basicDataSource = new BasicDataSource();
 
-        basicDataSource.setDriverClassName("");
-        basicDataSource.setUrl("");
-        basicDataSource.setUsername("");
-        basicDataSource.setPassword("");
+        basicDataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+        basicDataSource.setUrl("jdbc:oracle:thin:@localhost");
+        basicDataSource.setUsername("111");
+        basicDataSource.setPassword("111");
 
         basicDataSource.setInitialSize(2);
         basicDataSource.setMaxTotal(20);
