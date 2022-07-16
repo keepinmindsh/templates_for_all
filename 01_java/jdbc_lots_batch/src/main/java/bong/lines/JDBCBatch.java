@@ -20,9 +20,9 @@ public class JDBCBatch {
 
         PreparedStatement preparedStatement;
 
+        Connection connection = null;
         try {
-            Connection connection = getDatabaseConnection();
-            connection.setAutoCommit(true);
+            connection = getDatabaseConnection();
 
             String compiledQuery = "INSERT INTO TESTDB.EMPLOYEE(EMPNO, EMPNM, DEPT, RANK, USERNAME) VALUES" + "(?, ?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(compiledQuery);
@@ -30,8 +30,8 @@ public class JDBCBatch {
             for(int index = 1; index <= records; index++) {
                 preparedStatement.setInt(1, index);
                 preparedStatement.setString(2, "empo number-"+index);
-                preparedStatement.setInt(3, index+100);
-                preparedStatement.setInt(4, index+200);
+                preparedStatement.setInt(3, index + 100);
+                preparedStatement.setInt(4, index + 200);
                 preparedStatement.setString(5, "usernames");
                 preparedStatement.addBatch();
             }
@@ -44,14 +44,31 @@ public class JDBCBatch {
             System.out.println("total time taken = " + (end - start)/records + " s");
 
             preparedStatement.close();
+            connection.commit();
             connection.close();
 
         } catch (SQLException ex) {
             System.err.println("SQLException information");
+
             while (ex != null) {
                 System.err.println("Error msg: " + ex.getMessage());
                 ex = ex.getNextException();
             }
+
+            try {
+                assert connection != null;
+                connection.rollback();
+                connection.close();
+            } catch (SQLException exception) {
+                SQLException throwables = exception;
+                while (throwables != null) {
+                    System.err.println("Error msg: " + throwables.getMessage());
+                    throwables = throwables.getNextException();
+                }
+
+                throw new RuntimeException(throwables);
+            }
+
             throw new RuntimeException("Error");
         }catch (Exception exception){
             System.err.println(exception.getMessage());
