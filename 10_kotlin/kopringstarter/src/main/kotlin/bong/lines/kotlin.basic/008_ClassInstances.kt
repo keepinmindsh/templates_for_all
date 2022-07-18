@@ -73,6 +73,32 @@ class OverrideClass() : OverridingMethod() {
 }
 
 // https://kotlinlang.org/docs/properties.html
+class AddressSample {
+    var name: String = "Holmes, Sherlock"
+    var street: String = "Baker"
+    var city: String = "London"
+    var state: String? = null
+    var zip: String = "123456"
+}
+
+fun copyAddress(address: AddressSample): AddressSample {
+    val result = AddressSample() // there's no 'new' keyword in Kotlin
+    result.name = address.name // accessors are called
+    result.street = address.street
+    // ...
+    return result
+}
+
+// Getter and Setter
+var stringRepresentation: String
+    get() = "Value"
+    set(value) {
+        setDataFromString(value) // parses the string and assigns values to other properties
+    }
+
+fun setDataFromString(value: String) {
+
+}
 
 fun main(){
     val rectangle = Rectangle(5.0, 2.0)
@@ -91,4 +117,8 @@ fun main(){
     Derived(10000)
 
     OverrideClass().draw()
+
+    println("${copyAddress(AddressSample())}")
+
+    println(stringRepresentation)
 }
