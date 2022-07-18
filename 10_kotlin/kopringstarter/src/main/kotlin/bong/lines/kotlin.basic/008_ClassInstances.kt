@@ -8,7 +8,7 @@ class Rectangle(var height: Double, var length: Double) : Shape() {
 
 class ClassSample constructor(firstName: String)
 
-
+// When creating class with init by order
 class InitOrderDemo(name: String) {
     val firstProperty = "First property: $name".also(::println)
 
@@ -23,6 +23,7 @@ class InitOrderDemo(name: String) {
     }
 }
 
+// Init And Constructor
 class Constructors {
     init {
         println("Init block")
@@ -49,6 +50,27 @@ class OuterWithInner {
     }
 }
 
+// Inheritance
+open class Base(p: Int)
+
+class Derived(p: Int) : Base(p){
+    init {
+        println("$p")
+    }
+}
+
+// Overriding Methods
+open class OverridingMethod {
+    open fun draw() { /*...*/ }
+    fun fill() { /*...*/ }
+}
+
+class OverrideClass() : OverridingMethod() {
+    override fun draw() {
+        /*...*/
+        println("draw your dream!")
+    }
+}
 
 fun main(){
     val rectangle = Rectangle(5.0, 2.0)
@@ -63,4 +85,8 @@ fun main(){
 
     val demoWithInner = OuterWithInner().Inner().foo() // == 1
     println("$demoWithInner")
+
+    Derived(10000)
+
+    OverrideClass().draw()
 }
