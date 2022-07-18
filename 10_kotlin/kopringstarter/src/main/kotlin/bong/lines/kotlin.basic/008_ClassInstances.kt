@@ -33,6 +33,23 @@ class Constructors {
     }
 }
 
+// Nested And Inner Class
+class Outer {
+    private val bar: Int = 1
+    class Nested {
+        fun foo() = 2
+    }
+}
+
+// Inner Class
+class OuterWithInner {
+    private val bar: Int = 1
+    inner class Inner {
+        fun foo() = bar
+    }
+}
+
+
 fun main(){
     val rectangle = Rectangle(5.0, 2.0)
     println("The perimeter is ${rectangle.perimeter}")
@@ -40,4 +57,10 @@ fun main(){
     InitOrderDemo("Sample")
 
     Constructors(100)
+
+    val demo = Outer.Nested().foo() // == 2
+    println("$demo")
+
+    val demoWithInner = OuterWithInner().Inner().foo() // == 1
+    println("$demoWithInner")
 }
