@@ -467,10 +467,31 @@ fun main(){
 
 # 변수 - Variables 
 
+### 1 bit -> 1 Byte
+
+1 Byte is equal to 8 Bit (eight bit)  
+1 Bit is equal to 0.125 Byte (zero point one hundred and twenty-five b)  
+1 Byte is equal to 8 bits (eight bits)  
+1 Bit is equal to 1 bits (one bits)  
+1 Byte is equal to 8 Bit (eight bit)  
+
 ### Java
 
+int A 32-bit ( 4-byte ) integer value  
+short A 16-bit ( 2-byte ) integer value  
+long A 64-bit ( 8-byte ) integer value  
+byte An 8-bit ( 1-byte ) integer value  
+float A 32-bit ( 4-byte ) integer value  
+double A 64-bit ( 8-byte ) integer value  
+char A 16-bit character using the Unicode encoding scheme  
+boolean  A true or false value  
 
 ### Kotlin 
+
+- 코틀린에서는 기초 타입이 없고 모든 타입이 객체 형태이다.
+- 타입 클래스에 정의된 기초 함수와 프로퍼티를 사용할 수 있다.
+- Any는 코틀린의 최상위 클래스이기 때문에 어떤 타입의 데이터도 대입할 수 있다.
+- 타입 종류: Int, Double, Float, Long, Short, Byte, Char, Boolean, String, Any, Unit, Nothing
 
 ```kotlin
 
