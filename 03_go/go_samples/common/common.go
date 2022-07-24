@@ -1,5 +1,7 @@
 package common
 
-func test() {
-	
+func commandsBuilder() string {
+	println("Test")
+
+	return "Hello World"
 }
