@@ -1,6 +1,6 @@
 package common
 
-func commandsBuilder() string {
+func CommandsBuilder() string {
 	println("Test")
 
 	return "Hello World"
