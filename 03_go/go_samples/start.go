@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go_samples/basic"
 	"go_samples/common"
 	"math/rand"
 )
@@ -14,13 +15,17 @@ func mathRandom() {
 	}
 }
 
-func main() {
+func helloWorld() {
 	fmt.Println("Test Call!")
-
 	println("Hello World")
+}
 
+func main() {
+	helloWorld()
 	mathRandom()
 
 	common.Hello()
 	common.CommandsBuilder()
+
+	basic.Print()
 }
