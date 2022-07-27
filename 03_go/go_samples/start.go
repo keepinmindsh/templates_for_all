@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go_samples/basic"
-	"go_samples/common"
 	"math/rand"
 )
 
@@ -24,8 +23,12 @@ func main() {
 	helloWorld()
 	mathRandom()
 
-	common.Hello()
-	common.CommandsBuilder()
+	//common.Hello()
+	//common.CommandsBuilder()
+
+	basic.GoStringCannotHaveNil()
+
+	basic.GoNilWithObject()
 
 	basic.Print()
 }
