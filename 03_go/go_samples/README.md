@@ -13,3 +13,5 @@
 ---
 
 > [Golang - nil](https://2kindsofcs.tistory.com/3)
+
+> [Golang - Function](https://go.dev/tour/basics/9)

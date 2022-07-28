@@ -30,5 +30,15 @@ func main() {
 
 	basic.GoNilWithObject()
 
+	basic.Add(30, 40)
+
+	a, b := basic.Swap("Hello", "World")
+	fmt.Println(a, b)
+
+	x, y := basic.Split(50)
+	fmt.Println(x, y)
+
+	basic.ValueCheck()
+
 	basic.Print()
 }

@@ -40,7 +40,7 @@ func GoNilWithObject() {
 
 func GoCannotCompareBetweenSlice() {
 	var a []int
-	var b []int
+	//var b []int
 
 	fmt.Println(a == nil)
 	// 서로 다른 두 Slice 를 비용할 수 없다. 컴파일 에러 발생
