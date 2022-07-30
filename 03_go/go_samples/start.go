@@ -41,4 +41,6 @@ func main() {
 	basic.ValueCheck()
 
 	basic.Print()
+
+	basic.TestPointer()
 }
