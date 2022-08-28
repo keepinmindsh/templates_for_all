@@ -83,12 +83,6 @@ func setupRouter() *gin.Engine {
 
 	router.GET("/:name/:id", util.BindUrl)
 
-	router.GET("/getb", util.GetDataB)
-
-	router.GET("/getc", util.GetDataC)
-
-	router.GET("/getd", util.GetDataD)
-
 	router.GET("/testing", util.StartPage)
 
 	router.GET("/someJSON", func(c *gin.Context) {
