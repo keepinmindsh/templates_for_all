@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -21,6 +22,9 @@ func setupRouter() *gin.Engine {
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
 		log.Printf(" bongs endpoint %v %v %v %v\n", httpMethod, absolutePath, handlerName, nuHandlers)
 	}
+
+	f, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(f)
 
 	router := gin.Default()
 
