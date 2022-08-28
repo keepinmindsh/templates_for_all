@@ -47,6 +47,8 @@ func setupRouter() *gin.Engine {
 
 	util.TemplateMapper(router)
 
+	util.SetTemplateEngine(router)
+
 	//router.Use(util.Logger())
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -98,6 +100,26 @@ func setupRouter() *gin.Engine {
 		// will output : {"lang":"GO\u8bed\u8a00","tag":"\u003cbr\u003e"}
 		c.AsciiJSON(http.StatusOK, data)
 	})
+
+	router.GET("/JSONP?callback=x", func(c *gin.Context) {
+		data := map[string]interface{}{
+			"foo": "bar",
+		}
+
+		//callback is x
+		// Will output  :   x({\"foo\":\"bar\"})
+		c.JSONP(http.StatusOK, data)
+	})
+
+	router.POST("/post", func(c *gin.Context) {
+
+		ids := c.QueryMap("ids")
+		names := c.PostFormMap("names")
+
+		fmt.Printf("ids: %v; names: %v", ids, names)
+	})
+
+	util.SetLoginRouter(router)
 
 	return router
 }
