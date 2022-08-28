@@ -2,14 +2,25 @@ package main
 
 import (
 	"GinSample/util"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
 func setupRouter() *gin.Engine {
 	gin.ForceConsoleColor()
+
+	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
+		log.Printf(" bongs endpoint %v %v %v %v\n", httpMethod, absolutePath, handlerName, nuHandlers)
+	}
 
 	router := gin.Default()
 
@@ -34,8 +45,34 @@ func setupRouter() *gin.Engine {
 
 	//router.Use(util.Logger())
 
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("bookabledate", util.BookableDate)
+	}
+
+	router.GET("/bookable", util.GetBookable)
+
 	router.GET("/ping", func(context *gin.Context) {
 		context.String(200, "pong")
+	})
+
+	router.GET("/long_async", func(c *gin.Context) {
+		// create copy to be used inside the goroutine
+		cCp := c.Copy()
+		go func() {
+			// simulate a long task with time.Sleep(). 5 seconds
+			time.Sleep(5 * time.Second)
+
+			// note that you are using the copied context "cCp", IMPORTANT
+			log.Println("Done! in path " + cCp.Request.URL.Path)
+		}()
+	})
+
+	router.GET("/long_sync", func(c *gin.Context) {
+		// simulate a long task with time.Sleep(). 5 seconds
+		time.Sleep(5 * time.Second)
+
+		// since we are NOT using a goroutine, we do not have to copy the context
+		log.Println("Done! in path " + c.Request.URL.Path)
 	})
 
 	router.GET("/albums", util.GetAlbums)
@@ -70,12 +107,40 @@ func setupRouter() *gin.Engine {
 func main() {
 	router := setupRouter()
 
-	s := &http.Server{
+	srv := &http.Server{
 		Addr:           ":8080",
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	s.ListenAndServe()
+
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	// a timeout of 5 seconds.
+	quit := make(chan os.Signal)
+	// kill (no param) default send syscanll.SIGTERM
+	// kill -2 is syscall.SIGINT
+	// kill -9 is syscall. SIGKILL but can"t be catch, so don't need add it
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	log.Println("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	// catching ctx.Done(). timeout of 5 seconds.
+	select {
+	case <-ctx.Done():
+		log.Println("timeout of 5 seconds.")
+	}
+	log.Println("Server exiting")
 }
