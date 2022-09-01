@@ -127,6 +127,12 @@ func setupRouter() *gin.Engine {
 
 	util.ParameterInPath(router)
 
+	util.PureJson(router)
+
+	util.QueryStringParameters(router)
+
+	util.QueryAndPostFrom(router)
+
 	util.RouterForBiding(router)
 
 	util.SetLoginRouter(router)
