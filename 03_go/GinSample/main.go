@@ -119,6 +119,16 @@ func setupRouter() *gin.Engine {
 		fmt.Printf("ids: %v; names: %v", ids, names)
 	})
 
+	util.MultipartRouter(router)
+
+	util.MultiPartFormRouter(router)
+
+	util.OnlyBingQueryStringRouter(router)
+
+	util.ParameterInPath(router)
+
+	util.RouterForBiding(router)
+
 	util.SetLoginRouter(router)
 
 	return router
