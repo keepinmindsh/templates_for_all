@@ -14,6 +14,12 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"golang.org/x/sync/errgroup"
+)
+
+var (
+	g errgroup.Group
 )
 
 func setupRouter() *gin.Engine {
@@ -89,7 +95,7 @@ func setupRouter() *gin.Engine {
 
 	router.GET("/:name/:id", util.BindUrl)
 
-	router.GET("/testing", util.StartPage)
+	router.GET("/testing1", util.StartPage)
 
 	router.GET("/someJSON", func(c *gin.Context) {
 		data := map[string]interface{}{
@@ -137,7 +143,41 @@ func setupRouter() *gin.Engine {
 
 	util.SetLoginRouter(router)
 
+	util.SetSecureJson(router)
+
 	return router
+}
+
+func setRouter01() http.Handler {
+	engine := gin.New()
+	engine.Use(gin.Recovery())
+	engine.GET("/", func(context *gin.Context) {
+		context.JSON(
+			http.StatusOK,
+			gin.H{
+				"code":    http.StatusOK,
+				"message": "Welcome Server 01",
+			},
+		)
+	})
+
+	return engine
+}
+
+func setRouter02() http.Handler {
+	engine := gin.New()
+	engine.Use(gin.Recovery())
+	engine.GET("/", func(context *gin.Context) {
+		context.JSON(
+			http.StatusOK,
+			gin.H{
+				"code":    http.StatusOK,
+				"message": "Welcome Server 02",
+			},
+		)
+	})
+
+	return engine
 }
 
 func main() {
@@ -151,12 +191,38 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
+	server01 := &http.Server{
+		Addr:         ":8081",
+		Handler:      setRouter01(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	server02 := &http.Server{
+		Addr:         ":8082",
+		Handler:      setRouter02(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
 	go func() {
 		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}
 	}()
+
+	g.Go(func() error {
+		return server01.ListenAndServe()
+	})
+
+	g.Go(func() error {
+		return server02.ListenAndServe()
+	})
+
+	if err := g.Wait(); err != nil {
+		log.Fatal(err)
+	}
 
 	// Wait for interrupt signal to gracefully shutdown the server with
 	// a timeout of 5 seconds.

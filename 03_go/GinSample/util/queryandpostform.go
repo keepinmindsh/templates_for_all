@@ -6,7 +6,7 @@ import (
 )
 
 func QueryAndPostFrom(router *gin.Engine) {
-	router.POST("/post", func(c *gin.Context) {
+	router.POST("/post2", func(c *gin.Context) {
 
 		id := c.Query("id")
 		page := c.DefaultQuery("page", "0")

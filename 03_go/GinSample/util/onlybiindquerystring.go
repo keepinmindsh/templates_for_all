@@ -11,7 +11,7 @@ type PersonOnlyQuery struct {
 }
 
 func OnlyBingQueryStringRouter(router *gin.Engine) {
-	router.Any("/testing", startPage)
+	router.Any("/testing2", startPage)
 }
 
 func startPage(c *gin.Context) {
