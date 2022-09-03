@@ -6,7 +6,7 @@ import (
 )
 
 func SetSecureJson(router *gin.Engine) {
-	router.GET("/someJSON", func(c *gin.Context) {
+	router.GET("/secureSomeJSON", func(c *gin.Context) {
 		names := []string{"lena", "austin", "foo"}
 
 		// Will output  :   while(1);["lena","austin","foo"]

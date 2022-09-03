@@ -161,6 +161,8 @@ func setRouter01() http.Handler {
 		)
 	})
 
+	util.ServingDataFromReader(engine)
+
 	return engine
 }
 
@@ -205,13 +207,6 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	go func() {
-		// service connections
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
-		}
-	}()
-
 	g.Go(func() error {
 		return server01.ListenAndServe()
 	})
@@ -219,6 +214,13 @@ func main() {
 	g.Go(func() error {
 		return server02.ListenAndServe()
 	})
+
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
 
 	if err := g.Wait(); err != nil {
 		log.Fatal(err)
