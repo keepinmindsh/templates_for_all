@@ -163,6 +163,7 @@ func setRouter01() http.Handler {
 
 	util.ServingDataFromReader(engine)
 	util.UsingBasicAuthMiddleware(engine)
+	util.HttpMethod(engine)
 
 	return engine
 }
