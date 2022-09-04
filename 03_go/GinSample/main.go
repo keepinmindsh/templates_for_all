@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GinSample/util"
+	"GinSample/sample"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -51,17 +51,17 @@ func setupRouter() *gin.Engine {
 		)
 	}))
 
-	util.TemplateMapper(router)
+	sample.TemplateMapper(router)
 
-	util.SetTemplateEngine(router)
+	sample.SetTemplateEngine(router)
 
-	//router.Use(util.Logger())
+	//router.Use(sample.Logger())
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("bookabledate", util.BookableDate)
+		v.RegisterValidation("bookabledate", sample.BookableDate)
 	}
 
-	router.GET("/bookable", util.GetBookable)
+	router.GET("/bookable", sample.GetBookable)
 
 	router.GET("/ping", func(context *gin.Context) {
 		context.String(200, "pong")
@@ -87,15 +87,15 @@ func setupRouter() *gin.Engine {
 		log.Println("Done! in path " + c.Request.URL.Path)
 	})
 
-	router.GET("/albums", util.GetAlbums)
+	router.GET("/albums", sample.GetAlbums)
 
-	router.GET("/albums/:id", util.GetAlbumByID)
+	router.GET("/albums/:id", sample.GetAlbumByID)
 
-	router.POST("/albums", util.PostAlbums)
+	router.POST("/albums", sample.PostAlbums)
 
-	router.GET("/:name/:id", util.BindUrl)
+	router.GET("/:name/:id", sample.BindUrl)
 
-	router.GET("/testing1", util.StartPage)
+	router.GET("/testing1", sample.StartPage)
 
 	router.GET("/someJSON", func(c *gin.Context) {
 		data := map[string]interface{}{
@@ -125,25 +125,25 @@ func setupRouter() *gin.Engine {
 		fmt.Printf("ids: %v; names: %v", ids, names)
 	})
 
-	util.MultipartRouter(router)
+	sample.MultipartRouter(router)
 
-	util.MultiPartFormRouter(router)
+	sample.MultiPartFormRouter(router)
 
-	util.OnlyBingQueryStringRouter(router)
+	sample.OnlyBingQueryStringRouter(router)
 
-	util.ParameterInPath(router)
+	sample.ParameterInPath(router)
 
-	util.PureJson(router)
+	sample.PureJson(router)
 
-	util.QueryStringParameters(router)
+	sample.QueryStringParameters(router)
 
-	util.QueryAndPostFrom(router)
+	sample.QueryAndPostFrom(router)
 
-	util.RouterForBiding(router)
+	sample.RouterForBiding(router)
 
-	util.SetLoginRouter(router)
+	sample.SetLoginRouter(router)
 
-	util.SetSecureJson(router)
+	sample.SetSecureJson(router)
 
 	return router
 }
@@ -161,11 +161,11 @@ func setRouter01() http.Handler {
 		)
 	})
 
-	util.ServingDataFromReader(engine)
-	util.UsingBasicAuthMiddleware(engine)
-	util.HttpMethod(engine)
-	util.MiddleWare(engine)
-	util.RenderingVariousDataType(engine)
+	sample.ServingDataFromReader(engine)
+	sample.UsingBasicAuthMiddleware(engine)
+	sample.HttpMethod(engine)
+	sample.MiddleWare(engine)
+	sample.RenderingVariousDataType(engine)
 
 	return engine
 }

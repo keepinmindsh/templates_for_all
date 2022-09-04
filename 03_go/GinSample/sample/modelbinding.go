@@ -1,4 +1,4 @@
-package util
+package sample
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,14 +6,14 @@ import (
 )
 
 // Binding from JSON
-type Login struct {
+type LoginModel struct {
 	User     string `form:"user" json:"user" xml:"user"  binding:"required"`
 	Password string `form:"password" json:"password" xml:"password" binding:"required"`
 }
 
-func SetLoginRouter(router *gin.Engine) {
+func RouterForBiding(router *gin.Engine) {
 	// Example for binding JSON ({"user": "manu", "password": "123"})
-	router.POST("/loginJSON", func(c *gin.Context) {
+	router.POST("/loginJSON2", func(c *gin.Context) {
 		var json Login
 		if err := c.ShouldBindJSON(&json); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,7 +34,7 @@ func SetLoginRouter(router *gin.Engine) {
 	//		<user>manu</user>
 	//		<password>123</password>
 	//	</root>)
-	router.POST("/loginXML", func(c *gin.Context) {
+	router.POST("/loginXML2", func(c *gin.Context) {
 		var xml Login
 		if err := c.ShouldBindXML(&xml); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -50,7 +50,7 @@ func SetLoginRouter(router *gin.Engine) {
 	})
 
 	// Example for binding a HTML form (user=manu&password=123)
-	router.POST("/loginForm", func(c *gin.Context) {
+	router.POST("/loginForm2", func(c *gin.Context) {
 		var form Login
 		// This will infer what binder to use depending on the content-type header.
 		if err := c.ShouldBind(&form); err != nil {

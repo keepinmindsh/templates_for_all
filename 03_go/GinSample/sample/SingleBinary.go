@@ -1,4 +1,4 @@
-package util
+package sample
 
 import (
 	"html/template"
