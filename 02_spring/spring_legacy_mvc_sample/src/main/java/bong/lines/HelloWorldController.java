@@ -13,5 +13,6 @@ public class HelloWorldController {
 
     @GetMapping("/loginform")
     public String loginform() {
-        return "loginform"; }
+        return "loginform";
+    }
 }
