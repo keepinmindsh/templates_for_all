@@ -8,6 +8,6 @@ public class DataController {
 
     @GetMapping("/name")
     public String Name(){
-        return "Howard";
+        return "bongbong";
     }
 }
