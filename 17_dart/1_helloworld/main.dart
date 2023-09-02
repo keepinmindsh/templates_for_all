@@ -138,3 +138,54 @@ void sets() {
   print(numbers);
 }
 
+void sayHello(String name) {
+  print("Hello $name nice to meet you");
+}
+
+String sayHelloReturn(String name) {
+  return "Hello $name nice to meet you";
+}
+
+String sayHelloReturnWithout(String name) => "Hello $name nice to meet you"; // MARK Arrow Function
+
+String sayHelloWithNamed({String name = "Hello", int age = 99,required String country}){  // Mark Named Parameter ( Named Parameter, Default, Required )
+  return "$name, $age $country";
+}
+
+void ClientCallSayHello() {
+  sayHelloWithNamed(
+    name : "Howard",
+    country: "germany",
+    age: 99,
+  );
+}
+
+String sayHelloOptinal(String name, int age, [String? country = "cuba"]) => "$name, $age, $country";
+
+void ClientCallOptinal(){
+  sayHelloOptinal("good", 99);
+}
+
+String QQParameter1(String? name) => name != null ? name.toUpperCase() : 'ANON';
+
+String QQParameter2(String? name) => name?.toUpperCase() ?? 'ANON';
+
+
+void ClientCallQQ(){
+  String? name;
+  name ??= 'Nico';
+  name = null;
+  name ??= 'another';
+
+}
+
+typedef ListOfInts = List<int>;
+
+List<int> reverseListOfNumbers(ListOfInts list) {
+  var reversed = list.reversed;
+  return reversed.toList();
+}
+
+void ClientCallTypeDef() {
+  reverseListOfNumbers([1,2,3]);
+}
