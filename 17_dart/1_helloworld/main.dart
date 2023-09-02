@@ -95,7 +95,46 @@ void stringInterporation(){
   var age = 40;
   var greeting = 'Hi! $name, nice to meet you, I am ${age  + 20}';
 
-  print(greeting)
+  print(greeting);
 
+}
+
+void collectionFor() {
+  var oldFriends = [ 'howard', 'wood' ];
+  var newFriends = [
+    'thomas',
+    'kyle',
+    for ( var friend in oldFriends) "$friend",
+  ];
+
+  print(newFriends);
+}
+
+
+void maps() {
+  var player = {
+    'name' : 'howard',
+    'xp' : 19.99
+  };
+
+  Map<int, bool> playerStatus = {
+    1 :  true,
+    2 : false
+  };
+
+  Map<List<int>, bool > players = {
+    [1,2,3,4] : true,
+  };
+}
+
+void sets() {
+  Set<int> numbers = { 1,2,3,4,5 }; // MARK 중복을 허용하지 않음!
+
+  numbers.add(1);
+  numbers.add(1);
+  numbers.add(1);
+  numbers.add(1);
+
+  print(numbers);
 }
 
