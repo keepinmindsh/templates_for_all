@@ -71,3 +71,31 @@ void dataTypes() {
   double money = 69.99;
   num x = 1123;
 }
+
+void ListSample(){
+  var numbers = [0 ,1,2,3,4,5];
+
+  var isPass = true;
+
+  List<int> numbers2 = [
+    1,
+    2,
+    3,
+    4,
+    if ( isPass ) 6,
+  ];
+
+  numbers2.add(5);
+  
+  print(numbers2);
+}
+
+void stringInterporation(){
+  var name = 'howard';
+  var age = 40;
+  var greeting = 'Hi! $name, nice to meet you, I am ${age  + 20}';
+
+  print(greeting)
+
+}
+
