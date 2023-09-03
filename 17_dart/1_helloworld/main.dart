@@ -335,10 +335,10 @@ class PlayerNamedConstruct {
 
 void ClientCallClassNamedConstruct() {
   var player1 = PlayerNamedConstruct.createBluePlayer(name: 'my', age: 12);
-
-
   var player2 = PlayerNamedConstruct.createRedPlayer(name: 'my', age: 12);
 }
+
+// from https://nomadcoders.co/dart-for-beginners/lectures/4118
 
 
 
