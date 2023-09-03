@@ -189,3 +189,156 @@ List<int> reverseListOfNumbers(ListOfInts list) {
 void ClientCallTypeDef() {
   reverseListOfNumbers([1,2,3]);
 }
+
+class Player {
+  String name = 'my';
+  int xp = 1500;
+
+}
+
+void ClientCallClass(){
+  var player = Player();
+
+  print(player.name);
+}
+
+class Player1 {
+  final String name = 'my';
+  int xp = 1500;
+
+  void sayHello() {
+    print("Hi my name is $name");
+  }
+}
+
+void ClientCallClass2() {
+  var player = Player1();
+
+}
+
+class Player2 {
+  late final String name;
+  late int xp;
+
+  Player2(String name, int xp){
+    this.name = name;
+    this.xp = xp;
+  }
+
+  void sayHello() {
+    print("Hi my name is $name");
+  }
+}
+
+void ClientCallClass3() {
+  var player1 = Player2("asdfsafd", 123);
+
+
+  var player2 = Player2("steadfast", 123123);
+
+}
+
+
+class Player3 {
+  final String name;
+  int xp;
+
+  Player3(this.name, this.xp);
+
+  void sayHello() {
+    print("Hi my name is $name");
+  }
+}
+
+
+void ClientCallClass4() {
+  var player1 = Player3("asdfsafd", 123);
+
+
+  var player2 = Player3("steadfast", 123123);
+
+}
+
+
+class PlayerNamed {
+  final String name;
+  int xp;
+  String team;
+  int age;
+
+  PlayerNamed({
+    required this.name,
+    required this.xp,
+    required this.team,
+    required this.age
+  });
+
+  void sayHello() {
+    print("Hi my name is $name");
+  }
+}
+
+
+void ClientCallClassNamed() {
+  var player1 = PlayerNamed(
+    name : "my",
+    xp: 1200,
+    team: 'red',
+    age: 12
+  );
+
+
+  var player2 = PlayerNamed(
+      name : "my",
+      xp: 1200,
+      team: 'blue',
+      age: 12
+  );
+}
+
+
+
+class PlayerNamedConstruct {
+  final String name, team;
+  int xp, age;
+
+  PlayerNamedConstruct({
+    required this.name,
+    required this.xp,
+    required this.team,
+    required this.age
+  });
+
+  PlayerNamedConstruct.createBluePlayer({
+    required String name,
+    required int age
+  }) :
+      this.age = age,
+      this.name = name,
+      this.team = 'blue',
+      this.xp = 0;
+
+  PlayerNamedConstruct.createRedPlayer({
+    required String name,
+    required int age
+  }) :
+        this.age = age,
+        this.name = name,
+        this.team = 'blue',
+        this.xp = 0;
+
+  void sayHello() {
+    print("Hi my name is $name");
+  }
+}
+
+
+void ClientCallClassNamedConstruct() {
+  var player1 = PlayerNamedConstruct.createBluePlayer(name: 'my', age: 12);
+
+
+  var player2 = PlayerNamedConstruct.createRedPlayer(name: 'my', age: 12);
+}
+
+
+
