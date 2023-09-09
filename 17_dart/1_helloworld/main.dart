@@ -191,9 +191,14 @@ void ClientCallTypeDef() {
 }
 
 class Player {
-  String name = 'my';
-  int xp = 1500;
+  late String name = 'my';
+  late int xp = 1500;
 
+
+  Player(String name, int xp){
+    this.name = name;
+    this.xp = xp;
+  }
 }
 
 void ClientCallClass(){
@@ -449,4 +454,30 @@ class AbstractFactory {
 
 // from https://nomadcoders.co/dart-for-beginners/lectures/4118
 
+void CascadeNotation() {
+  var nico = Player("nico", 1230);
+  var good = nico
+    ..name = 'good'
+    ..xp = 1234;
+}
 
+
+mixin Strong {
+  final double strengthLevel = 1500.99;
+}
+
+mixin QuickRunner {
+  void run() {
+    print("ruuuuuuuuun!");
+  }
+}
+
+class SuperMan with Strong, QuickRunner {
+  SuperMan(){}
+}
+
+void CallClient(){
+  var superMan = SuperMan();
+
+  superMan.run()
+}
