@@ -407,6 +407,45 @@ class Proxy {
   }
 }
 
+enum ProductType { Human1, Human2, Human3 }
+
+abstract interface class Product {
+  void working();
+}
+
+class Human1 implements Product {
+  @override
+  void working() {
+    // TODO: implement working
+  }
+}
+
+class Human2 implements Product {
+  @override
+  void working() {
+    // TODO: implement working
+  }
+}
+
+class Human3 implements Product {
+  @override
+  void working() {
+    // TODO: implement working
+  }
+}
+
+class AbstractFactory {
+  MakeProduct(ProductType productType){
+    switch (productType) {
+      case ProductType.Human1 :
+        return Human1();
+      case ProductType.Human2:
+        return Human2();
+      case ProductType.Human3:
+        return Human3();
+    }
+  }
+}
 
 // from https://nomadcoders.co/dart-for-beginners/lectures/4118
 

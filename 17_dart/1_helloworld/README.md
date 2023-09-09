@@ -38,3 +38,54 @@ class Proxy {
   }
 }
 ```
+
+## Dart에서의 디자인패턴을 정의하는 방식 / 예제 
+
+Gof에서 제공하는 23가지 패턴에 대해서 적용 가능 
+
+- Abstract Factory, Factory Method, Singleton, Builder, ProtoType, Composite, Chain Of Responsibility, Visitor, State, Interpreter
+- Strategy, Proxy, Adapter, Memento, Mediator, Template Method, Pacade, Observer, Command, FlyWeight, Iterator, Bridge, Decorator 
+
+```dart
+
+enum ProductType { Human1, Human2, Human3 }
+
+abstract interface class Product {
+  void working();
+}
+
+class Human1 implements Product {
+  @override
+  void working() {
+    // TODO: implement working
+  }
+}
+
+class Human2 implements Product {
+  @override
+  void working() {
+    // TODO: implement working
+  }
+}
+
+class Human3 implements Product {
+  @override
+  void working() {
+    // TODO: implement working
+  }
+}
+
+class AbstractFactory {
+  MakeProduct(ProductType productType){
+    switch (productType) {
+      case ProductType.Human1 :
+        return Human1();
+      case ProductType.Human2:
+        return Human2();
+      case ProductType.Human3:
+        return Human3();
+    }
+  }
+}
+
+```
