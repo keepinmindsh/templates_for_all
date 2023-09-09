@@ -202,7 +202,7 @@ class Player {
 }
 
 void ClientCallClass(){
-  var player = Player();
+  var player = Player('nico',12);
 
   print(player.name);
 }
@@ -479,5 +479,5 @@ class SuperMan with Strong, QuickRunner {
 void CallClient(){
   var superMan = SuperMan();
 
-  superMan.run()
+  superMan.run();
 }
