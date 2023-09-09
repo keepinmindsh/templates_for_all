@@ -381,6 +381,32 @@ class Foo<T extends View> {
   String toString() => "Instance of 'Foo<$T>'";
 }
 
+T first<T>(List<T> ts) {
+  // Do some initial work or error checking, then...
+  T tmp = ts[0];
+  // Do some additional checking or processing...
+  return tmp;
+}
+
+abstract interface class Inter {
+  void helloWorld();
+}
+
+class Impl implements Inter {
+  @override
+  void helloWorld() {
+    print("Hi My Name is Interface!");
+  }
+}
+
+class Proxy {
+  Proxy(Inter inter){
+    print("A");
+    inter.helloWorld();
+    print("C");
+  }
+}
+
 
 // from https://nomadcoders.co/dart-for-beginners/lectures/4118
 
