@@ -338,7 +338,50 @@ void ClientCallClassNamedConstruct() {
   var player2 = PlayerNamedConstruct.createRedPlayer(name: 'my', age: 12);
 }
 
-// from https://nomadcoders.co/dart-for-beginners/lectures/4118
+// fixme Type Inference Checking
+void CheckingTypeInference(){
+  var arguments = {'argA': 'hello', 'argB': 42}; // Map<String, Object>
+}
 
+typedef IntList = List<int>;
+IntList il = [1,2,3];
+
+typedef Compare<T> = int Function(T a, T b);
+
+int sort(int a, int b) => a - b;
+
+void TypeDefSample(){
+  assert(sort is Compare<int>);
+}
+
+class View {
+
+}
+
+void TypeGenericsLiterals() {
+  var name = <String>[ 'Seth', 'Kothy', 'Lars' ];
+  var uniqueNames = <String>{ 'Seth' , 'Kathy', 'Lars' };
+  var pages = <String, String> {
+    'index.html' :  'Homepage',
+    'robot.txt' : 'Hints for web robots',
+    'human.txt' : 'We are people, not machine'
+  };
+
+  var nameSet = Set<String>.from(name);
+
+  var views = Map<int, View>();
+}
+
+class Generics<T extends Object> {
+
+}
+
+class Foo<T extends View> {
+  // Implementation goes here...
+  String toString() => "Instance of 'Foo<$T>'";
+}
+
+
+// from https://nomadcoders.co/dart-for-beginners/lectures/4118
 
 
