@@ -89,3 +89,42 @@ class AbstractFactory {
 }
 
 ```
+
+## Constructor 정의 
+
+### Positional Parameter Constructor  
+
+- 정의되는 생성자내의 인자의 전달 순서가 중요함. 
+
+```dart
+class Player {
+  String name = 'Lines';
+
+  Player(this.name, );
+}
+
+void main() {
+  var lines = Player("Dream");
+}
+```
+
+### Named Parameter Constructor
+
+- named parameter 를 활용하는 방식 
+
+```dart
+
+class PlayerRequired {
+  String name = 'Lines';
+  int? length = 300;
+
+  PlayerRequired({
+    required this.name,
+    this.length
+  });
+}
+
+void main(){
+  var lines2 = PlayerRequired(name: "Dream");
+}
+```
