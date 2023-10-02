@@ -2,10 +2,16 @@ mod network;
 use network::server::connect;
 
 mod basic;
-use basic::primitives::primitives::sample_primitives;
+use basic::primitives::primitives;
+use basic::literal_operator::literal_operator;
 
 fn main() {
-    connect();
+    //connect();
 
-    sample_primitives();
+    primitives::sample_primitives();
+
+    println!("-----------------------------------\r\n");
+
+    literal_operator::literal_operator();
+
 }
