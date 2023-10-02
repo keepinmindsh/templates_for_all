@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div hx-put="/messages">
+        Put To Messages
+    </div>
+
+    <div hx-post="/mouse_entered" hx-trigger="mouseenter">
+        [Here Mouse, Mouse!]
+    </div>
+
+    <div hx-post="/mouse_entered" hx-trigger="mouseenter once">
+        [Here Mouse, Mouse!]
+    </div>
+
+
+    <input type="text" name="q"
+    hx-get="/trigger_delay"
+    hx-trigger="keyup changed delay:500ms"
+    hx-target="#search-results"
+    placeholder="Search..."
+>
+<div id="search-results"></div>
+
+    <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+</body>
+</html>
