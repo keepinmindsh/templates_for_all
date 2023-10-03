@@ -4,6 +4,7 @@ use network::server::connect;
 mod basic;
 use basic::primitives::primitives;
 use basic::literal_operator::literal_operator;
+use basic::constants;
 
 fn main() {
     //connect();
@@ -14,4 +15,7 @@ fn main() {
 
     literal_operator::literal_operator();
 
+    println!("-----------------------------------\r\n");
+
+    constants::basic_constants();
 }
